@@ -2,7 +2,7 @@ CREATE TABLE Users (
   id INTEGER PRIMARY KEY,
   username TEXT UNIQUE,
   email TEXT UNIQUE,
-  password_hash  TEXT
+  password_hash TEXT
 );
 
 CREATE TABLE Dogs (

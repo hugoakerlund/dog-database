@@ -1,7 +1,7 @@
 import sqlite3
 from flask import Flask
 from flask import redirect, render_template, request, send_from_directory
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import db
 
@@ -14,6 +14,27 @@ def index():
 @app.route("/register")
 def register():
     return render_template("html/register.html")
+
+@app.route("/login")
+def login():
+    return render_template("html/login.html")
+
+@app.route("/login", methods=["POST"])
+def login_post():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    sql = "SELECT password_hash FROM Users WHERE username = ?"
+    result = db.query(sql, [username])
+    if not result:
+        return "ERROR: invalid username or password"
+
+    password_hash = result[0][0]
+    print(password_hash)
+    if not check_password_hash(password_hash, password):
+        return "ERROR: invalid username or password"
+
+    return redirect("/")
 
 @app.route("/create", methods=["POST"])
 def create():
