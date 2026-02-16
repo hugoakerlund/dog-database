@@ -10,10 +10,10 @@
     <p>login <a href="/login">here</a> or register <a href="/register">here</a>.</p>
 
     {% for dog in dogs %}
-        <a> href="/dog/{{ dog.id }}">View details</a>
+        <a href="/dog/{{ dog.registration_number }}">View details</a>
         <h2>{{ dog.name }}</h2>
         <p>Breed: {{ dog.breed }}</p>
-        <p>Age: {{ dog.age }}</p>
+        <p>Born: {{ dog.born_date }}</p>
     {% endfor %}
 </body>
 </html>

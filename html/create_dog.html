@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Add dog to database</title>
+</head>
+
+<body>
+  <form action="/create_dog" method="post">
+    <p>
+      Registration number: <br />
+      <input type="text" name="registration_number" />
+    </p>
+    <p>
+      Name: <br />
+      <input type="text" name="name" />
+    </p>
+    <p>
+      Breed: <br />
+      <input type="text" name="breed" />
+    </p>
+    <p>
+      Born date: <br />
+      <input type="text" name="born_date",  placeholder="DD/MM/YYYY"/>
+    </p>
+    <p>
+      Sex: <br />
+      <input type="text" name="sex", placeholder="M/F"/>
+    </p>
+    <input type="submit" value="Save" />
+  </form>
+</body>
+
+</html>

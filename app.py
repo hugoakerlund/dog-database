@@ -12,7 +12,43 @@ app.secret_key = config.SECRET_KEY
 
 @app.route("/")
 def index():
-    return render_template("html/index.html")
+    dogs = get_dogs()
+    return render_template("html/index.html", dogs=dogs)
+
+def get_dogs():
+    sql = "SELECT * FROM dogs"
+    return db.query(sql)
+
+@app.route("/dog/<registration_number>")
+def dog(registration_number):
+    sql = "SELECT * FROM dogs WHERE registration_number = ?"
+    result = db.query(sql, [registration_number])
+    if not result:
+        return "ERROR: dog not found"
+    return render_template("html/dog.html", dog=result[0])
+
+@app.route("/create_dog")
+def create_dog_form():
+    return render_template("html/create_dog.html")
+
+@app.route("/create_dog", methods=["POST"])
+def create_dog():
+    registration_number = request.form["registration_number"]
+    name = request.form["name"]
+    breed = request.form["breed"]
+    born_date = request.form["born_date"]
+    sex = request.form["sex"]
+
+    if not registration_number or not name or not breed or not born_date or not sex:
+        return "ERROR: all fields are required"
+
+    try:
+        sql = "INSERT INTO Dogs (registration_number, name, breed, born_date, sex) VALUES (?, ?, ?, ?, ?)"
+        db.execute(sql, [registration_number, name, breed, born_date, sex])
+    except sqlite3.IntegrityError as e:
+        print(e)
+        return "ERROR: registration failed"
+    return redirect("/")
 
 @app.route("/register")
 def register():
