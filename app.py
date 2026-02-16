@@ -30,7 +30,6 @@ def login_post():
         return "ERROR: invalid username or password"
 
     password_hash = result[0][0]
-    print(password_hash)
     if not check_password_hash(password_hash, password):
         return "ERROR: invalid username or password"
 
@@ -39,8 +38,12 @@ def login_post():
 @app.route("/create", methods=["POST"])
 def create():
     username = request.form["username"]
+    email = request.form["email"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+
+    if not username or not email or not password1 or not password2:
+        return "ERROR: all fields are required"
     if password1 != password2:
         return "ERROR: passwords do not match"
     elif len(password1) < 8:
@@ -48,12 +51,12 @@ def create():
     password_hash = generate_password_hash(password1)
 
     try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
+        sql = "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)"
+        db.execute(sql, [username, email, password_hash])
     except sqlite3.IntegrityError:
-        return "ERROR: username already exists"
+        return "ERROR: username or email already exists"
 
-    return "Account created successfully"
+    return redirect("/")
 
 @app.route('/favicon.ico')
 def favicon():
