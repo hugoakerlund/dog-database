@@ -1,11 +1,14 @@
 import sqlite3
 from flask import Flask
+from flask import session
 from flask import redirect, render_template, request, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import db
+import config
 
 app = Flask(__name__, template_folder=".")
+app.secret_key = config.SECRET_KEY
 
 @app.route("/")
 def index():
@@ -16,11 +19,11 @@ def register():
     return render_template("html/register.html")
 
 @app.route("/login")
-def login():
+def login_form():
     return render_template("html/login.html")
 
 @app.route("/login", methods=["POST"])
-def login_post():
+def login():
     username = request.form["username"]
     password = request.form["password"]
 
@@ -33,6 +36,12 @@ def login_post():
     if not check_password_hash(password_hash, password):
         return "ERROR: invalid username or password"
 
+    session["username"] = username
+    return redirect("/")
+
+@app.route("/logout")
+def logout():
+    del session["username"]
     return redirect("/")
 
 @app.route("/create", methods=["POST"])

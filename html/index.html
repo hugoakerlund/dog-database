@@ -8,5 +8,12 @@
 <body>
     <h1>Welcome to the Dog Database!</h1>
     <p>login <a href="/login">here</a> or register <a href="/register">here</a>.</p>
+
+    {% for dog in dogs %}
+        <a> href="/dog/{{ dog.id }}">View details</a>
+        <h2>{{ dog.name }}</h2>
+        <p>Breed: {{ dog.breed }}</p>
+        <p>Age: {{ dog.age }}</p>
+    {% endfor %}
 </body>
 </html>
