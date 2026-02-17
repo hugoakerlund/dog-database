@@ -9,21 +9,21 @@
   <form action="/create" method="post">
     <p>
       Username: <br />
-      <input type="text" name="username" />
+      <input type="text" name="username" maxlength=20 required />
     </p>
     <p>
       Email: <br />
-      <input type="text" name="email" />
+      <input type="text" name="email"  maxlength=50 required />
     </p>
     <p>
       Password: <br />
-      <input type="password" name="password1" />
+      <input type="password" name="password1" maxlength=35 required />
     </p>
     <p>
       Password again: <br />
-      <input type="password" name="password2" />
+      <input type="password" name="password2" maxlength=35 required />
     </p>
-    <input type="submit" value="Create account" />
+    <input type="submit" value="Create account" maxlength=35 required />
   </form>
 </body>
 
