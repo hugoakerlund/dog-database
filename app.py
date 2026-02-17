@@ -13,7 +13,7 @@ app.secret_key = config.SECRET_KEY
 @app.route("/")
 def index():
     dogs = get_dogs()
-    return render_template("html/index.html", dogs=dogs)
+    return render_template("html/index.html", dogs=dogs, session=session)
 
 def get_dogs():
     sql = "SELECT * FROM dogs"
