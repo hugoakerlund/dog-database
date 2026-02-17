@@ -7,13 +7,18 @@
 
 <body>
     <h1>Welcome to the Dog Database!</h1>
+    {% if session.get('username') %}
+        <p>You are logged in as {{ session.get('username') }}. <a href="/logout">Logout</a></p>
+    {% else %}
     <p>login <a href="/login">here</a> or register <a href="/register">here</a>.</p>
+    {% endif %}
 
     {% for dog in dogs %}
         <a href="/dog/{{ dog.registration_number }}">View details</a>
-        <h2>{{ dog.name }}</h2>
-        <p>Breed: {{ dog.breed }}</p>
-        <p>Born: {{ dog.born_date }}</p>
+        <h2>{{ dog.registration_number }}</h2>
+        <p>Name: {{ dog.name }} Breed: {{ dog.breed }} Born: {{ dog.born_date }} 
+           Sex: {{ dog.sex }} Father {{ dog.father_id  }} Mother {{ dog.mother_id }} 
+           Owner {{ dog.owner_id }} Litters {{ dog.litters }} Championship Title {{ dog.championship_title }}</p>
     {% endfor %}
 </body>
 </html>
