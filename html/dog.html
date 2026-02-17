@@ -48,4 +48,10 @@
   <p>
     Use Index: {{ dog.use_index }}
   </P>
+  {% if dog.owner_id == session.user_id %}
+  <p>
+    <a href="/edit/{{ dog.registration_number }}">Edit</a> |
+    <a href="/remove/{{ dog.registration_number }}">Remove</a>
+  </p>
+  {% endif %}
 </html>
