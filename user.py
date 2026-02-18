@@ -13,4 +13,4 @@ def get_id_with_username(username):
     id = db.query(sql, [username])
     if not id:
         abort(404)
-    return id
+    return id[0][0]

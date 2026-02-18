@@ -77,7 +77,7 @@ def login():
     user_id = user.get_id_with_username(username)
 
     session["username"] = username
-    session["user_id"] = username
+    session["user_id"] = user_id
     return redirect("/")
 
 @app.route("/logout")
