@@ -39,6 +39,7 @@ def create_dog():
     born_date = request.form["born_date"]
     sex = request.form["sex"]
 
+
     if not registration_number or not name or not breed or not born_date or not sex:
         return "ERROR: all fields are required"
 

@@ -9,7 +9,7 @@
     <form action="/create_dog" method="post">
       <p>
         Registration number:
-        <input type="text" name="registration_number" maxlength=10 required />
+        <input type="text" name="registration_number" placeholder="Registration number" maxlength=10 required />
       </p>
       <p>
         Name:
@@ -25,11 +25,11 @@
       </p>
       <p>
         Born date:
-        <input type="date" value="yyyy/mm/dd" />
+        <input type="date" name="born_date" value="yyyy/mm/dd" />
       </p>
       <p>
         Death date:
-        <input type="date" value="yyyy/mm/dd" />
+        <input type="date" name="born_date" value="yyyy/mm/dd" />
       </p>
       <p>
         Sex:
@@ -41,19 +41,19 @@
       </p>
       <p>
         Father:
-        <input type="text" name="father_id", placeholder="Father registration number" maxlength=10 required />
+        <input type="text" name="father_id" placeholder="Registration number" maxlength=10 required />
       </p>
       <p>
         Mother:
-        <input type="text" name="mother_id", placeholder="Mother registration number" maxlength=10 required />
+        <input type="text" name="mother_id" placeholder="Registration number" maxlength=10 required />
       </p>
       <p>
         Litters:
-        <input type="text" name="litters", placeholder="" maxlength=3 />
+        <input type="number" name="litters" placeholder="" maxlength=3 />
       </p>
       <p>
         Championship title:
-        <input type="text" name="championship_title", placeholder="" maxlength=5 />
+        <input type="text" name="championship_title" placeholder="" maxlength=5 />
       </p>
       <input type="submit" value="Save" />
     </form>
