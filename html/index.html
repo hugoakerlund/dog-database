@@ -8,8 +8,10 @@
 <body>
     <h1>Welcome to the Dog Database!</h1>
     {% if session.get('username') %}
-        <p>You are logged in as {{ session.get('username') }}. <a href="/logout">Logout</a></p>
-        <p> <a href="/create_dog">Add a new dog to the database</a></p>
+        <p>You are logged in as {{ session.get('username') }}. <a href="/logout">Logout</a>
+           <a href="/create_dog">Add a new dog to the database</a> 
+           <a href="/my_dogs">My dogs</a> 
+        </p>
     {% else %}
     <p>login <a href="/login">here</a> or register <a href="/register">here</a>.</p>
     {% endif %}
