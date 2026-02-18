@@ -5,25 +5,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import db
 import config
+import dog
 
 app = Flask(__name__, template_folder=".")
 app.secret_key = config.SECRET_KEY
 
 @app.route("/")
 def index():
-    dogs = get_dogs()
+    dogs = dog.get_dogs()
     return render_template("html/index.html", dogs=dogs, session=session)
 
-def get_dogs():
-    sql = "SELECT * FROM dogs"
-    return db.query(sql)
-
-def get_breeds():
-    sql = "SELECT * FROM DogBreeds"
-    return db.query(sql)
-
 @app.route("/dog/<int:dog_id>")
-def dog(dog_id):
+def show_dog(dog_id):
     print("here")
     sql = "SELECT * FROM dogs WHERE id = ?"
     dog= db.query(sql, [dog_id])
@@ -33,7 +26,7 @@ def dog(dog_id):
 
 @app.route("/create_dog")
 def create_dog_form():
-    dog_breeds = get_breeds()
+    dog_breeds = dog.get_breeds()
     return render_template("html/create_dog.html", dog_breeds=dog_breeds)
 
 @app.route("/create_dog", methods=["POST"])
