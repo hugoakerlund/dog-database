@@ -11,6 +11,7 @@ CREATE TABLE Dogs (
   name TEXT,
   breed TEXT REFERENCES DogBreeds(name),
   born_date DATE,
+  death_date DATE,
   sex TEXT CHECK (sex IN ('M', 'F')),
   father_id TEXT REFERENCES Dogs(registration_number),
   mother_id TEXT REFERENCES Dogs(registration_number),
