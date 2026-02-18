@@ -12,13 +12,36 @@
     {% else %}
     <p>login <a href="/login">here</a> or register <a href="/register">here</a>.</p>
     {% endif %}
+  
+    <table>
+      <tr>
+        <th>Registration number</th>
+        <th>Name</th>
+        <th>Breed</th>
+        <th>Born</th>
+        <th>Sex</th>
+        <th>Father</th>
+        <th>Mother</th>
+        <th>Owner</th>
+        <th>Litters</th>
+        <th>Championship title</th>
+      </tr>
 
-    {% for dog in dogs %}
-        <a href="/dog/{{ dog.registration_number }}">View details</a>
-        <h2>{{ dog.registration_number }}</h2>
-        <p>Name: {{ dog.name }} Breed: {{ dog.breed }} Born: {{ dog.born_date }} 
-           Sex: {{ dog.sex }} Father {{ dog.father_id  }} Mother {{ dog.mother_id }} 
-           Owner {{ dog.owner_id }} Litters {{ dog.litters }} Championship Title {{ dog.championship_title }}</p>
-    {% endfor %}
+      {% for dog in dogs %}
+      <tr>
+          <td><a href="/dog/{{ dog.registration_number }}">{{ dog.registration_number }}</a></td>
+          <td>{{ dog.name }}</td>
+          <td>{{ dog.breed }}</td>
+          <td>{{ dog.born_date }}</td>
+          <td>{{ dog.sex }}</td>
+          <td>{{ dog.father_id  }}</td>
+          <td>{{ dog.mother_id }}</td>
+          <td>{{ dog.owner_id }}</td>
+          <td>{{ dog.litters }}</td>
+          <td>{{ dog.championship_title }}</td>
+      </tr>
+      {% endfor %}
+
+    </table>
 </body>
 </html>
