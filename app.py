@@ -1,7 +1,6 @@
 import sqlite3
-from flask import Flask
-from flask import session
-from flask import redirect, render_template, request, send_from_directory
+from flask import Flask, session, redirect, render_template, \
+                  request, send_from_directory, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 import db
@@ -22,10 +21,10 @@ def get_dogs():
 @app.route("/dog/<registration_number>")
 def dog(registration_number):
     sql = "SELECT * FROM dogs WHERE registration_number = ?"
-    result = db.query(sql, [registration_number])
-    if not result:
-        return "ERROR: dog not found"
-    return render_template("html/dog.html", dog=result[0])
+    dog= db.query(sql, [registration_number])
+    if not dog:
+        abort(404)
+    return render_template("html/dog.html", dog=dog[0])
 
 @app.route("/create_dog")
 def create_dog_form():
