@@ -23,7 +23,7 @@ def show_dog(dog_id):
     if not dog:
         abort(404)
     owner_id = dog[0][9]
-    username = user.get_user_with_id(owner_id)
+    username = user.get_username_with_id(owner_id)
     return render_template("html/dog.html", dog=dog[0], username=username[0][0])
 
 @app.route("/create_dog")
@@ -72,8 +72,11 @@ def login():
     password_hash = result[0][0]
     if not check_password_hash(password_hash, password):
         return "ERROR: invalid username or password"
+    
+    user_id = user.get_id_with_username(username)
 
     session["username"] = username
+    session["user_id"] = username
     return redirect("/")
 
 @app.route("/logout")

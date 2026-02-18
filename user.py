@@ -1,7 +1,7 @@
 from flask import abort
 import db
 
-def get_user_with_id(id):
+def get_username_with_id(id):
     sql = "SELECT username FROM Users WHERE id = ?"
     username = db.query(sql, [id])
     if not username:
