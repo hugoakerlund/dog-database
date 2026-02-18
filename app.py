@@ -6,6 +6,7 @@ import os
 import db
 import config
 import dog
+import user
 
 app = Flask(__name__, template_folder=".")
 app.secret_key = config.SECRET_KEY
@@ -17,12 +18,13 @@ def index():
 
 @app.route("/dog/<int:dog_id>")
 def show_dog(dog_id):
-    print("here")
     sql = "SELECT * FROM dogs WHERE id = ?"
-    dog= db.query(sql, [dog_id])
+    dog = db.query(sql, [dog_id])
     if not dog:
         abort(404)
-    return render_template("html/dog.html", dog=dog[0])
+    owner_id = dog[0][9]
+    username = user.get_user_with_id(owner_id)
+    return render_template("html/dog.html", dog=dog[0], username=username[0][0])
 
 @app.route("/create_dog")
 def create_dog_form():
