@@ -31,6 +31,12 @@ def create_dog_form():
     dog_breeds = dog.get_breeds()
     return render_template("html/create_dog.html", dog_breeds=dog_breeds)
 
+@app.route("/my_dogs")
+def show_my_dogs():
+    owner_id = session["user_id"]
+    my_dogs = dog.get_owners_dogs(owner_id)
+    return render_template("html/my_dogs.html", my_dogs=my_dogs)
+
 @app.route("/create_dog", methods=["POST"])
 def create_dog():
     registration_number = request.form["registration_number"]

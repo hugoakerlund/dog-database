@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Dogs</title>
+</head>
+
+<body>
+ 
+    {% if my_dogs %}
+
+    <p>
+      You have currently {{ my_dogs | count }} dog(s).
+    </p>
+    <table>
+      <tr>
+        <th>Registration number</th>
+        <th>Name</th>
+        <th>Breed</th>
+        <th>Born</th>
+        <th>Sex</th>
+        <th>Father</th>
+        <th>Mother</th>
+        <th>Owner</th>
+        <th>Litters</th>
+        <th>Championship title</th>
+      </tr>
+
+      {% for my_dog in my_dogs %}
+      <tr>
+          <td><a href="/dog/{{ my_dog.id}}">{{ my_dog.registration_number }}</a></td>
+          <td>{{ my_dog.name }}</td>
+          <td>{{ my_dog.breed }}</td>
+          <td>{{ my_dog.born_date }}</td>
+          <td>{{ my_dog.sex }}</td>
+          <td>{{ my_dog.father_id  }}</td>
+          <td>{{ my_dog.mother_id }}</td>
+          <td>{{ my_dog.owner_id }}</td>
+          <td>{{ my_dog.litters }}</td>
+          <td>{{ my_dog.championship_title }}</td>
+      </tr>
+      {% endfor %}
+    {% else %}
+    <p>
+      You don't have any dogs yet. Add your first dog <a href="/create_dog">here</a>.
+    </p>
+    {% endif %}
+
+    </table>
+</body>
+</html>
