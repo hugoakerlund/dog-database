@@ -9,6 +9,7 @@ CREATE TABLE Dogs (
   id INTEGER PRIMARY KEY,
   registration_number TEXT UNIQUE,
   name TEXT,
+  color TEXT,
   breed TEXT REFERENCES DogBreeds(name),
   born_date DATE,
   death_date DATE,

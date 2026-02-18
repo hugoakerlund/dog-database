@@ -22,7 +22,7 @@ def show_dog(dog_id):
     dog = db.query(sql, [dog_id])
     if not dog:
         abort(404)
-    owner_id = dog[0][9]
+    owner_id = dog[0][10]
     username = user.get_username_with_id(owner_id)
     return render_template("html/dog.html", dog=dog[0], username=username[0][0])
 
@@ -35,6 +35,7 @@ def create_dog_form():
 def create_dog():
     registration_number = request.form["registration_number"]
     name = request.form["name"]
+    color = request.form["color"]
     breed = request.form["breed"]
     born_date = request.form["born_date"]
     sex = request.form["sex"]
@@ -44,8 +45,8 @@ def create_dog():
         return "ERROR: all fields are required"
 
     try:
-        sql = "INSERT INTO Dogs (registration_number, name, breed, born_date, sex, owner_id) VALUES (?, ?, ?, ?, ?, ?)"
-        db.execute(sql, [registration_number, name, breed, born_date, sex, owner_id])
+        sql = "INSERT INTO Dogs (registration_number, name, color, breed, born_date, sex, owner_id) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        db.execute(sql, [registration_number, name, color, breed, born_date, sex, owner_id])
     except sqlite3.IntegrityError as e:
         print(e)
         return "ERROR: registration failed"
