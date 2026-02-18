@@ -18,6 +18,10 @@ def get_dogs():
     sql = "SELECT * FROM dogs"
     return db.query(sql)
 
+def get_breeds():
+    sql = "SELECT * FROM DogBreeds"
+    return db.query(sql)
+
 @app.route("/dog/<int:dog_id>")
 def dog(dog_id):
     print("here")
@@ -29,7 +33,8 @@ def dog(dog_id):
 
 @app.route("/create_dog")
 def create_dog_form():
-    return render_template("html/create_dog.html")
+    dog_breeds = get_breeds()
+    return render_template("html/create_dog.html", dog_breeds=dog_breeds)
 
 @app.route("/create_dog", methods=["POST"])
 def create_dog():
