@@ -29,7 +29,7 @@
 
       {% for dog in dogs %}
       <tr>
-          <td><a href="/dog/{{ dog.registration_number }}">{{ dog.registration_number }}</a></td>
+          <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
           <td>{{ dog.name }}</td>
           <td>{{ dog.breed }}</td>
           <td>{{ dog.born_date }}</td>

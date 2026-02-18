@@ -18,10 +18,11 @@ def get_dogs():
     sql = "SELECT * FROM dogs"
     return db.query(sql)
 
-@app.route("/dog/<registration_number>")
-def dog(registration_number):
-    sql = "SELECT * FROM dogs WHERE registration_number = ?"
-    dog= db.query(sql, [registration_number])
+@app.route("/dog/<int:dog_id>")
+def dog(dog_id):
+    print("here")
+    sql = "SELECT * FROM dogs WHERE id = ?"
+    dog= db.query(sql, [dog_id])
     if not dog:
         abort(404)
     return render_template("html/dog.html", dog=dog[0])
