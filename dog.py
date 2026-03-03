@@ -5,7 +5,7 @@ def get_dogs():
     return db.query(sql)
 
 def get_breeds():
-    sql = "SELECT * FROM DogBreeds"
+    sql = "SELECT * FROM Dog_breeds"
     return db.query(sql)
 
 def get_owners_dogs(owner_id):
