@@ -14,14 +14,14 @@ CREATE TABLE Dogs (
   birth_date DATE,
   death_date DATE,
   sex TEXT CHECK (sex IN ('M', 'F')),
-  father_id TEXT REFERENCES Dogs(registration_number),
-  mother_id TEXT REFERENCES Dogs(registration_number),
+  father_id TEXT REFERENCES Dogs(id),
+  mother_id TEXT REFERENCES Dogs(id),
   owner_id INTEGER REFERENCES Users(id),
   picture INTEGER REFERENCES Pictures(id),
   litters INTEGER REFERENCES Litters(id),
   championship_title INTEGER REFERENCES Championship_titles(id),
   best_test INTEGER CHECK (best_test IN (1, 2, 3, 4, 5)),
-  best_show TEXT,
+  best_show INTEGER REFERENCES Dog_shows(id),
   litter_score TEXT,
   score_trace TEXT,
   hip_index INTEGER,
@@ -52,7 +52,7 @@ CREATE TABLE Dog_shows (
 
 CREATE TABLE Litters (
   id INTEGER PRIMARY KEY,
-  father_id TEXT REFERENCES Dogs(registration_number),
-  mother_id TEXT REFERENCES Dogs(registration_number),
-  born_date DATE
+  father_id TEXT REFERENCES Dogs(id),
+  mother_id TEXT REFERENCES Dogs(id),
+  birth_date DATE
 );
