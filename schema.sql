@@ -9,6 +9,7 @@ CREATE TABLE Dogs (
   id INTEGER PRIMARY KEY,
   registration_number TEXT UNIQUE,
   name TEXT,
+  image BLOB,
   color TEXT,
   breed TEXT REFERENCES Dog_breeds(name),
   birth_date DATE,
@@ -17,8 +18,7 @@ CREATE TABLE Dogs (
   father_id TEXT REFERENCES Dogs(id),
   mother_id TEXT REFERENCES Dogs(id),
   owner_id INTEGER REFERENCES Users(id),
-  picture INTEGER REFERENCES Pictures(id),
-  litters INTEGER REFERENCES Litters(id),
+  litter INTEGER REFERENCES Litters(id),
   championship_title INTEGER REFERENCES Championship_titles(id),
   best_test INTEGER CHECK (best_test IN (1, 2, 3, 4, 5)),
   best_show INTEGER REFERENCES Dog_shows(id),
@@ -36,12 +36,6 @@ CREATE TABLE Championship_titles (
 CREATE TABLE Dog_breeds (
   id INTEGER PRIMARY KEY,
   name TEXT UNIQUE
-);
-
-CREATE TABLE Pictures (
-  id INTEGER PRIMARY KEY,
-  dog_id INTEGER REFERENCES Dogs(id),
-  url TEXT
 );
 
 CREATE TABLE Dog_shows (
