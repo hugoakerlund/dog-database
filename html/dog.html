@@ -47,7 +47,7 @@
     Best test: {{ dog.best_test }}
   </P>
   <p>
-    Best show: {{ dog.best_show }}
+    Best show: {{ best_show_name if best_show_name else "Unknown" }}
   </P>
   <p>
     Litter Score: {{ dog.litter_score }}
