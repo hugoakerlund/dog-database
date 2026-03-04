@@ -14,6 +14,11 @@ def get_championship_title(title_id):
     result = db.query(sql, [title_id])
     return result[0][0] if result else None
 
+def get_registration_number(dog_id):
+    sql = "SELECT registration_number FROM Dogs WHERE id = ?"
+    result = db.query(sql, [dog_id])
+    return result[0][0] if result else None
+
 def get_breeds():
     sql = "SELECT * FROM Dog_breeds"
     return db.query(sql)

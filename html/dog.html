@@ -29,10 +29,10 @@
     Sex: {{ dog.sex }}
   </P>
   <p>
-    Father: {{ dog.father_id }}
+    Father: {{ father_registration_number if father_registration_number else "Unknown" }}
   </P>
   <p>
-    Mother: {{ dog.mother_id}}
+    Mother: {{ mother_registration_number if mother_registration_number else "Unknown" }}
   </P>
   <p>
     Owner: {{ username }}
