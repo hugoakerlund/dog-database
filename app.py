@@ -24,7 +24,9 @@ def show_dog(dog_id):
         abort(404)
     owner_id = dog.get_owner_id(dog_id)
     username = user.get_username_with_id(owner_id)
-    return render_template("html/dog.html", dog=result[0], username=username[0][0])
+    championship_title_id = result[0][14]
+    championship_title = dog.get_championship_title(championship_title_id)
+    return render_template("html/dog.html", dog=result[0], username=username[0][0], championship_title=championship_title)
 
 @app.route("/create_dog")
 def create_dog_form():
