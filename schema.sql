@@ -46,6 +46,7 @@ CREATE TABLE Dog_shows (
 
 CREATE TABLE Litters (
   id INTEGER PRIMARY KEY,
+  name TEXT UNIQUE,
   father_id TEXT REFERENCES Dogs(id),
   mother_id TEXT REFERENCES Dogs(id),
   birth_date DATE
