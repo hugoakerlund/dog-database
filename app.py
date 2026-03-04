@@ -29,7 +29,8 @@ def show_dog(dog_id):
 def create_dog_form():
     require_login()
     dog_breeds = dog.get_breeds()
-    return render_template("html/create_dog.html", dog_breeds=dog_breeds)
+    championship_titles = dog.get_championship_titles()
+    return render_template("html/create_dog.html", dog_breeds=dog_breeds, championship_titles=championship_titles)
 
 @app.route("/my_dogs")
 def show_my_dogs():

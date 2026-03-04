@@ -56,8 +56,12 @@
         <input type="number" name="litters" placeholder="" maxlength=3 />
       </p>
       <p>
-        Championship title:
-        <input type="text" name="championship_title" placeholder="" maxlength=5 />
+        <label for="championship_title">Championship Title:</label>
+        <select name="championship_title" id="championship_title">
+          {% for championship_title in championship_titles %}
+          <option value="{{ championship_title.title }}">{{ championship_title.title }}</option>
+          {% endfor %}
+        </select> 
       </p>
       <input type="submit" value="Save" />
     </form>
