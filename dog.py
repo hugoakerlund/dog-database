@@ -13,3 +13,12 @@ def get_owners_dogs(owner_id):
     dogs = db.query(sql, [owner_id])
     return dogs
 
+def get_image(dog_id):
+    sql = "SELECT image FROM Dogs WHERE id = ?"
+    image = db.query(sql, [dog_id])
+    return image[0][0] if image else None
+
+def has_image(dog_id):
+    sql = "SELECT image FROM Dogs WHERE id = ?"
+    image = db.query(sql, [dog_id])
+    return bool(image and image[0][0])

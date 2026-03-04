@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, session, redirect, render_template, \
+from flask import Flask, make_response, session, redirect, render_template, \
                   request, send_from_directory, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
@@ -118,3 +118,26 @@ def create():
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'favicon.ico', mimetype='image/vnd.microsoft.icon')
+@app.route("/image/<int:dog_id>")
+def show_image(dog_id):
+    image = dog.get_image(dog_id)
+    if not image:
+        abort(404)
+
+    if isinstance(image, (bytes, bytearray, memoryview)):
+        data = bytes(image)
+        response = make_response(data)
+        response.headers.set("Content-Type", "image/jpeg")
+        return response
+
+    if isinstance(image, str):
+        pictures_dir = os.path.join(app.root_path, "static", "pictures")
+        return send_from_directory(pictures_dir, image)
+
+    try:
+        data = str(image).encode("utf-8")
+        response = make_response(data)
+        response.headers.set("Content-Type", "image/jpeg")
+        return response
+    except Exception:
+        abort(404)

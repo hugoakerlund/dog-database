@@ -3,6 +3,16 @@
   <p>
     Registration number: {{ dog.registration_number }}
   </P>
+  
+  {% if dog.image %}
+  <p>
+    Image: <img src="/image/{{ dog.id }}" alt="Dog Image" width="200" height="200">
+  </P>
+  {% else %}
+  <p>
+    No image available for this dog.
+  </P>
+  {% endif %}
   <p>
     Name: {{ dog.name }}
   </P>
