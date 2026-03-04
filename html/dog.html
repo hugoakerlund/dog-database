@@ -29,25 +29,24 @@
     Sex: {{ dog.sex }}
   </P>
   <p>
-    Father: {% if dog.father_id %}<a href="/dog/{{ dog.father_id }}">{{ father_registration_number if father_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
+    Father: {% if dog.father_id %}<a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number if dog.father_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
   </P>
   <p>
-    Mother: {% if dog.mother_id %}<a href="/dog/{{ dog.mother_id }}">{{ mother_registration_number if mother_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
+    Mother: {% if dog.mother_id %}<a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number if dog.mother_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
   </P>
   <p>
-    Owner: {{ username }}
+    Owner: {{ dog.owner_username }}
   </P>
   <p>
-    Litters: {{ dog.litters }}
-  </P>
+    Litter: {% if dog.litter_id%}<a href="/dog/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else "Unknown" }}</a>{% else %}Unknown{% endif %}  </P>
   <p>
-    Champion ship title: {{ championship_title }}
+    Championship title: {{ dog.championship_title }}
   </P>
   <p>
     Best test: {{ dog.best_test }}
   </P>
   <p>
-    Best show: {{ best_show_name if best_show_name else "Unknown" }}
+    Best show: {{ dog.best_show_name if dog.best_show_name else "Unknown" }}
   </P>
   <p>
     Litter Score: {{ dog.litter_score }}

@@ -26,7 +26,7 @@
         <th>Father</th>
         <th>Mother</th>
         <th>Owner</th>
-        <th>Litters</th>
+        <th>Litter</th>
         <th>Championship title</th>
       </tr>
 
@@ -51,8 +51,8 @@
               Unknown
             {% endif %}
           </td>
-          <td>{{ dog.owner_id }}</td>
-          <td>{{ dog.litter_id }}</td>
+          <td>{{ dog.owner_username }}</td>
+          <td>{{ dog.litter_name or "Unknown" }}</td>
           <td>{{ dog.championship_title }}</td>
       </tr>
       {% endfor %}
