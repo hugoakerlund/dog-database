@@ -27,17 +27,20 @@ def show_dog(dog_id):
 
 @app.route("/create_dog")
 def create_dog_form():
+    require_login()
     dog_breeds = dog.get_breeds()
     return render_template("html/create_dog.html", dog_breeds=dog_breeds)
 
 @app.route("/my_dogs")
 def show_my_dogs():
+    require_login()
     owner_id = session["user_id"]
     my_dogs = dog.get_owners_dogs(owner_id)
     return render_template("html/my_dogs.html", my_dogs=my_dogs)
 
 @app.route("/create_dog", methods=["POST"])
 def create_dog():
+    require_login()
     registration_number = request.form["registration_number"]
     name = request.form["name"]
     color = request.form["color"]
@@ -88,6 +91,7 @@ def login():
 @app.route("/logout")
 def logout():
     del session["username"]
+    del session["user_id"]
     return redirect("/")
 
 @app.route("/create", methods=["POST"])
@@ -140,3 +144,7 @@ def show_image(dog_id):
         return response
     except Exception:
         abort(404)
+
+def require_login():
+    if "user_id" not in session:
+        abort(403)
