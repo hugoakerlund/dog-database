@@ -4,6 +4,11 @@ def get_dogs():
     sql = "SELECT * FROM dogs"
     return db.query(sql)
 
+def get_owner_id(dog_id):
+    sql = "SELECT owner_id FROM Dogs WHERE id = ?"
+    result = db.query(sql, [dog_id])
+    return result[0][0] if result else None
+
 def get_breeds():
     sql = "SELECT * FROM Dog_breeds"
     return db.query(sql)
