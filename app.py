@@ -20,23 +20,10 @@ def index():
 
 @app.route("/dog/<int:dog_id>")
 def show_dog(dog_id):
-    sql = "SELECT * FROM Dogs WHERE id = ?"
-    result = db.query(sql, [dog_id])
+    result = dog.get_dog(dog_id)
     if not result:
         abort(404)
-    owner_id = dog.get_owner_id(dog_id)
-    username = user.get_username_with_id(owner_id)
-    father_id = result[0][10]
-    mother_id = result[0][11]
-    father_registration_number = dog.get_registration_number(father_id) if father_id else None
-    mother_registration_number = dog.get_registration_number(mother_id) if mother_id else None
-    championship_title_id = result[0][14]
-    championship_title = dog.get_championship_title(championship_title_id)
-    best_show_id = result[0][15]
-    best_show_name = dog.get_show_name(best_show_id) if best_show_id else None
-    return render_template("html/dog.html", dog=result[0], username=username[0][0], 
-                           championship_title=championship_title, father_registration_number=father_registration_number, 
-                           mother_registration_number=mother_registration_number, best_show_name=best_show_name)
+    return render_template("html/dog.html", dog=result)
 
 @app.route("/create_dog")
 def create_dog_form():
