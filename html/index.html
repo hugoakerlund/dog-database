@@ -37,10 +37,22 @@
           <td>{{ dog.breed }}</td>
           <td>{{ dog.birth_date }}</td>
           <td>{{ dog.sex }}</td>
-          <td>{{ dog.father_id  }}</td>
-          <td>{{ dog.mother_id }}</td>
+          <td>
+            {% if dog.father_id %}
+              <a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number or "Unknown" }}</a>
+            {% else %}
+              Unknown
+            {% endif %}
+          </td>
+          <td>
+            {% if dog.mother_id %}
+              <a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number or "Unknown" }}</a>
+            {% else %}
+              Unknown
+            {% endif %}
+          </td>
           <td>{{ dog.owner_id }}</td>
-          <td>{{ dog.litters }}</td>
+          <td>{{ dog.litter_id }}</td>
           <td>{{ dog.championship_title }}</td>
       </tr>
       {% endfor %}

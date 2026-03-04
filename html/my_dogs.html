@@ -32,8 +32,20 @@
           <td>{{ my_dog.breed }}</td>
           <td>{{ my_dog.birth_date }}</td>
           <td>{{ my_dog.sex }}</td>
-          <td>{{ my_dog.father_id  }}</td>
-          <td>{{ my_dog.mother_id }}</td>
+          <td>
+            {% if my_dog.father_id %}
+              <a href="/dog/{{ my_dog.father_id }}">{{ my_dog.father_registration_number or "Unknown" }}</a>
+            {% else %}
+              Unknown
+            {% endif %}
+          </td>
+          <td>
+            {% if my_dog.mother_id %}
+              <a href="/dog/{{ my_dog.mother_id }}">{{ my_dog.mother_registration_number or "Unknown" }}</a>
+            {% else %}
+              Unknown
+            {% endif %}
+          </td>
           <td>{{ my_dog.owner_id }}</td>
           <td>{{ my_dog.litters }}</td>
           <td>{{ my_dog.championship_title }}</td>

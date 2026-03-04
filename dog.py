@@ -1,7 +1,14 @@
 import db
 
 def get_dogs():
-    sql = "SELECT * FROM dogs"
+    sql = (
+        "SELECT d.*, "
+        "f.registration_number AS father_registration_number, "
+        "m.registration_number AS mother_registration_number "
+        "FROM Dogs d "
+        "LEFT JOIN Dogs f ON d.father_id = f.id "
+        "LEFT JOIN Dogs m ON d.mother_id = m.id"
+    )
     return db.query(sql)
 
 def get_owner_id(dog_id):
@@ -29,7 +36,15 @@ def get_breeds():
     return db.query(sql)
 
 def get_owners_dogs(owner_id):
-    sql = "SELECT * FROM Dogs WHERE owner_id = ?"
+    sql = (
+        "SELECT d.*, "
+        "f.registration_number AS father_registration_number, "
+        "m.registration_number AS mother_registration_number "
+        "FROM Dogs d "
+        "LEFT JOIN Dogs f ON d.father_id = f.id "
+        "LEFT JOIN Dogs m ON d.mother_id = m.id "
+        "WHERE d.owner_id = ?"
+    )
     dogs = db.query(sql, [owner_id])
     return dogs
 

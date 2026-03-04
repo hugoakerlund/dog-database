@@ -13,8 +13,10 @@ app.secret_key = config.SECRET_KEY
 
 @app.route("/")
 def index():
-    dogs = dog.get_dogs()
-    return render_template("html/index.html", dogs=dogs, session=session)
+    result = dog.get_dogs()
+    if not result:
+        abort(404)
+    return render_template("html/index.html", dogs=result, session=session)
 
 @app.route("/dog/<int:dog_id>")
 def show_dog(dog_id):
