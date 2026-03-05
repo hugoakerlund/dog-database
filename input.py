@@ -8,7 +8,7 @@ def validate_registration_number(registration_number):
     return True
 
 def validate_name(name):
-    return len(name) > 0 and len(name) <= 20 and \
+    return len(name) >= 2 and len(name) <= 20 and \
            all(c.isalpha() or c.isspace() for c in name)
 
 def validate_date(date_str):
