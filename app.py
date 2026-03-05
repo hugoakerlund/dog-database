@@ -73,6 +73,12 @@ def create_dog():
 
     if death_date and not dog.validate_date(death_date):
         return "ERROR: invalid death date format (must be YYYY-MM-DD)"
+    
+    if father_id and not dog.validate_registration_number(father_id):
+        return "ERROR: invalid father registration number format (must be 'FI12345/67')"
+
+    if mother_id and not dog.validate_registration_number(mother_id):
+        return "ERROR: invalid mother registration number format (must be 'FI12345/67')"
 
     if not image or not image.filename:
         return "ERROR: image is required"
