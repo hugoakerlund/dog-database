@@ -65,6 +65,9 @@ def create_dog():
     if not dog.validate_registration_number(registration_number):
         return "ERROR: invalid registration number format (must be 'FI12345/67')"
 
+    if not dog.validate_name(name):
+        return "ERROR: name must be between 2 and 20 characters"
+
     if not image or not image.filename:
         return "ERROR: image is required"
     

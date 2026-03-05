@@ -106,3 +106,7 @@ def validate_registration_number(registration_number):
        not registration_number[8:].isdigit():
         return False
     return True
+
+def validate_name(name):
+    return len(name) > 0 and len(name) <= 20 and \
+           all(c.isalpha() or c.isspace() for c in name)
