@@ -57,6 +57,11 @@ def get_registration_number(dog_id):
     result = db.query(sql, [dog_id])
     return result[0][0] if result else None
 
+def get_dog_id_by_registration_number(registration_number):
+    sql = "SELECT id FROM Dogs WHERE registration_number = ?"
+    result = db.query(sql, [registration_number])
+    return result[0][0] if result else None
+
 def get_show_name(show_id):
     sql = "SELECT name FROM Dog_shows WHERE id = ?"
     result = db.query(sql, [show_id])
