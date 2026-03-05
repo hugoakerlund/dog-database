@@ -67,6 +67,12 @@ def create_dog():
 
     if not dog.validate_name(name):
         return "ERROR: name must be between 2 and 20 characters"
+    
+    if not dog.validate_date(birth_date):
+        return "ERROR: invalid birth date format (must be YYYY-MM-DD)"
+
+    if death_date and not dog.validate_date(death_date):
+        return "ERROR: invalid death date format (must be YYYY-MM-DD)"
 
     if not image or not image.filename:
         return "ERROR: image is required"
