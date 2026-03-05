@@ -110,12 +110,9 @@ def create_dog():
             return f"ERROR: mother with registration number '{mother_id}' not found"
 
     try:
-        sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, 
-                                   birth_date, death_date, sex, father_id, mother_id, 
-                                   owner_id, championship_title_id) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-        db.execute(sql, [registration_number, name, image_data, color, breed, birth_date, 
-                         death_date, sex, father_dog_id, mother_dog_id, owner_id, championship_title_id])
+        params = [registration_number, name, image_data, color, breed, birth_date, 
+                         death_date, sex, father_dog_id, mother_dog_id, owner_id, championship_title_id]
+        dog.insert_dog(params)
     except sqlite3.IntegrityError as e:
         print(f"Database error: {e}")
         return "ERROR: registration failed (duplicate registration number or invalid references)"

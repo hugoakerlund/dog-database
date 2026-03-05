@@ -97,3 +97,10 @@ def has_image(dog_id):
 def delete_dog(dog_id):
     sql = "DELETE FROM Dogs WHERE id = ?"
     db.execute(sql, [dog_id])
+
+def insert_dog(params):
+        sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, 
+                                   birth_date, death_date, sex, father_id, mother_id, 
+                                   owner_id, championship_title_id) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+        db.execute(sql, params)
