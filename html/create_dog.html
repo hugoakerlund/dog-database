@@ -6,10 +6,14 @@
   </head>
 
   <body>
-    <form action="/create_dog" method="post">
+    <form action="/create_dog" method="post" enctype="multipart/form-data">
       <p>
         Registration number:
         <input type="text" name="registration_number" placeholder="Registration number" maxlength=10 required />
+      </p>
+      <p>
+        Add image:
+        <input type="file" name="image" accept=".jpg,.jpeg,.JPG,.JPEG" required />
       </p>
       <p>
         Name:
