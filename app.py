@@ -7,6 +7,7 @@ import db
 import config
 import dog
 import user
+import input
 
 app = Flask(__name__, template_folder=".")
 app.secret_key = config.SECRET_KEY
@@ -62,22 +63,22 @@ def create_dog():
     if not registration_number or not name or not breed or not birth_date or not sex:
         return "ERROR: registration number, name, breed, birth date, and sex are required"
     
-    if not dog.validate_registration_number(registration_number):
+    if not input.validate_registration_number(registration_number):
         return "ERROR: invalid registration number format (must be 'FI12345/67')"
 
-    if not dog.validate_name(name):
+    if not input.validate_name(name):
         return "ERROR: name must be between 2 and 20 characters"
     
-    if not dog.validate_date(birth_date):
+    if not input.validate_date(birth_date):
         return "ERROR: invalid birth date format (must be YYYY-MM-DD)"
 
-    if death_date and not dog.validate_date(death_date):
+    if death_date and not input.validate_date(death_date):
         return "ERROR: invalid death date format (must be YYYY-MM-DD)"
     
-    if father_id and not dog.validate_registration_number(father_id):
+    if father_id and not input.validate_registration_number(father_id):
         return "ERROR: invalid father registration number format (must be 'FI12345/67')"
 
-    if mother_id and not dog.validate_registration_number(mother_id):
+    if mother_id and not input.validate_registration_number(mother_id):
         return "ERROR: invalid mother registration number format (must be 'FI12345/67')"
 
     if not image or not image.filename:
