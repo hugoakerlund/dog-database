@@ -18,3 +18,6 @@ def validate_date(date_str):
     if not (year.isdigit() and month.isdigit() and day.isdigit()):
         return False
     return True
+
+def validate_email(email):
+    return "@" in email and "." in email

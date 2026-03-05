@@ -180,6 +180,12 @@ def create():
         return "ERROR: password must be atleast 8 characters long"
     password_hash = generate_password_hash(password1)
 
+    if not input.validate_name(username):
+        return "ERROR: username must be between 2 and 20 characters"
+
+    if not input.validate_email(email):
+        return "ERROR: invalid email address"
+
     try:
         sql = "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)"
         db.execute(sql, [username, email, password_hash])
