@@ -61,6 +61,9 @@ def create_dog():
 
     if not registration_number or not name or not breed or not birth_date or not sex:
         return "ERROR: registration number, name, breed, birth date, and sex are required"
+    
+    if not dog.validate_registration_number(registration_number):
+        return "ERROR: invalid registration number format (must be 'FI12345/67')"
 
     if not image or not image.filename:
         return "ERROR: image is required"

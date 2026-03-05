@@ -97,3 +97,12 @@ def has_image(dog_id):
 def delete_dog(dog_id):
     sql = "DELETE FROM Dogs WHERE id = ?"
     db.execute(sql, [dog_id])
+
+def validate_registration_number(registration_number):
+    if not len(registration_number) == 10 or \
+       not registration_number.startswith("FI") or \
+       not registration_number[2:7].isdigit() or \
+       not registration_number[7] == "/" or \
+       not registration_number[8:].isdigit():
+        return False
+    return True
