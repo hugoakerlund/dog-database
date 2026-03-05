@@ -102,6 +102,19 @@ def create_dog():
         return "ERROR: registration failed (duplicate registration number or invalid references)"
     return redirect("/")
 
+@app.route("/remove/<int:dog_id>", methods=["GET", "POST"])
+def remove(dog_id):
+    require_login()
+    if request.method == "GET":
+        dog_info = dog.get_dog(dog_id)
+        if not dog_info:
+            abort(404)
+        return render_template("html/remove.html", dog=dog_info)
+
+    elif request.method == "POST":
+        dog.delete_dog(dog_id)
+        return redirect("/my_dogs")
+
 @app.route("/register")
 def register():
     return render_template("html/register.html")
