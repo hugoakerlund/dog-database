@@ -167,9 +167,10 @@ def show_image(dog_id):
 @app.route("/user/<int:user_id>")
 def show_user(user_id):
     user_info = user.get_user(user_id)
+    users_dogs = user.get_users_dogs(user_id)
     if not user_info:
         abort(404, "ERROR: user not found")
-    return render_template("html/user.html", user=user_info)
+    return render_template("html/user.html", user=user_info, dogs=users_dogs)
 
 def require_login():
     if "user_id" not in session:

@@ -9,6 +9,25 @@ def get_user(user_id):
     result = db.query(sql, [user_id])
     return result[0] if result else None
 
+def get_users_dogs(user_id):
+    sql = (
+        "SELECT d.*, "
+        "f.registration_number AS father_registration_number, "
+        "m.registration_number AS mother_registration_number, "
+        "l.name AS litter_name, "
+        "o.username AS owner_username, "
+        "c.title AS championship_title "
+        "FROM Dogs d "
+        "LEFT JOIN Dogs f ON d.father_id = f.id "
+        "LEFT JOIN Dogs m ON d.mother_id = m.id "
+        "LEFT JOIN Litters l ON d.litter_id = l.id "
+        "LEFT JOIN Users o ON d.owner_id = o.id "
+        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id "
+        "WHERE d.owner_id = ?"
+    )
+    result = db.query(sql, [user_id])
+    return result
+
 def get_username_with_id(id):
     sql = "SELECT username FROM Users WHERE id = ?"
     username = db.query(sql, [id])
