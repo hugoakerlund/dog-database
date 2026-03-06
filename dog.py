@@ -119,3 +119,26 @@ def insert_dog(form):
             form["championship_title_id"]
         ]
         db.execute(sql, params)
+
+def update_dog(dog_id, form):
+    sql = """UPDATE Dogs 
+             SET registration_number = ?, name = ?, image = ?, color = ?, breed = ?, 
+                 birth_date = ?, death_date = ?, sex = ?, father_id = ?, mother_id = ?, 
+                 owner_id = ?, championship_title_id = ?
+             WHERE id = ?"""
+    params = [
+        form["registration_number"],
+        form["name"],
+        form["image_data"],
+        form["color"],
+        form["breed"],
+        form["birth_date"],
+        form["death_date"],
+        form["sex"],
+        form["father_dog_id"],
+        form["mother_dog_id"],
+        form["owner_id"],
+        form["championship_title_id"],
+        dog_id
+    ]
+    db.execute(sql, params)

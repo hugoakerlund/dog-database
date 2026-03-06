@@ -50,6 +50,17 @@ def create_dog():
         championship_titles = dog.get_championship_titles()
         return render_template("html/create_dog.html", dog_breeds=dog_breeds, championship_titles=championship_titles)
 
+@app.route("/update_dog/<int:dog_id>", methods=["POST"])
+def update_dog(dog_id):
+    require_login()
+    form = input.get_form_data(request)
+    try:
+        dog.update_dog(dog_id, form)
+    except sqlite3.IntegrityError as e:
+        print(f"Database error: {e}")
+        return "ERROR: update failed (duplicate registration number or invalid references)"
+    return redirect("/my_dogs")
+
 @app.route("/remove/<int:dog_id>", methods=["GET", "POST"])
 def remove(dog_id):
     require_login()
