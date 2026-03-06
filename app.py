@@ -96,20 +96,7 @@ def login_form():
 
 @app.route("/login", methods=["POST"])
 def login():
-    username = request.form["username"]
-    password = request.form["password"]
-
-    sql = "SELECT password_hash FROM Users WHERE username = ?"
-    result = db.query(sql, [username])
-    if not result:
-        return "ERROR: invalid username or password"
-
-    password_hash = result[0][0]
-    if not check_password_hash(password_hash, password):
-        return "ERROR: invalid username or password"
-    
-    user_id = user.get_id_with_username(username)
-
+    username, user_id = user.check_login(request)
     session["username"] = username
     session["user_id"] = user_id
     return redirect("/")
