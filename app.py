@@ -131,6 +131,16 @@ def remove(dog_id):
         dog.delete_dog(dog_id)
         return redirect("/my_dogs")
 
+@app.route("/edit/<int:dog_id>")
+def edit_form(dog_id):
+    require_login()
+    dog_info = dog.get_dog(dog_id)
+    if not dog_info:
+        abort(404)
+    dog_breeds = dog.get_breeds()
+    championship_titles = dog.get_championship_titles()
+    return render_template("html/edit.html", dog=dog_info, dog_breeds=dog_breeds, championship_titles=championship_titles)
+
 @app.route("/register")
 def register():
     return render_template("html/register.html")
