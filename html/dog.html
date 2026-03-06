@@ -38,7 +38,7 @@
     Owner: <a href="/user/{{ dog.owner_id }}">{{ dog.owner_username }}</a>
   </P>
   <p>
-    Litter: {% if dog.litter_id%}<a href="/dog/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else "Unknown" }}</a>{% else %}Unknown{% endif %}  </P>
+    Litter: {% if dog.litter_id%}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else "Unknown" }}</a>{% else %}Unknown{% endif %}  </P>
   <p>
     Championship title: {{ dog.championship_title }}
   </P>
