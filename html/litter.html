@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <p>
+        Name: {{ litter.name }}
+    </P>
+    <p>
+        Father: <a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number }}</a>
+    </P>
+    <p>
+        Mother: <a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number }}</a>
+    </P>
+    <p>
+        Birth date: {{ litter.birth_date }}
+    </P>
+    <p>
+        Dogs in {{ litter.name }}:
+    </P>
+    <table>
+        <tr>
+            <th>Registration number</th>
+            <th>Name</th>
+            <th>Breed</th>
+            <th>Born</th>
+            <th>Sex</th>
+            <th>Father</th>
+            <th>Mother</th>
+            <th>Owner</th>
+            <th>Litter</th>
+            <th>Championship title</th>
+        </tr>
+
+        {% for dog in dogs %}
+        <tr>
+            <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
+            <td>{{ dog.name }}</td>
+            <td>{{ dog.breed }}</td>
+            <td>{{ dog.birth_date }}</td>
+            <td>{{ dog.sex }}</td>
+            <td>
+                {% if dog.father_id %}
+                <a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number or "Unknown" }}</a>
+                {% else %}
+                Unknown
+                {% endif %}
+            </td>
+            <td>
+                {% if dog.mother_id %}
+                <a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number or "Unknown" }}</a>
+                {% else %}
+                Unknown
+                {% endif %}
+            </td>
+            <td><a href="/user/{{ dog.owner_id }}">{{ dog.owner_username }}</a></td>
+            <td>{{ dog.litter_name or "Unknown" }}</td>
+            <td>{{ dog.championship_title }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
+</body>
+</html>

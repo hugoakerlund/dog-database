@@ -8,6 +8,7 @@ import config
 import dog
 import user
 import input
+import litter
 
 app = Flask(__name__, template_folder=".")
 app.secret_key = config.SECRET_KEY
@@ -30,7 +31,7 @@ def show_dog(dog_id):
 def show_my_dogs():
     require_login()
     owner_id = session["user_id"]
-    my_dogs = dog.get_owners_dogs(owner_id)
+    my_dogs = user.get_users_dogs(owner_id)
     return render_template("html/my_dogs.html", my_dogs=my_dogs)
 
 @app.route("/create_dog", methods=["GET", "POST"])
@@ -171,6 +172,14 @@ def show_user(user_id):
     if not user_info:
         abort(404, "ERROR: user not found")
     return render_template("html/user.html", user=user_info, dogs=users_dogs)
+
+@app.route("/litter/<int:litter_id>")
+def show_litter(litter_id):
+    litter_info = litter.get_litter(litter_id)
+    dogs = litter.get_dogs_in_litter(litter_id)
+    if not litter_info:
+        abort(404, "ERROR: litter not found")
+    return render_template("html/litter.html", litter=litter_info, dogs=dogs)
 
 def require_login():
     if "user_id" not in session:
