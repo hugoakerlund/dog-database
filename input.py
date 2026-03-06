@@ -1,5 +1,6 @@
 from flask import session, abort
 import dog
+import litter
 
 def validate_registration_number(registration_number):
     if not len(registration_number) == 10 or \
@@ -25,6 +26,10 @@ def validate_date(date_str):
 def validate_email(email):
     return "@" in email and "." in email
 
+def validate_litter(litter_name):
+    return len(litter_name) >= 2 and len(litter_name) <= 20 and \
+           litter.get_litter_id_by_name(litter_name) is not None
+
 def validate_form_data(form):
     if not form["registration_number"] or not form["name"] or not form["breed"] or not \
         form["color"] or not form["birth_date"] or not form["sex"]:
@@ -47,6 +52,9 @@ def validate_form_data(form):
 
     if form["mother"] and not validate_registration_number(form["mother"]):
         abort(400, "ERROR: invalid mother registration number format (must be 'FI12345/67')")
+    
+    if form["litter"] and not validate_litter(form["litter"]):
+        abort(400, "ERROR: invalid litter name (must be between 2 and 20 characters)")
 
     if not form["image"] or not form["image"].filename:
         abort(400, "ERROR: image is required")
@@ -66,6 +74,7 @@ def get_form_data(request):
     form["sex"] = request.form.get("sex", "").strip()
     form["father"] = request.form.get("father", "").strip() or None # Field is optional
     form["mother"] = request.form.get("mother", "").strip() or None # Field is optional
+    form["litter"] = request.form.get("litter", "").strip() or None # Field is optional
     form["championship_title"] = request.form.get("championship_title", "").strip() or None
     form["owner_id"] = session["user_id"]
 
@@ -83,6 +92,11 @@ def get_form_data(request):
         form["mother_dog_id"] = dog.get_dog_id_by_registration_number(form["mother"])
         if not form["mother_dog_id"]:
             abort(400, f"ERROR: mother with registration number '{form['mother']}' not found")
+    
+    if form["litter"]:
+        form["litter_id"] = litter.get_litter_id_by_name(form["litter"])
+        if not form["litter_id"]:
+            abort(400, f"ERROR: litter with name '{form['litter']}' not found")
     
     form["image_data"] = form["image"].read()
     if len(form["image_data"]) > 100 * 1024:

@@ -13,6 +13,11 @@ def get_litter(litter_id):
     result = db.query(sql, [litter_id])
     return result[0] if result else None
 
+def get_litter_id_by_name(litter_name):
+    sql = "SELECT id FROM Litters WHERE name = ?"
+    result = db.query(sql, [litter_name])
+    return result[0]["id"] if result else None
+
 def get_dogs_in_litter(litter_id):
     sql = (
         "SELECT d.*, "
