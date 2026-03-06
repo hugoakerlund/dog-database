@@ -26,8 +26,9 @@ def validate_email(email):
     return "@" in email and "." in email
 
 def validate_form_data(form):
-    if not form["registration_number"] or not form["name"] or not form["breed"] or not form["birth_date"] or not form["sex"]:
-        abort(400, "ERROR: registration number, name, breed, birth date, and sex are required")
+    if not form["registration_number"] or not form["name"] or not form["breed"] or not \
+        form["color"] or not form["birth_date"] or not form["sex"]:
+        abort(400, "ERROR: registration number, name, breed, color, birth date, and sex are required")
     
     if not validate_registration_number(form["registration_number"]):
         abort(400, "ERROR: invalid registration number format (must be 'FI12345/67')")

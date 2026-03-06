@@ -4,6 +4,21 @@ import string
 import db
 from app import app
 
+colors = [
+'Brown', 
+'Chocolate', 
+'Liver',
+'Red',
+'Gold',
+'Yellow',
+'Cream',
+'Fawn',
+'Black',
+'Blue',
+'Gray',
+'Silver',
+'White']
+
 dog_breeds = [
 'Affenpinscher',
 'Afghan Hound',
@@ -114,7 +129,7 @@ def insert_random_dog(id):
         registration_number = "FI" + f"{id:05}" + "/" + year[2:]
         name = random.choice(dog_names)
         image = random.choice(pictures)
-        color = random.choice(["red", "brown", "black", "white"])
+        color = random.choice(colors)
         breed = random.choice(dog_breeds)
         birth_date = create_random_date()
         sex = random.choice(["M", "F"])
@@ -140,6 +155,12 @@ def insert_random_dog(id):
         db.execute(sql, [registration_number, name, image, color, breed, birth_date, 
                         sex, father_id, mother_id, owner_id, litter_id, championship_title_id, 
                         best_test, best_show_id, hip_index, use_index])
+
+def seed_table_colors():
+     sql = "INSERT INTO Colors (name) VALUES (?)"
+     for i in range(len(colors)):
+          color = colors[i]
+          db.execute(sql, [color])
     
 def seed_table_dog_shows():
      sql = "INSERT INTO Dog_shows (name, date) VALUES (?,?)"
@@ -162,6 +183,7 @@ def seed_table_championship_titles():
 
 with app.app_context():
     n = 100
+    seed_table_colors()
     seed_table_dog_breeds()
     seed_table_dog_shows()
     seed_table_championship_titles()

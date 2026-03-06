@@ -20,8 +20,12 @@
         <input type="text" name="name" maxlength=20 required />
       </p>
       <p>
-        Color:
-        <input type="text" name="color" maxlength=20 required />
+        <label for="color">Color:</label>
+        <select name="color" id="color">
+          {% for color in colors %}
+          <option value="{{ color.name }}">{{ color.name }}</option>
+          {% endfor %}
+        </select>
       </p>
       <p>
         <label for="breed">Breed:</label>

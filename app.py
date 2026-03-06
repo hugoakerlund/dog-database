@@ -46,9 +46,11 @@ def create_dog():
         return redirect("/")
 
     elif request.method == "GET":
+        colors = dog.get_colors()
         dog_breeds = dog.get_breeds()
         championship_titles = dog.get_championship_titles()
-        return render_template("html/create_dog.html", dog_breeds=dog_breeds, championship_titles=championship_titles)
+        return render_template("html/create_dog.html", colors=colors, dog_breeds=dog_breeds,
+                               championship_titles=championship_titles)
 
 @app.route("/update_dog/<int:dog_id>", methods=["POST"])
 def update_dog(dog_id):

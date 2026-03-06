@@ -10,7 +10,7 @@ CREATE TABLE Dogs (
   registration_number TEXT UNIQUE,
   name TEXT,
   image BLOB,
-  color TEXT,
+  color TEXT REFERENCES Colors(name),
   breed TEXT REFERENCES Dog_breeds(name),
   birth_date DATE,
   death_date DATE,
@@ -26,6 +26,11 @@ CREATE TABLE Dogs (
   score_trace TEXT,
   hip_index INTEGER,
   use_index INTEGER
+);
+
+CREATE TABLE Colors (
+  id INTEGER PRIMARY KEY,
+  name TEXT UNIQUE
 );
 
 CREATE TABLE Championship_titles (

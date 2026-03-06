@@ -67,6 +67,10 @@ def get_show_name(show_id):
     result = db.query(sql, [show_id])
     return result[0][0] if result else None
 
+def get_colors():
+    sql = "SELECT * FROM Colors"
+    return db.query(sql)
+
 def get_breeds():
     sql = "SELECT * FROM Dog_breeds"
     return db.query(sql)
