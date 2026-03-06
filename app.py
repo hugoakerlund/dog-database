@@ -16,14 +16,14 @@ app.secret_key = config.SECRET_KEY
 def index():
     result = dog.get_dogs()
     if not result:
-        abort(404)
+        abort(404, "ERROR: no dogs found")
     return render_template("html/index.html", dogs=result, session=session)
 
 @app.route("/dog/<int:dog_id>")
 def show_dog(dog_id):
     result = dog.get_dog(dog_id)
     if not result:
-        abort(404)
+        abort(404, "ERROR: dog not found")
     return render_template("html/dog.html", dog=result)
 
 @app.route("/my_dogs")
@@ -69,7 +69,7 @@ def remove(dog_id):
     if request.method == "GET":
         dog_info = dog.get_dog(dog_id)
         if not dog_info:
-            abort(404)
+            abort(404, "ERROR: dog not found")
         return render_template("html/remove.html", dog=dog_info)
 
     elif request.method == "POST":
@@ -81,7 +81,7 @@ def edit_form(dog_id):
     require_login()
     dog_info = dog.get_dog(dog_id)
     if not dog_info:
-        abort(404)
+        abort(404, "ERROR: dog not found")
     dog_breeds = dog.get_breeds()
     championship_titles = dog.get_championship_titles()
     return render_template("html/edit.html", dog=dog_info, dog_breeds=dog_breeds, championship_titles=championship_titles)
@@ -144,7 +144,7 @@ def favicon():
 def show_image(dog_id):
     image = dog.get_image(dog_id)
     if not image:
-        abort(404)
+        abort(404, "ERROR: image not found")
 
     if isinstance(image, (bytes, bytearray, memoryview)):
         data = bytes(image)
@@ -162,8 +162,8 @@ def show_image(dog_id):
         response.headers.set("Content-Type", "image/jpeg")
         return response
     except Exception:
-        abort(404)
+        abort(404, "ERROR: unable to display image")
 
 def require_login():
     if "user_id" not in session:
-        abort(403)
+        abort(403, "ERROR: login required")
