@@ -35,7 +35,7 @@
     Mother: {% if dog.mother_id %}<a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number if dog.mother_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
   </P>
   <p>
-    Owner: {{ dog.owner_username }}
+    Owner: <a href="/user/{{ dog.owner_id }}">{{ dog.owner_username }}</a>
   </P>
   <p>
     Litter: {% if dog.litter_id%}<a href="/dog/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else "Unknown" }}</a>{% else %}Unknown{% endif %}  </P>

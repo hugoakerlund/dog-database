@@ -51,7 +51,7 @@
               Unknown
             {% endif %}
           </td>
-          <td>{{ dog.owner_username }}</td>
+          <td><a href="/user/{{ dog.owner_id }}">{{ dog.owner_username }}</a></td>
           <td>{{ dog.litter_name or "Unknown" }}</td>
           <td>{{ dog.championship_title }}</td>
       </tr>

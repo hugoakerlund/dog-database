@@ -164,6 +164,13 @@ def show_image(dog_id):
     except Exception:
         abort(404, "ERROR: unable to display image")
 
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user_info = user.get_user(user_id)
+    if not user_info:
+        abort(404, "ERROR: user not found")
+    return render_template("html/user.html", user=user_info)
+
 def require_login():
     if "user_id" not in session:
         abort(403, "ERROR: login required")

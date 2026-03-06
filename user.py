@@ -3,6 +3,12 @@ from werkzeug.security import check_password_hash
 import db
 import user
 
+
+def get_user(user_id):
+    sql = "SELECT * FROM Users WHERE id = ?"
+    result = db.query(sql, [user_id])
+    return result[0] if result else None
+
 def get_username_with_id(id):
     sql = "SELECT username FROM Users WHERE id = ?"
     username = db.query(sql, [id])
