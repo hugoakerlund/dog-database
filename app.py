@@ -26,13 +26,6 @@ def show_dog(dog_id):
         abort(404)
     return render_template("html/dog.html", dog=result)
 
-@app.route("/create_dog")
-def create_dog_form():
-    require_login()
-    dog_breeds = dog.get_breeds()
-    championship_titles = dog.get_championship_titles()
-    return render_template("html/create_dog.html", dog_breeds=dog_breeds, championship_titles=championship_titles)
-
 @app.route("/my_dogs")
 def show_my_dogs():
     require_login()
@@ -40,18 +33,22 @@ def show_my_dogs():
     my_dogs = dog.get_owners_dogs(owner_id)
     return render_template("html/my_dogs.html", my_dogs=my_dogs)
 
-@app.route("/create_dog", methods=["POST"])
+@app.route("/create_dog", methods=["GET", "POST"])
 def create_dog():
     require_login()
+    if request.method == "POST":
+        form = input.get_form_data(request)
+        try:
+            dog.insert_dog(form)
+        except sqlite3.IntegrityError as e:
+            print(f"Database error: {e}")
+            return "ERROR: registration failed (duplicate registration number or invalid references)"
+        return redirect("/")
 
-    form = input.get_form_data(request)
-
-    try:
-        dog.insert_dog(form)
-    except sqlite3.IntegrityError as e:
-        print(f"Database error: {e}")
-        return "ERROR: registration failed (duplicate registration number or invalid references)"
-    return redirect("/")
+    elif request.method == "GET":
+        dog_breeds = dog.get_breeds()
+        championship_titles = dog.get_championship_titles()
+        return render_template("html/create_dog.html", dog_breeds=dog_breeds, championship_titles=championship_titles)
 
 @app.route("/remove/<int:dog_id>", methods=["GET", "POST"])
 def remove(dog_id):
