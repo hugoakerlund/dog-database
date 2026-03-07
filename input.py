@@ -1,8 +1,10 @@
 from flask import session, abort
+from werkzeug.security import generate_password_hash, check_password_hash
 import dog
 import litter
+import user
 
-def validate_registration_number(registration_number):
+def check_registration_number(registration_number):
     if not len(registration_number) == 10 or \
        not registration_number.startswith("FI") or \
        not registration_number[2:7].isdigit() or \
@@ -11,11 +13,11 @@ def validate_registration_number(registration_number):
         return False
     return True
 
-def validate_name(name):
+def check_name(name):
     return len(name) >= 2 and len(name) <= 20 and \
            all(c.isalpha() or c.isspace() for c in name)
 
-def validate_date(date_str):
+def check_date(date_str):
     if not len(date_str) == 10 or date_str[4] != "-" or date_str[7] != "-":
         return False
     year, month, day = date_str.split("-")
@@ -23,37 +25,34 @@ def validate_date(date_str):
         return False
     return True
 
-def validate_email(email):
-    return "@" in email and "." in email
-
-def validate_litter(litter_name):
+def check_litter(litter_name):
     return len(litter_name) >= 2 and len(litter_name) <= 20 and \
            litter.get_litter_id_by_name(litter_name) is not None
 
-def validate_form_data(form):
+def check_form_data(form):
     if not form["registration_number"] or not form["name"] or not form["breed"] or not \
         form["color"] or not form["birth_date"] or not form["sex"]:
         abort(400, "ERROR: registration number, name, breed, color, birth date, and sex are required")
     
-    if not validate_registration_number(form["registration_number"]):
+    if not check_registration_number(form["registration_number"]):
         abort(400, "ERROR: invalid registration number format (must be 'FI12345/67')")
 
-    if not validate_name(form["name"]):
+    if not check_name(form["name"]):
         abort(400, "ERROR: name must be between 2 and 20 characters")
     
-    if not validate_date(form["birth_date"]):
+    if not check_date(form["birth_date"]):
         abort(400, "ERROR: invalid birth date format (must be YYYY-MM-DD)")
 
-    if form["death_date"] and not validate_date(form["death_date"]):
+    if form["death_date"] and not check_date(form["death_date"]):
         abort(400, "ERROR: invalid death date format (must be YYYY-MM-DD)")
     
-    if form["father"] and not validate_registration_number(form["father"]):
+    if form["father"] and not check_registration_number(form["father"]):
         abort(400, "ERROR: invalid father registration number format (must be 'FI12345/67')")
 
-    if form["mother"] and not validate_registration_number(form["mother"]):
+    if form["mother"] and not check_registration_number(form["mother"]):
         abort(400, "ERROR: invalid mother registration number format (must be 'FI12345/67')")
     
-    if form["litter"] and not validate_litter(form["litter"]):
+    if form["litter"] and not check_litter(form["litter"]):
         abort(400, "ERROR: invalid litter name (must be between 2 and 20 characters)")
 
     if not form["image"] or not form["image"].filename:
@@ -62,7 +61,7 @@ def validate_form_data(form):
     if not form["image"].filename.lower().endswith(('.jpg', '.jpeg')):
         abort(400, "ERROR: only .jpg and .jpeg images are allowed")
 
-def get_form_data(request):
+def get_dog_creation_form_data(request):
     form = {}
     form["registration_number"] = request.form.get("registration_number", "").strip()
     form["name"] = request.form.get("name", "").strip()
@@ -102,5 +101,52 @@ def get_form_data(request):
     if len(form["image_data"]) > 100 * 1024:
         abort(400, "ERROR: image size must be less than 100KB")
     
-    validate_form_data(form)
+    check_form_data(form)
     return form
+
+def check_registration_form_data(form):
+    if not form["username"] or not form["email"] or not form["password1"] or not form["password2"]:
+        abort(400, "ERROR: all fields are required")
+    if form["password1"] != form["password2"]:
+        abort(400, "ERROR: passwords do not match")
+    if len(form["password1"]) < 8:
+        abort(400, "ERROR: password must be atleast 8 characters long")
+    if not check_name(form["username"]):
+        abort(400, "ERROR: username must be between 2 and 20 characters")
+    if not check_email(form["email"]):
+        abort(400, "ERROR: invalid email address")
+    form["password_hash"] = generate_password_hash(form["password1"])
+
+def get_account_registration_form_data(request):
+    form = {}
+    form["username"] = request.form.get("username", "").strip()
+    form["email"] = request.form.get("email", "").strip()
+    form["password1"] = request.form.get("password1", "")
+    form["password2"] = request.form.get("password2", "")
+    check_registration_form_data(form)
+    return form
+
+def check_username(username):
+    result = user.get_id_with_username(username)
+    if not result:
+        abort(400, "ERROR: Invalid username or password")
+    return True
+
+def check_email(email):
+    return email.count("@") == 1 and email.count(".") == 1 and \
+           email.index("@") < email.rindex(".") and email.index("@") > 0 and \
+           email.rindex(".") < len(email) - 1
+
+def check_password(password, username):
+    result = user.get_password_hash(username) 
+    if not result or not check_password_hash(result, password):
+        abort(400, "ERROR: Invalid username or password")
+    return True
+
+def check_login(request):
+    username = request.form.get("username", "").strip()
+    password = request.form.get("password", "").strip()
+    check_username(username)
+    check_password(password, username)
+    user_id = user.get_id_with_username(username)
+    return user_id, username

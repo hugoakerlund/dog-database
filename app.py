@@ -1,9 +1,7 @@
 import sqlite3
 from flask import Flask, make_response, session, redirect, render_template, \
-                  request, send_from_directory, abort
-from werkzeug.security import generate_password_hash, check_password_hash
+                  request, send_from_directory, abort, flash
 import os
-import db
 import config
 import dog
 import user
@@ -38,7 +36,7 @@ def show_my_dogs():
 def create_dog():
     require_login()
     if request.method == "POST":
-        form = input.get_form_data(request)
+        form = input.get_dog_creation_form_data(request)
         try:
             dog.insert_dog(form)
         except sqlite3.IntegrityError as e:
@@ -56,7 +54,7 @@ def create_dog():
 @app.route("/update_dog/<int:dog_id>", methods=["POST"])
 def update_dog(dog_id):
     require_login()
-    form = input.get_form_data(request)
+    form = input.get_dog_creation_form_data(request)
     try:
         dog.update_dog(dog_id, form)
     except sqlite3.IntegrityError as e:
@@ -85,7 +83,8 @@ def edit_form(dog_id):
         abort(404, "ERROR: dog not found")
     dog_breeds = dog.get_breeds()
     championship_titles = dog.get_championship_titles()
-    return render_template("html/edit.html", dog=dog_info, dog_breeds=dog_breeds, championship_titles=championship_titles)
+    return render_template("html/edit.html", dog=dog_info, dog_breeds=dog_breeds,
+                           championship_titles=championship_titles)
 
 @app.route("/register")
 def register():
@@ -97,44 +96,25 @@ def login_form():
 
 @app.route("/login", methods=["POST"])
 def login():
-    username, user_id = user.check_login(request)
-    session["username"] = username
-    session["user_id"] = user_id
+    user_id, username = user.check_login(request)
+    set_session(user_id, username)
     return redirect("/")
 
 @app.route("/logout")
 def logout():
-    del session["username"]
     del session["user_id"]
+    del session["username"]
     return redirect("/")
 
 @app.route("/create", methods=["POST"])
 def create():
-    username = request.form["username"]
-    email = request.form["email"]
-    password1 = request.form["password1"]
-    password2 = request.form["password2"]
-
-    if not username or not email or not password1 or not password2:
-        return "ERROR: all fields are required"
-    if password1 != password2:
-        return "ERROR: passwords do not match"
-    elif len(password1) < 8:
-        return "ERROR: password must be atleast 8 characters long"
-    password_hash = generate_password_hash(password1)
-
-    if not input.validate_name(username):
-        return "ERROR: username must be between 2 and 20 characters"
-
-    if not input.validate_email(email):
-        return "ERROR: invalid email address"
-
+    form = input.get_account_registration_form_data(request)
     try:
-        sql = "INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)"
-        db.execute(sql, [username, email, password_hash])
+        user.insert_user(form)
+        flash("Account created successfully!", "success")
     except sqlite3.IntegrityError:
         return "ERROR: username or email already exists"
-
+    set_session(user.get_id_with_username(form["username"]), form["username"])
     return redirect("/")
 
 @app.route('/favicon.ico')
@@ -184,3 +164,7 @@ def show_litter(litter_id):
 def require_login():
     if "user_id" not in session:
         abort(403, "ERROR: login required")
+
+def set_session(user_id, username):
+    session["user_id"] = user_id
+    session["username"] = username

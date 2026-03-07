@@ -1,7 +1,5 @@
 from flask import abort
-from werkzeug.security import check_password_hash
 import db
-import user
 
 
 def get_user(user_id):
@@ -49,22 +47,6 @@ def get_password_hash(username):
         abort(404, "ERROR: invalid username or password")
     return result[0][0]
 
-def check_username(username):
-    result = user.get_id_with_username(username)
-    if not result:
-        abort(400, "ERROR: Invalid username or password")
-    return True
-
-def check_password(password, username):
-    result = user.get_password_hash(username) 
-    if not result or not check_password_hash(result, password):
-        abort(400, "ERROR: Invalid username or password")
-    return True
-
-def check_login(request):
-    username = request.form.get("username", "").strip()
-    password = request.form.get("password", "").strip()
-    check_username(username)
-    check_password(password, username)
-    user_id = user.get_id_with_username(username)
-    return username, user_id
+def insert_user(form):
+    sql = "INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)"
+    db.execute(sql, [form["username"], form["email"], form["password_hash"]])
