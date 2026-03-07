@@ -161,6 +161,11 @@ def show_litter(litter_id):
         abort(404, "ERROR: litter not found")
     return render_template("html/litter.html", litter=litter_info, dogs=dogs)
 
+@app.route("/litters")
+def show_litters():
+    litters = litter.get_all_litters()
+    return render_template("html/litters.html", litters=litters)
+
 def require_login():
     if "user_id" not in session:
         abort(403, "ERROR: login required")
