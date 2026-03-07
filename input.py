@@ -72,16 +72,17 @@ def get_dog_creation_form_data(request):
     form["date_of_death"] = request.form.get("date_of_death", "").strip() or None # Field is optional
     form["sex"] = request.form.get("sex", "").strip()
     form["father"] = request.form.get("father", "").strip() or None # Field is optional
+    form["father_dog_id"] = None
     form["mother"] = request.form.get("mother", "").strip() or None # Field is optional
+    form["mother_dog_id"] = None
     form["litter"] = request.form.get("litter", "").strip() or None # Field is optional
+    form["litter_id"] = None
     form["championship_title"] = request.form.get("championship_title", "").strip() or None
     form["owner_id"] = session["user_id"]
 
     if form["championship_title"]:
         form["championship_title_id"] = dog.get_championship_title_id(form["championship_title"])
 
-    form["father_dog_id"] = None
-    form["mother_dog_id"] = None
     if form["father"]:
         form["father_dog_id"] = dog.get_dog_id_by_registration_number(form["father"])
         if not form["father_dog_id"]:
