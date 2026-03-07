@@ -96,7 +96,7 @@ def login_form():
 
 @app.route("/login", methods=["POST"])
 def login():
-    user_id, username = user.check_login(request)
+    user_id, username = input.check_login(request)
     set_session(user_id, username)
     return redirect("/")
 
