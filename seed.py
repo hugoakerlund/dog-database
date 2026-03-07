@@ -76,6 +76,7 @@ dog_shows = [
 ('Winter Dog Show', '2024-12-05')]
 
 championship_titles = [
+"None", # No title
 "Exc", # Excellent
 "VG", # Very Good
 "G", # Good
