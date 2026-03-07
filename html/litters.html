@@ -11,7 +11,7 @@
         </tr>
         {% for litter in litters %}
         <tr>
-            <td><a href="/litter/{{ litter.name }}">{{ litter.name }}</a></td>
+            <td><a href="/litter/{{ litter.id }}">{{ litter.name }}</a></td>
             <td><a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number or "Unknown" }}</a></td>
             <td><a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number or "Unknown" }}</a></td>
             <td>{{ litter.date_of_birth }}</td>
