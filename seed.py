@@ -119,9 +119,9 @@ def insert_random_user(id):
 
 def create_litter(id, father_id, mother_id):
         name = "test_litter_" + str(id)
-        birth_date = create_random_date()
-        sql = "INSERT INTO Litters (id, name, father_id, mother_id, birth_date) VALUES (?, ?, ?, ?, ?)"
-        db.execute(sql, [id, name, father_id, mother_id, birth_date])
+        date_of_birth = create_random_date()
+        sql = "INSERT INTO Litters (id, name, father_id, mother_id, date_of_birth) VALUES (?, ?, ?, ?, ?)"
+        db.execute(sql, [id, name, father_id, mother_id, date_of_birth])
 
 
 def insert_random_dog(id):
@@ -131,7 +131,7 @@ def insert_random_dog(id):
         image = random.choice(pictures)
         color = random.choice(colors)
         breed = random.choice(dog_breeds)
-        birth_date = create_random_date()
+        date_of_birth = create_random_date()
         sex = random.choice(["M", "F"])
         father_id = random.randint(1, id - 1) if id > 2 else None
         mother_id = random.randint(1, id - 1) if id > 2 else None
@@ -148,11 +148,11 @@ def insert_random_dog(id):
         hip_index = random.randint(0,100)
         use_index = random.randint(0,100)
 
-        sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, birth_date, 
+        sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, date_of_birth, 
                                    sex, father_id, mother_id, owner_id, litter_id, championship_title_id, 
                                    best_test, best_show_id, hip_index, use_index) 
                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-        db.execute(sql, [registration_number, name, image, color, breed, birth_date, 
+        db.execute(sql, [registration_number, name, image, color, breed, date_of_birth, 
                         sex, father_id, mother_id, owner_id, litter_id, championship_title_id, 
                         best_test, best_show_id, hip_index, use_index])
 

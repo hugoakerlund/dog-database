@@ -104,7 +104,7 @@ def delete_dog(dog_id):
 
 def insert_dog(form):
         sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, 
-                                   birth_date, death_date, sex, father_id, mother_id, 
+                                   date_of_birth, date_of_death, sex, father_id, mother_id, 
                                    litter_id, owner_id, championship_title_id) 
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
         
@@ -114,8 +114,8 @@ def insert_dog(form):
             form["image_data"],
             form["color"],
             form["breed"],
-            form["birth_date"],
-            form["death_date"],
+            form["date_of_birth"],
+            form["date_of_death"],
             form["sex"],
             form["father_dog_id"],
             form["mother_dog_id"],
@@ -128,7 +128,7 @@ def insert_dog(form):
 def update_dog(dog_id, form):
     sql = """UPDATE Dogs 
              SET registration_number = ?, name = ?, image = ?, color = ?, breed = ?, 
-                 birth_date = ?, death_date = ?, sex = ?, father_id = ?, mother_id = ?, 
+                 date_of_birth = ?, date_of_death = ?, sex = ?, father_id = ?, mother_id = ?, 
                  litter_id = ?, owner_id = ?, championship_title_id = ?
              WHERE id = ?"""
     params = [
@@ -137,8 +137,8 @@ def update_dog(dog_id, form):
         form["image_data"],
         form["color"],
         form["breed"],
-        form["birth_date"],
-        form["death_date"],
+        form["date_of_birth"],
+        form["date_of_death"],
         form["sex"],
         form["father_dog_id"],
         form["mother_dog_id"],

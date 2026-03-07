@@ -12,8 +12,8 @@ CREATE TABLE Dogs (
   image BLOB,
   color TEXT REFERENCES Colors(name),
   breed TEXT REFERENCES Dog_breeds(name),
-  birth_date DATE,
-  death_date DATE,
+  date_of_birth DATE,
+  date_of_death DATE,
   sex TEXT CHECK (sex IN ('M', 'F')),
   father_id TEXT REFERENCES Dogs(id),
   mother_id TEXT REFERENCES Dogs(id),
@@ -54,5 +54,5 @@ CREATE TABLE Litters (
   name TEXT UNIQUE,
   father_id TEXT REFERENCES Dogs(id),
   mother_id TEXT REFERENCES Dogs(id),
-  birth_date DATE
+  date_of_birth DATE
 );

@@ -31,7 +31,7 @@ def check_litter(litter_name):
 
 def check_form_data(form):
     if not form["registration_number"] or not form["name"] or not form["breed"] or not \
-        form["color"] or not form["birth_date"] or not form["sex"]:
+        form["color"] or not form["date_of_birth"] or not form["sex"]:
         abort(400, "ERROR: registration number, name, breed, color, birth date, and sex are required")
     
     if not check_registration_number(form["registration_number"]):
@@ -40,10 +40,10 @@ def check_form_data(form):
     if not check_name(form["name"]):
         abort(400, "ERROR: name must be between 2 and 20 characters")
     
-    if not check_date(form["birth_date"]):
+    if not check_date(form["date_of_birth"]):
         abort(400, "ERROR: invalid birth date format (must be YYYY-MM-DD)")
 
-    if form["death_date"] and not check_date(form["death_date"]):
+    if form["date_of_death"] and not check_date(form["date_of_death"]):
         abort(400, "ERROR: invalid death date format (must be YYYY-MM-DD)")
     
     if form["father"] and not check_registration_number(form["father"]):
@@ -68,8 +68,8 @@ def get_dog_creation_form_data(request):
     form["image"] = request.files.get("image")
     form["color"] = request.form.get("color", "").strip()
     form["breed"] = request.form.get("breed", "").strip()
-    form["birth_date"] = request.form.get("birth_date", "").strip()
-    form["death_date"] = request.form.get("death_date", "").strip() or None # Field is optional
+    form["date_of_birth"] = request.form.get("date_of_birth", "").strip()
+    form["date_of_death"] = request.form.get("date_of_death", "").strip() or None # Field is optional
     form["sex"] = request.form.get("sex", "").strip()
     form["father"] = request.form.get("father", "").strip() or None # Field is optional
     form["mother"] = request.form.get("mother", "").strip() or None # Field is optional
