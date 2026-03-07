@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Add a litter to the database</title>
+  </head>
+
+  <body>
+    <form action="/create_litter" method="post">
+      <p>
+        Name:
+        <input type="text" name="name" maxlength=20 required />
+      </p>
+      <p>
+        Father:
+        <input type="text" name="father" placeholder="Registration number" maxlength=10 />
+      </p>
+      <p>
+        Mother:
+        <input type="text" name="mother" placeholder="Registration number" maxlength=10 />
+      </p>
+      <p>
+        Date of birth:
+        <input type="date" name="date_of_birth" value="yyyy/mm/dd" required />
+      </p>
+      <input type="submit" value="Save" />
+    </form>
+  </body>
+</html>

@@ -105,6 +105,33 @@ def get_dog_creation_form_data(request):
     check_form_data(form)
     return form
 
+def check_litter_creation_form_data(form):
+    if not form["name"] or not form["date_of_birth"] or not form["father_id"] or not form["mother_id"]:
+        abort(400, "ERROR: All fields are required")
+    
+    if not check_name(form["name"]):
+        abort(400, "ERROR: litter name must be between 2 and 20 characters")
+    
+    if not check_date(form["date_of_birth"]):
+        abort(400, "ERROR: invalid birth date format (must be YYYY-MM-DD)")
+
+    if  not check_registration_number(form["father"]):
+        abort(400, "ERROR: invalid father registration number format (must be 'FI12345/67')")
+
+    if not check_registration_number(form["mother"]):
+        abort(400, "ERROR: invalid mother registration number format (must be 'FI12345/67')")
+
+def get_litter_creation_form_data(request):
+    form = {}
+    form["name"] = request.form.get("name", "").strip()
+    form["father"] = request.form.get("father", "").strip() or None
+    form["father_id"] = dog.get_dog_id_by_registration_number(form["father"])
+    form["mother"] = request.form.get("mother", "").strip() or None
+    form["mother_id"] = dog.get_dog_id_by_registration_number(form["mother"])
+    form["date_of_birth"] = request.form.get("date_of_birth", "").strip()
+    check_litter_creation_form_data(form)
+    return form
+
 def check_registration_form_data(form):
     if not form["username"] or not form["email"] or not form["password1"] or not form["password2"]:
         abort(400, "ERROR: all fields are required")

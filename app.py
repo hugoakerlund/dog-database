@@ -51,6 +51,21 @@ def create_dog():
         return render_template("html/create_dog.html", colors=colors, dog_breeds=dog_breeds,
                                championship_titles=championship_titles)
 
+@app.route("/create_litter", methods=["GET", "POST"])
+def create_litter():
+    require_login()
+    if request.method == "POST":
+        form = input.get_litter_creation_form_data(request)
+        try:
+            litter.insert_litter(form)
+        except sqlite3.IntegrityError as e:
+            print(f"Database error: {e}")
+            return "ERROR: registration failed (duplicate litter name or invalid references)"
+        return redirect("/litters")
+
+    elif request.method == "GET":
+        return render_template("html/create_litter.html")
+
 @app.route("/update_dog/<int:dog_id>", methods=["POST"])
 def update_dog(dog_id):
     require_login()

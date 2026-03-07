@@ -48,3 +48,10 @@ def get_dogs_in_litter(litter_id):
     )
     result = db.query(sql, [litter_id])
     return result
+
+def insert_litter(form):
+    sql = (
+        "INSERT INTO Litters (name, father_id, mother_id, date_of_birth) "
+        "VALUES (?, ?, ?, ?)"
+    )
+    db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"]])
