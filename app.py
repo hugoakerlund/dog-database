@@ -7,6 +7,7 @@ import dog
 import user
 import input
 import litter
+import secrets
 
 app = Flask(__name__, template_folder=".")
 app.secret_key = config.SECRET_KEY
@@ -36,6 +37,7 @@ def show_my_dogs():
 def create_dog():
     require_login()
     if request.method == "POST":
+        check_csrf()
         form = input.get_dog_creation_form_data(request)
         try:
             dog.insert_dog(form)
@@ -55,6 +57,7 @@ def create_dog():
 def create_litter():
     require_login()
     if request.method == "POST":
+        check_csrf()
         form = input.get_litter_creation_form_data(request)
         try:
             litter.insert_litter(form)
@@ -87,6 +90,7 @@ def remove(dog_id):
         return render_template("html/remove.html", dog=dog_info)
 
     elif request.method == "POST":
+        check_csrf()
         dog.delete_dog(dog_id)
         return redirect("/my_dogs")
 
@@ -185,6 +189,13 @@ def require_login():
     if "user_id" not in session:
         abort(403, "ERROR: login required")
 
+def check_csrf():
+    print(f"Request CSRF token: {request.form.get('csrf_token')}")
+    print(f"Session CSRF token: {session.get('csrf_token')}")
+    if request.form.get("csrf_token") != session.get("csrf_token"):
+        abort(403, "ERROR: invalid CSRF token")
+
 def set_session(user_id, username):
     session["user_id"] = user_id
     session["username"] = username
+    session["csrf_token"] = secrets.token_hex(16)

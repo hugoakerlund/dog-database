@@ -22,6 +22,7 @@
         Date of birth:
         <input type="date" name="date_of_birth" value="yyyy/mm/dd" required />
       </p>
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
       <input type="submit" value="Save" />
     </form>
   </body>
