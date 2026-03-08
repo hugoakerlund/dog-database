@@ -2,10 +2,21 @@
 <html>
 
 <head>
-  <title>Edit dog</title>
+  <title>Dog Database</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 
 <body>
+  <h1>Edit dog: {{ dog.name }}</h1>
+  <p>
+    <a href="/">Home</a>
+    <a href="/litters">Litters</a>
+    {% if session.get('username') %}
+    <a href="/create_dog">Add a new dog to the database</a>
+    <a href="/create_litter">Add a new litter to the database</a>
+    <a href="/my_dogs">My dogs</a>
+    {% endif %}
+  </p>
   <form action="/edit/{{ dog.id }}" method="post" enctype="multipart/form-data">
     <p>
       Registration number:

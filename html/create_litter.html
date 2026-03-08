@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Add a litter to the database</title>
+    <title>Dog Database</title>
   </head>
 
   <body>
+    <h1>Add a new litter to the database</h1>
+    <p>
+      <a href="/">Home</a>
+      {% if session.get('username') %}
+      <a href="/create_dog">Add a new dog to the database</a>
+      <a href="/my_dogs">My dogs</a>
+      {% endif %}
+    </p>
     <form action="/create_litter" method="post">
       <p>
         Name:

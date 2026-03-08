@@ -1,9 +1,26 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+  <title>Dog Database</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+
+<body>
+  <h1>{{ dog.name }}</h1>
+  <p>
+    <a href="/">Home</a>
+    <a href="/litters">Litters</a>
+    {% if session.get('username') %}
+    <a href="/create_dog">Add a new dog to the database</a>
+    <a href="/create_litter">Add a new litter to the database</a>
+    <a href="/my_dogs">My dogs</a>
+    {% endif %}
+  </p>
   <p>
     Registration number: {{ dog.registration_number }}
   </P>
-  
+
   {% if dog.image %}
   <p>
     Image: <img src="/image/{{ dog.id }}" alt="Dog Image" width="200" height="200">
@@ -29,16 +46,19 @@
     Sex: {{ dog.sex }}
   </P>
   <p>
-    Father: {% if dog.father_id %}<a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number if dog.father_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
+    Father: {% if dog.father_id %}<a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number if
+      dog.father_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
   </P>
   <p>
-    Mother: {% if dog.mother_id %}<a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number if dog.mother_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
+    Mother: {% if dog.mother_id %}<a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number if
+      dog.mother_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
   </P>
   <p>
     Owner: <a href="/user/{{ dog.owner_id }}">{{ dog.owner_username }}</a>
   </P>
   <p>
-    Litter: {% if dog.litter_id%}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else "Unknown" }}</a>{% else %}Unknown{% endif %}  </P>
+    Litter: {% if dog.litter_id%}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else
+      "Unknown" }}</a>{% else %}Unknown{% endif %} </P>
   <p>
     Championship title: {{ dog.championship_title }}
   </P>
@@ -66,4 +86,5 @@
     <a href="/remove/{{ dog.id }}">Remove</a>
   </p>
   {% endif %}
+
 </html>

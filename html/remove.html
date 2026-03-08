@@ -2,15 +2,29 @@
 <html>
 
 <head>
-    <title>Remove dog from database</title>
+    <title>Dog Database</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
-<form action="/remove/{{ dog.id }}" method="post">
+
+<body>
+    <h1>Remove dog: {{ dog.name }}</h1>
     <p>
-        Are you sure you want to remove {{ dog.name }} from the database?
+        <a href="/">Home</a>
+        <a href="/litters">Litters</a>
+        {% if session.get('username') %}
+        <a href="/create_dog">Add a new dog to the database</a>
+        <a href="/create_litter">Add a new litter to the database</a>
+        <a href="/my_dogs">My dogs</a>
+        {% endif %}
     </p>
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" name="continue" value="Continue" />
-    <input type="submit" name="cancel" value="Cancel" />
-</form>
+    <form action="/remove/{{ dog.id }}" method="post">
+        <p>
+            Are you sure you want to remove {{ dog.name }} from the database?
+        </p>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+        <input type="submit" name="continue" value="Continue" />
+        <input type="submit" name="cancel" value="Cancel" />
+    </form>
+</body>
 
 </html>

@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html>
 
+<head>
+  <title>Dog Database</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+
 <body>
+    <h1>Litters</h1>
+    <p>
+        <a href="/">Home</a>
+        {% if session.get('username') %}
+        <a href="/create_dog">Add a new dog to the database</a>
+        <a href="/create_litter">Add a new litter to the database</a>
+        <a href="/my_dogs">My dogs</a>
+        {% endif %}
+    </p>
     <table>
         <tr>
             <th>Name</th>
@@ -23,9 +37,8 @@
     <a href="/litters/{{ page - 1 }}">&lt;&lt;</a>
     {% endif %}
     Page {{ page }}/{{ page_count }}
-    {% if page < page_count %}
-    <a href="/litters/{{ page + 1 }}">&gt;&gt;</a>
-    {% endif %}
+    {% if page < page_count %} <a href="/litters/{{ page + 1 }}">&gt;&gt;</a>
+        {% endif %}
 </p>
 
 </html>

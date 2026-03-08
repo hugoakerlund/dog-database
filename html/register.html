@@ -2,10 +2,16 @@
 <html>
 
 <head>
-  <title>Registration</title>
+  <title>Dog Database</title>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 
 <body>
+  <h1>Register</h1>
+  <p>
+    <a href="/">Home</a>
+    <a href="/litters">Litters</a>
+  </p>
   <form action="/create" method="post">
     <p>
       Username: <br />
@@ -13,7 +19,7 @@
     </p>
     <p>
       Email: <br />
-      <input type="text" name="email"  maxlength=50 required />
+      <input type="text" name="email" maxlength=50 required />
     </p>
     <p>
       Password: <br />
