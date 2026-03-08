@@ -13,16 +13,26 @@ def get_litter(litter_id):
     result = db.query(sql, [litter_id])
     return result[0] if result else None
 
-def get_all_litters():
+def get_litter_count():
+    sql = "SELECT COUNT(*) FROM Litters"
+    result = db.query(sql)
+    return result[0][0] if result else 0
+
+def get_litters(page, page_size):
     sql = (
         "SELECT l.*, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number "
         "FROM Litters l "
         "LEFT JOIN Dogs f ON l.father_id = f.id "
-        "LEFT JOIN Dogs m ON l.mother_id = m.id"
+        "LEFT JOIN Dogs m ON l.mother_id = m.id "
+        "GROUP BY l.id "
+        "ORDER BY l.date_of_birth DESC "
+        "LIMIT ? OFFSET ?"
     )
-    result = db.query(sql)
+    limit = page_size
+    offset = page_size * (page - 1)
+    result = db.query(sql, [limit, offset])
     return result
 
 def get_litter_id_by_name(litter_name):

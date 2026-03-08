@@ -1,6 +1,6 @@
 import db
 
-def get_dogs():
+def get_dogs(page, page_size):
     sql = (
         "SELECT d.*, "
         "f.registration_number AS father_registration_number, "
@@ -13,9 +13,19 @@ def get_dogs():
         "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
         "LEFT JOIN Users o ON d.owner_id = o.id "
-        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id"
+        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id "
+        "GROUP BY d.id "
+        "ORDER BY d.id DESC "
+        "LIMIT ? OFFSET ?"
     )
-    return db.query(sql)
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [limit, offset])
+
+def get_dog_count():
+    sql = "SELECT COUNT(*) FROM Dogs"
+    result = db.query(sql)
+    return result[0][0] if result else 0
 
 def get_dog(dog_id):
     sql = (

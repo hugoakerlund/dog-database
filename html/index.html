@@ -1,64 +1,76 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Dogdatabase</title>
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 </head>
 
 <body>
-    <h1>Welcome to the Dog Database!</h1>
-    {% if session.get('username') %}
-        <p>You are logged in as {{ session.get('username') }}. <a href="/logout">Logout</a>
-           <a href="/create_dog">Add a new dog to the database</a> 
-           <a href="/create_litter">Add a new litter to the database</a> 
-           <a href="/litters">Litters</a> 
-           <a href="/my_dogs">My dogs</a> 
-        </p>
-    {% else %}
-    <p>login <a href="/login">here</a> or register <a href="/register">here</a>.</p>
-    {% endif %}
-  
-    <table>
-      <tr>
-        <th>Registration number</th>
-        <th>Name</th>
-        <th>Breed</th>
-        <th>Born</th>
-        <th>Sex</th>
-        <th>Father</th>
-        <th>Mother</th>
-        <th>Owner</th>
-        <th>Litter</th>
-        <th>Championship title</th>
-      </tr>
+  <h1>Welcome to the Dog Database!</h1>
+  {% if session.get('username') %}
+  <p>You are logged in as {{ session.get('username') }}. <a href="/logout">Logout</a>
+    <a href="/create_dog">Add a new dog to the database</a>
+    <a href="/create_litter">Add a new litter to the database</a>
+    <a href="/litters">Litters</a>
+    <a href="/my_dogs">My dogs</a>
+  </p>
+  {% else %}
+  <p>login <a href="/login">here</a> or register <a href="/register">here</a>.</p>
+  {% endif %}
 
-      {% for dog in dogs %}
-      <tr>
-          <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
-          <td>{{ dog.name }}</td>
-          <td>{{ dog.breed }}</td>
-          <td>{{ dog.date_of_birth }}</td>
-          <td>{{ dog.sex }}</td>
-          <td>
-            {% if dog.father_id %}
-              <a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number or "Unknown" }}</a>
-            {% else %}
-              Unknown
-            {% endif %}
-          </td>
-          <td>
-            {% if dog.mother_id %}
-              <a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number or "Unknown" }}</a>
-            {% else %}
-              Unknown
-            {% endif %}
-          </td>
-          <td><a href="/user/{{ dog.owner_id }}">{{ dog.owner_username }}</a></td>
-          <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{% endif %}</td>
-          <td>{{ dog.championship_title }}</td>
-      </tr>
-      {% endfor %}
+  <table>
+    <tr>
+      <th>Registration number</th>
+      <th>Name</th>
+      <th>Breed</th>
+      <th>Born</th>
+      <th>Sex</th>
+      <th>Father</th>
+      <th>Mother</th>
+      <th>Owner</th>
+      <th>Litter</th>
+      <th>Championship title</th>
+    </tr>
 
-    </table>
+    {% for dog in dogs %}
+    <tr>
+      <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
+      <td>{{ dog.name }}</td>
+      <td>{{ dog.breed }}</td>
+      <td>{{ dog.date_of_birth }}</td>
+      <td>{{ dog.sex }}</td>
+      <td>
+        {% if dog.father_id %}
+        <a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number or "Unknown" }}</a>
+        {% else %}
+        Unknown
+        {% endif %}
+      </td>
+      <td>
+        {% if dog.mother_id %}
+        <a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number or "Unknown" }}</a>
+        {% else %}
+        Unknown
+        {% endif %}
+      </td>
+      <td><a href="/user/{{ dog.owner_id }}">{{ dog.owner_username }}</a></td>
+      <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{%
+        endif %}</td>
+      <td>{{ dog.championship_title }}</td>
+    </tr>
+    {% endfor %}
+
+  </table>
 </body>
+<p>
+  {% if page > 1 %}
+  <a href="/{{ page - 1 }}">&lt;&lt;</a>
+  {% endif %}
+  Page {{ page }}/{{ page_count }}
+  {% if page < page_count %}
+  <a href="/{{ page + 1 }}">&gt;&gt;</a>
+  {% endif %}
+</p>
+
 </html>

@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, make_response, session, redirect, render_template, \
                   request, send_from_directory, abort, flash
+import math
 import os
 import config
 import dog
@@ -13,11 +14,22 @@ app = Flask(__name__, template_folder=".")
 app.secret_key = config.SECRET_KEY
 
 @app.route("/")
-def index():
-    result = dog.get_dogs()
-    if not result:
+@app.route("/<int:page>")
+def index(page=1):
+    page_size = 10
+    dog_count = dog.get_dog_count()
+    page_count = math.ceil(dog_count / page_size)
+    page_count = max(page_count, 1)
+    dogs = dog.get_dogs(page, page_size)
+    if not dogs:
         abort(404, "ERROR: no dogs found")
-    return render_template("html/index.html", dogs=result, session=session)
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/", str(page_count))
+
+    return render_template("html/index.html", page=page, page_count=page_count,
+                            dogs=dogs, session=session)
 
 @app.route("/dog/<int:dog_id>")
 def show_dog(dog_id):
@@ -182,9 +194,23 @@ def show_litter(litter_id):
     return render_template("html/litter.html", litter=litter_info, dogs=dogs)
 
 @app.route("/litters")
-def show_litters():
-    litters = litter.get_all_litters()
-    return render_template("html/litters.html", litters=litters)
+@app.route("/litters/<int:page>")
+def show_litters(page=1):
+    page_size = 10
+    litter_count = litter.get_litter_count()
+    page_count = math.ceil(litter_count / page_size)
+    page_count = max(page_count, 1)
+    litters = litter.get_litters(page, page_size)
+
+    if not litters:
+        abort(404, "ERROR: no litters found")
+    if page < 1:
+        return redirect("/litters/1")
+    if page > page_count:
+        return redirect("/litters/", str(page_count))
+
+    return render_template("html/litters.html", page=page, page_count=page_count, 
+                           litters=litters)
 
 def require_login():
     if "user_id" not in session:

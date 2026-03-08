@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html>
+
 <body>
     <table>
         <tr>
@@ -15,7 +15,17 @@
             <td><a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number or "Unknown" }}</a></td>
             <td><a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number or "Unknown" }}</a></td>
             <td>{{ litter.date_of_birth }}</td>
-        {% endfor %}
+            {% endfor %}
     </table>
 </body>
+<p>
+    {% if page > 1 %}
+    <a href="/litters/{{ page - 1 }}">&lt;&lt;</a>
+    {% endif %}
+    Page {{ page }}/{{ page_count }}
+    {% if page < page_count %}
+    <a href="/litters/{{ page + 1 }}">&gt;&gt;</a>
+    {% endif %}
+</p>
+
 </html>
