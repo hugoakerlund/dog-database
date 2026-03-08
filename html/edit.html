@@ -1,75 +1,76 @@
 <!DOCTYPE html>
 <html>
 
-  <head>
-    <title>Edit dog</title>
-  </head>
+<head>
+  <title>Edit dog</title>
+</head>
 
-  <body>
-    <form action="/update_dog/{{ dog.id }}" method="post" enctype="multipart/form-data">
-      <p>
-        Registration number:
-        <input type="text" name="registration_number" value="{{ dog.registration_number }}" placeholder="Registration number" maxlength=10 required />
-      </p>
-      <p>
-        Add image:
-        <input type="file" name="image" accept=".jpg,.jpeg,.JPG,.JPEG" required />
-      </p>
-      <p>
-        Name:
-        <input type="text" name="name" value="{{ dog.name }}" maxlength=20 required />
-      </p>
-      <p>
-        Color:
-        <input type="text" name="color" value="{{ dog.color }}" maxlength=20 required />
-      </p>
-      <p>
-        <label for="breed">Breed:</label>
-        <select name="breed" id="breed">
-          {% for breed in dog_breeds %}
-          <option value="{{ breed.name }}">{{ breed.name }}</option>
-          {% endfor %}
-        </select> 
-      </p>
-      <p>
-        Born date:
-        <input type="date" name="date_of_birth" value="{{ dog.date_of_birth }}" required />
-      </p>
-      <p>
-        Death date:
-        <input type="date" name="date_of_death" value="{{ dog.date_of_death }}" />
-      </p>
-      <p>
-        Sex:
-        <input type="radio" id="sexChoice1" name="sex" value="M" />
-        <label for="sexChoice1">Male</label>
+<body>
+  <form action="/edit/{{ dog.id }}" method="post" enctype="multipart/form-data">
+    <p>
+      Registration number:
+      <input type="text" name="registration_number" value="{{ dog.registration_number }}"
+        placeholder="Registration number" maxlength=10 required />
+    </p>
+    <p>
+      Add image:
+      <input type="file" name="image" accept=".jpg,.jpeg,.JPG,.JPEG" required />
+    </p>
+    <p>
+      Name:
+      <input type="text" name="name" value="{{ dog.name }}" maxlength=20 required />
+    </p>
+    <p>
+      Color:
+      <input type="text" name="color" value="{{ dog.color }}" maxlength=20 required />
+    </p>
+    <p>
+      <label for="breed">Breed:</label>
+      <select name="breed" id="breed">
+        {% for breed in dog_breeds %}
+        <option value="{{ breed.name }}">{{ breed.name }}</option>
+        {% endfor %}
+      </select>
+    </p>
+    <p>
+      Born date:
+      <input type="date" name="date_of_birth" value="{{ dog.date_of_birth }}" required />
+    </p>
+    <p>
+      Death date:
+      <input type="date" name="date_of_death" value="{{ dog.date_of_death }}" />
+    </p>
+    <p>
+      Sex:
+      <input type="radio" id="sexChoice1" name="sex" value="M" />
+      <label for="sexChoice1">Male</label>
 
-        <input type="radio" id="sexChoice2" name="sex" value="F" />
-        <label for="sexChoice2">Female</label>
-      </p>
-      <p>
-        Father:
-        <input type="text" name="father_id" value="{{ dog.father_id }}" placeholder="Registration number" maxlength=10 />
-      </p>
-      <p>
-        Mother:
-        <input type="text" name="mother_id" value="{{ dog.mother_id }}" placeholder="Registration number" maxlength=10 />
-      </p>
-      <p>
-        Litter:
-        <input type="text" name="litter" value="{{ dog.litter }}" placeholder="Litter name" maxlength=20 />
-      </p>
-      <p>
-        <label for="championship_title">Championship Title:</label>
-        <select name="championship_title" id="championship_title">
-          {% for championship_title in championship_titles %}
-          <option value="{{ championship_title.title }}">{{ championship_title.title }}</option>
-          {% endfor %}
-        </select> 
-      </p>
+      <input type="radio" id="sexChoice2" name="sex" value="F" />
+      <label for="sexChoice2">Female</label>
+    </p>
+    <p>
+      Father:
+      <input type="text" name="father_id" value="{{ dog.father_id }}" placeholder="Registration number" maxlength=10 />
+    </p>
+    <p>
+      Mother:
+      <input type="text" name="mother_id" value="{{ dog.mother_id }}" placeholder="Registration number" maxlength=10 />
+    </p>
+    <p>
+      Litter:
+      <input type="text" name="litter" value="{{ dog.litter }}" placeholder="Litter name" maxlength=20 />
+    </p>
+    <p>
+      <label for="championship_title">Championship Title:</label>
+      <select name="championship_title" id="championship_title">
+        {% for championship_title in championship_titles %}
+        <option value="{{ championship_title.title }}">{{ championship_title.title }}</option>
+        {% endfor %}
+      </select>
+    </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-      <input type="submit" value="Save" />
-    </form>
-  </body>
+    <input type="submit" value="Save" />
+  </form>
+</body>
 
 </html>

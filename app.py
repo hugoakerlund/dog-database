@@ -69,16 +69,26 @@ def create_litter():
     elif request.method == "GET":
         return render_template("html/create_litter.html")
 
-@app.route("/update_dog/<int:dog_id>", methods=["POST"])
-def update_dog(dog_id):
+@app.route("/edit/<int:dog_id>", methods=["GET", "POST"])
+def edit_dog(dog_id):
     require_login()
-    form = input.get_dog_creation_form_data(request)
-    try:
-        dog.update_dog(dog_id, form)
-    except sqlite3.IntegrityError as e:
-        print(f"Database error: {e}")
-        return "ERROR: update failed (duplicate registration number or invalid references)"
-    return redirect("/my_dogs")
+    if request.method == "POST":
+        form = input.get_dog_creation_form_data(request)
+        try:
+            dog.update_dog(dog_id, form)
+        except sqlite3.IntegrityError as e:
+            print(f"Database error: {e}")
+            return "ERROR: update failed (duplicate registration number or invalid references)"
+        return redirect("/my_dogs")
+
+    elif request.method == "GET":
+        dog_info = dog.get_dog(dog_id)
+        if not dog_info:
+            abort(404, "ERROR: dog not found")
+        dog_breeds = dog.get_breeds()
+        championship_titles = dog.get_championship_titles()
+        return render_template("html/edit.html", dog=dog_info, dog_breeds=dog_breeds,
+                            championship_titles=championship_titles)
 
 @app.route("/remove/<int:dog_id>", methods=["GET", "POST"])
 def remove(dog_id):
@@ -93,17 +103,6 @@ def remove(dog_id):
         check_csrf()
         dog.delete_dog(dog_id)
         return redirect("/my_dogs")
-
-@app.route("/edit/<int:dog_id>")
-def edit_form(dog_id):
-    require_login()
-    dog_info = dog.get_dog(dog_id)
-    if not dog_info:
-        abort(404, "ERROR: dog not found")
-    dog_breeds = dog.get_breeds()
-    championship_titles = dog.get_championship_titles()
-    return render_template("html/edit.html", dog=dog_info, dog_breeds=dog_breeds,
-                           championship_titles=championship_titles)
 
 @app.route("/register")
 def register():
@@ -141,6 +140,7 @@ def create():
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'favicon.ico', mimetype='image/vnd.microsoft.icon')
+                               
 @app.route("/image/<int:dog_id>")
 def show_image(dog_id):
     image = dog.get_image(dog_id)
