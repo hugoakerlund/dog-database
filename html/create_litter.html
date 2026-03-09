@@ -15,6 +15,11 @@
       <a href="/logout">Logout</a>
       {% endif %}
     </p>
+    {% for message in get_flashed_messages() %}
+    <p>
+      <b>{{ message }}</b>
+    </p>
+    {% endfor %}
     <form action="/create_litter" method="post">
       <p>
         Name:
