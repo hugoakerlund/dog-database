@@ -116,19 +116,14 @@ def remove(dog_id):
         dog.delete_dog(dog_id)
         return redirect("/my_dogs")
 
-@app.route("/register")
-def register():
-    return render_template("html/register.html")
-
-@app.route("/login")
-def login_form():
-    return render_template("html/login.html")
-
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    owner_id, name = input.check_login(request)
-    set_session(owner_id, name)
-    return redirect("/")
+    if request.method == "POST":
+        owner_id, name = input.check_login(request)
+        set_session(owner_id, name)
+        return redirect("/")
+    elif request.method == "GET":
+        return render_template("html/login.html")
 
 @app.route("/logout")
 def logout():
@@ -137,16 +132,19 @@ def logout():
     del session["name"]
     return redirect("/")
 
-@app.route("/create", methods=["POST"])
+@app.route("/register", methods=["GET", "POST"])
 def create():
-    form = input.get_account_registration_form_data(request)
-    try:
-        owner.insert_owner(form)
-        flash("Account created successfully!", "success")
-    except sqlite3.IntegrityError:
-        return "ERROR: name or email already exists"
-    set_session(owner.get_id_with_name(form["name"]), form["name"])
-    return redirect("/")
+    if request.method == "POST":
+        form = input.get_account_registration_form_data(request)
+        try:
+            owner.insert_owner(form)
+            flash("Account created successfully!", "success")
+        except sqlite3.IntegrityError:
+            return "ERROR: name or email already exists"
+        set_session(owner.get_id_with_name(form["name"]), form["name"])
+        return redirect("/")
+    elif request.method == "GET":
+        return render_template("html/register.html")
 
 @app.route('/favicon.ico')
 def favicon():
