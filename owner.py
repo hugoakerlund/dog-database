@@ -18,7 +18,7 @@ def get_owners(page, page_size):
     offset = page_size * (page - 1)
     return db.query(sql, [limit, offset])
 
-def get_owners_dogs(owner_id):
+def get_dogs(owner_id):
     sql = (
         "SELECT d.*, "
         "f.registration_number AS father_registration_number, "
@@ -61,3 +61,13 @@ def get_password_hash(name):
 def insert_owner(form):
     sql = "INSERT INTO Owners (name, email, password_hash) VALUES (?, ?, ?)"
     db.execute(sql, [form["name"], form["email"], form["password_hash"]])
+
+def name_exists(name):
+    sql = "SELECT id FROM Owners WHERE name = ?"
+    result = db.query(sql, [name])
+    return bool(result)
+
+def email_exists(email):
+    sql = "SELECT id FROM Owners WHERE email = ?"
+    result = db.query(sql, [email])
+    return bool(result)

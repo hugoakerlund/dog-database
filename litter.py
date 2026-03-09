@@ -65,3 +65,8 @@ def insert_litter(form):
         "VALUES (?, ?, ?, ?)"
     )
     db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"]])
+
+def litter_name_exists(name):
+    sql = "SELECT id FROM Litters WHERE name = ?"
+    result = db.query(sql, [name])
+    return bool(result)
