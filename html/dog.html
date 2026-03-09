@@ -41,7 +41,7 @@
     Breed: {{ dog.breed }}
   </P>
   <p>
-    Born: {{ dog.date_of_birth }}
+    Date or birth: {{ dog.date_of_birth }}
   </P>
   <p>
     Sex: {{ dog.sex }}
@@ -70,16 +70,16 @@
     Best show: {{ dog.best_show_name if dog.best_show_name else "Unknown" }}
   </P>
   <p>
-    Litter Score: {{ dog.litter_score }}
+    Litter score: {{ dog.litter_score }}
   </P>
   <p>
-    Score Trace: {{ dog.score_trace }}
+    Score trace: {{ dog.score_trace }}
   </P>
   <p>
-    Hip Index: {{ dog.hip_index }}
+    Hip index: {{ dog.hip_index }}
   </P>
   <p>
-    Use Index: {{ dog.use_index }}
+    Use index: {{ dog.use_index }}
   </P>
   {% if dog.owner_id == session.owner_id %}
   <p>

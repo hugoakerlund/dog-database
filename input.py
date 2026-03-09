@@ -32,7 +32,7 @@ def check_litter(litter_name):
 def check_form_data(form):
     if not form["registration_number"] or not form["name"] or not form["breed"] or not \
         form["color"] or not form["date_of_birth"] or not form["sex"]:
-        abort(400, "ERROR: registration number, name, breed, color, birth date, and sex are required")
+        abort(400, "ERROR: registration number, name, breed, color, date of birth, and sex are required")
     
     if not check_registration_number(form["registration_number"]):
         abort(400, "ERROR: invalid registration number format (must be 'FI12345/67')")
@@ -41,7 +41,7 @@ def check_form_data(form):
         abort(400, "ERROR: name must be between 2 and 20 characters")
     
     if not check_date(form["date_of_birth"]):
-        abort(400, "ERROR: invalid birth date format (must be YYYY-MM-DD)")
+        abort(400, "ERROR: invalid date of birth format (must be YYYY-MM-DD)")
 
     if form["date_of_death"] and not check_date(form["date_of_death"]):
         abort(400, "ERROR: invalid death date format (must be YYYY-MM-DD)")
@@ -113,7 +113,7 @@ def check_litter_creation_form_data(form):
         abort(400, "ERROR: litter name must be between 2 and 20 characters")
     
     if not check_date(form["date_of_birth"]):
-        abort(400, "ERROR: invalid birth date format (must be YYYY-MM-DD)")
+        abort(400, "ERROR: invalid date of birth format (must be YYYY-MM-DD)")
 
     if  not check_registration_number(form["father"]):
         abort(400, "ERROR: invalid father registration number format (must be 'FI12345/67')")
