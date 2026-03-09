@@ -12,7 +12,7 @@
     <a href="/">Home</a>
     <a href="/litters">Litters</a>
     <a href="/owners">Owners</a>
-    {% if session.get('username') %}
+    {% if session.get('name') %}
     <a href="/create_dog">Add a new dog to the database</a>
     <a href="/create_litter">Add a new litter to the database</a>
     <a href="/my_dogs">My dogs</a>
@@ -55,7 +55,7 @@
       dog.mother_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
   </P>
   <p>
-    Owner: <a href="/user/{{ dog.owner_id }}">{{ dog.owner_username }}</a>
+    Owner: <a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a>
   </P>
   <p>
     Litter: {% if dog.litter_id%}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else
@@ -81,7 +81,7 @@
   <p>
     Use Index: {{ dog.use_index }}
   </P>
-  {% if dog.owner_id == session.user_id %}
+  {% if dog.owner_id == session.owner_id %}
   <p>
     <a href="/edit/{{ dog.id }}">Edit</a> |
     <a href="/remove/{{ dog.id }}">Remove</a>

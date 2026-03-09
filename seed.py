@@ -111,12 +111,12 @@ def create_random_date():
         day = random.randint(1, 28)
         return f"{year}-{month:02d}-{day:02d}"
 
-def insert_random_user(id):
-        username = "test_user" + str(id)
-        email = username + "@" + "testdomain"
+def insert_random_owner(id):
+        name = "test_owner" + str(id)
+        email = name + "@" + "testdomain"
         password_hash = "test_hash"
-        sql = "INSERT INTO Users (username, email, password_hash) VALUES (?, ?, ?)"
-        db.execute(sql, [username, email, password_hash])
+        sql = "INSERT INTO Owners (name, email, password_hash) VALUES (?, ?, ?)"
+        db.execute(sql, [name, email, password_hash])
 
 def create_litter(id, father_id, mother_id):
         name = "test_litter_" + str(id)
@@ -190,5 +190,5 @@ with app.app_context():
     seed_table_championship_titles()
 
     for id in range(1, n):
-        insert_random_user(id)
+        insert_random_owner(id)
         insert_random_dog(id)

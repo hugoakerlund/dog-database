@@ -2,7 +2,7 @@ from flask import session, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 import dog
 import litter
-import user
+import owner
 
 def check_registration_number(registration_number):
     if not len(registration_number) == 10 or \
@@ -78,7 +78,7 @@ def get_dog_creation_form_data(request):
     form["litter"] = request.form.get("litter", "").strip() or None # Field is optional
     form["litter_id"] = None
     form["championship_title"] = request.form.get("championship_title", "").strip() or None
-    form["owner_id"] = session["user_id"]
+    form["owner_id"] = session["owner_id"]
 
     if form["championship_title"]:
         form["championship_title_id"] = dog.get_championship_title_id(form["championship_title"])
@@ -133,31 +133,31 @@ def get_litter_creation_form_data(request):
     return form
 
 def check_registration_form_data(form):
-    if not form["username"] or not form["email"] or not form["password1"] or not form["password2"]:
+    if not form["name"] or not form["email"] or not form["password1"] or not form["password2"]:
         abort(400, "ERROR: all fields are required")
     if form["password1"] != form["password2"]:
         abort(400, "ERROR: passwords do not match")
     if len(form["password1"]) < 8:
         abort(400, "ERROR: password must be atleast 8 characters long")
-    if not check_name(form["username"]):
-        abort(400, "ERROR: username must be between 2 and 20 characters")
+    if not check_name(form["name"]):
+        abort(400, "ERROR: name must be between 2 and 20 characters")
     if not check_email(form["email"]):
         abort(400, "ERROR: invalid email address")
     form["password_hash"] = generate_password_hash(form["password1"])
 
 def get_account_registration_form_data(request):
     form = {}
-    form["username"] = request.form.get("username", "").strip()
+    form["name"] = request.form.get("name", "").strip()
     form["email"] = request.form.get("email", "").strip()
     form["password1"] = request.form.get("password1", "")
     form["password2"] = request.form.get("password2", "")
     check_registration_form_data(form)
     return form
 
-def check_username(username):
-    result = user.get_id_with_username(username)
+def check_name(name):
+    result = owner.get_id_with_name(name)
     if not result:
-        abort(400, "ERROR: Invalid username or password")
+        abort(400, "ERROR: Invalid name or password")
     return True
 
 def check_email(email):
@@ -165,16 +165,16 @@ def check_email(email):
            email.index("@") < email.rindex(".") and email.index("@") > 0 and \
            email.rindex(".") < len(email) - 1
 
-def check_password(password, username):
-    result = user.get_password_hash(username) 
+def check_password(password, name):
+    result = owner.get_password_hash(name) 
     if not result or not check_password_hash(result, password):
-        abort(400, "ERROR: Invalid username or password")
+        abort(400, "ERROR: Invalid name or password")
     return True
 
 def check_login(request):
-    username = request.form.get("username", "").strip()
+    name = request.form.get("name", "").strip()
     password = request.form.get("password", "").strip()
-    check_username(username)
-    check_password(password, username)
-    user_id = user.get_id_with_username(username)
-    return user_id, username
+    check_name(name)
+    check_password(password, name)
+    owner_id = owner.get_id_with_name(name)
+    return owner_id, name

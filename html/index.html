@@ -8,15 +8,15 @@
 
 <body>
   <h1>Dog Database</h1>
-  {% if session.get('username') %}
-  <p>You are logged in as {{ session.get('username') }}. <a href="/logout">Logout</a></p>
+  {% if session.get('name') %}
+  <p>You are logged in as {{ session.get('name') }}. <a href="/logout">Logout</a></p>
   {% else %}
   <p>login <a href="/login">here</a> or register <a href="/register">here</a>.</p>
   {% endif %}
   <p>
     <a href="/litters">Litters</a>
     <a href="/owners">Owners</a>
-    {% if session.get('username') %}
+    {% if session.get('name') %}
     <a href="/create_dog">Add a new dog to the database</a>
     <a href="/create_litter">Add a new litter to the database</a>
     <a href="/my_dogs">My dogs</a>
@@ -58,7 +58,7 @@
         Unknown
         {% endif %}
       </td>
-      <td><a href="/user/{{ dog.owner_id }}">{{ dog.owner_username }}</a></td>
+      <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
       <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{%
         endif %}</td>
       <td>{{ dog.championship_title }}</td>

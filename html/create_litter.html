@@ -9,7 +9,7 @@
     <p>
       <a href="/">Home</a>
       <a href="/owners">Owners</a>
-      {% if session.get('username') %}
+      {% if session.get('name') %}
       <a href="/create_dog">Add a new dog to the database</a>
       <a href="/my_dogs">My dogs</a>
       {% endif %}

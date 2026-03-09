@@ -7,25 +7,25 @@
 </head>
 
 <body>
-    <h1>User: {{ user.username }}</h1>
+    <h1>{{ owner.name }}</h1>
     <p>
         <a href="/">Home</a>
         <a href="/litters">Litters</a>
         <a href="/owners">Owners</a>
-        {% if session.get('username') %}
+        {% if session.get('name') %}
         <a href="/create_dog">Add a new dog to the database</a>
         <a href="/create_litter">Add a new litter to the database</a>
         <a href="/my_dogs">My dogs</a>
         {% endif %}
     </p>
     <p>
-        Name: {{ user.username }}
+        Name: {{ owner.name }}
     </P>
     <p>
-        Email: {{ user.email }}
+        Email: {{ owner.email }}
     </P>
     <p>
-        Dogs owned by {{ user.username }}:
+        Dogs owned by {{ owner.name }}:
     </P>
     <table>
         <tr>
@@ -62,7 +62,7 @@
                 Unknown
                 {% endif %}
             </td>
-            <td><a href="/user/{{ dog.owner_id }}">{{ dog.owner_username }}</a></td>
+            <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
             <td>{{ dog.litter_name or "Unknown" }}</td>
             <td>{{ dog.championship_title }}</td>
         </tr>

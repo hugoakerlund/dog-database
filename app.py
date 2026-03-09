@@ -5,7 +5,7 @@ import math
 import os
 import config
 import dog
-import user
+import owner
 import input
 import litter
 import secrets
@@ -41,8 +41,8 @@ def show_dog(dog_id):
 @app.route("/my_dogs")
 def show_my_dogs():
     require_login()
-    owner_id = session["user_id"]
-    my_dogs = user.get_users_dogs(owner_id)
+    owner_id = session["owner_id"]
+    my_dogs = owner.get_owners_dogs(owner_id)
     return render_template("html/my_dogs.html", my_dogs=my_dogs)
 
 @app.route("/create_dog", methods=["GET", "POST"])
@@ -126,26 +126,26 @@ def login_form():
 
 @app.route("/login", methods=["POST"])
 def login():
-    user_id, username = input.check_login(request)
-    set_session(user_id, username)
+    owner_id, name = input.check_login(request)
+    set_session(owner_id, name)
     return redirect("/")
 
 @app.route("/logout")
 def logout():
     require_login()
-    del session["user_id"]
-    del session["username"]
+    del session["owner_id"]
+    del session["name"]
     return redirect("/")
 
 @app.route("/create", methods=["POST"])
 def create():
     form = input.get_account_registration_form_data(request)
     try:
-        user.insert_user(form)
+        owner.insert_owner(form)
         flash("Account created successfully!", "success")
     except sqlite3.IntegrityError:
-        return "ERROR: username or email already exists"
-    set_session(user.get_id_with_username(form["username"]), form["username"])
+        return "ERROR: name or email already exists"
+    set_session(owner.get_id_with_name(form["name"]), form["name"])
     return redirect("/")
 
 @app.route('/favicon.ico')
@@ -177,13 +177,13 @@ def show_image(dog_id):
     except Exception:
         abort(404, "ERROR: unable to display image")
 
-@app.route("/user/<int:user_id>")
-def show_user(user_id):
-    user_info = user.get_user(user_id)
-    users_dogs = user.get_users_dogs(user_id)
-    if not user_info:
-        abort(404, "ERROR: user not found")
-    return render_template("html/user.html", user=user_info, dogs=users_dogs)
+@app.route("/owner/<int:owner_id>")
+def show_owner(owner_id):
+    owner_info = owner.get_owner(owner_id)
+    owners_dogs = owner.get_owners_dogs(owner_id)
+    if not owner_info:
+        abort(404, "ERROR: owner not found")
+    return render_template("html/owner.html", owner=owner_info, dogs=owners_dogs)
 
 @app.route("/litter/<int:litter_id>")
 def show_litter(litter_id):
@@ -216,10 +216,10 @@ def show_litters(page=1):
 @app.route("/owners/<int:page>")
 def show_owners(page=1):
     page_size = 10
-    owner_count = user.get_owner_count()
+    owner_count = owner.get_owner_count()
     page_count = math.ceil(owner_count / page_size)
     page_count = max(page_count, 1)
-    owners = user.get_owners(page, page_size)
+    owners = owner.get_owners(page, page_size)
 
     if not owners:
         abort(404, "ERROR: no owners found")
@@ -232,7 +232,7 @@ def show_owners(page=1):
                            owners=owners)
 
 def require_login():
-    if "user_id" not in session:
+    if "owner_id" not in session:
         abort(403, "ERROR: login required")
 
 def check_csrf():
@@ -241,7 +241,7 @@ def check_csrf():
     if request.form.get("csrf_token") != session.get("csrf_token"):
         abort(403, "ERROR: invalid CSRF token")
 
-def set_session(user_id, username):
-    session["user_id"] = user_id
-    session["username"] = username
+def set_session(owner_id, name):
+    session["owner_id"] = owner_id
+    session["name"] = name
     session["csrf_token"] = secrets.token_hex(16)

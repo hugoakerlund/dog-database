@@ -11,7 +11,7 @@
     <p>
         <a href="/">Home</a>
         <a href="/litters">Litters</a>
-        {% if session.get('username') %}
+        {% if session.get('name') %}
         <a href="/create_dog">Add a new dog to the database</a>
         <a href="/create_litter">Add a new litter to the database</a>
         <a href="/my_dogs">My dogs</a>
@@ -24,7 +24,7 @@
         </tr>
         {% for owner in owners %}
         <tr>
-            <td><a href="/user/{{ owner.id }}">{{ owner.username }}</a></td>
+            <td><a href="/owner/{{ owner.id }}">{{ owner.name }}</a></td>
             <td>{{ owner.email }}</a></td>
         </tr>
         {% endfor %}
