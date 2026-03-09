@@ -15,6 +15,7 @@
     {% if session.get('name') %}
     <a href="/create_litter">Add a new litter to the database</a>
     <a href="/my_dogs">My dogs</a>
+    <a href="/logout">Logout</a>
     {% endif %}
   </p>
   <form action="/create_dog" method="post" enctype="multipart/form-data">
