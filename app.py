@@ -212,6 +212,25 @@ def show_litters(page=1):
     return render_template("html/litters.html", page=page, page_count=page_count, 
                            litters=litters)
 
+@app.route("/owners")
+@app.route("/owners/<int:page>")
+def show_owners(page=1):
+    page_size = 10
+    owner_count = user.get_owner_count()
+    page_count = math.ceil(owner_count / page_size)
+    page_count = max(page_count, 1)
+    owners = user.get_owners(page, page_size)
+
+    if not owners:
+        abort(404, "ERROR: no owners found")
+    if page < 1:
+        return redirect("/owners/1")
+    if page > page_count:
+        return redirect("/owners/", str(page_count))
+
+    return render_template("html/owners.html", page=page, page_count=page_count, 
+                           owners=owners)
+
 def require_login():
     if "user_id" not in session:
         abort(403, "ERROR: login required")

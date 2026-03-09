@@ -7,6 +7,17 @@ def get_user(user_id):
     result = db.query(sql, [user_id])
     return result[0] if result else None
 
+def get_owner_count():
+    sql = "SELECT COUNT(*) FROM Users"
+    result = db.query(sql)
+    return result[0][0] if result else 0
+
+def get_owners(page, page_size):
+    sql = "SELECT * FROM Users ORDER BY username LIMIT ? OFFSET ?"
+    limit = page_size
+    offset = page_size * (page - 1)
+    return db.query(sql, [limit, offset])
+
 def get_users_dogs(user_id):
     sql = (
         "SELECT d.*, "
