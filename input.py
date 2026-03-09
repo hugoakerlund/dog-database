@@ -37,7 +37,7 @@ def check_form_data(form):
     if not check_registration_number(form["registration_number"]):
         abort(400, "ERROR: invalid registration number format (must be 'FI12345/67')")
 
-    if not check_name(form["name"]):
+    if not name_exists(form["name"]):
         abort(400, "ERROR: name must be between 2 and 20 characters")
     
     if not check_date(form["date_of_birth"]):
@@ -109,7 +109,7 @@ def check_litter_creation_form_data(form):
     if not form["name"] or not form["date_of_birth"] or not form["father_id"] or not form["mother_id"]:
         abort(400, "ERROR: All fields are required")
     
-    if not check_name(form["name"]):
+    if not name_exists(form["name"]):
         abort(400, "ERROR: litter name must be between 2 and 20 characters")
     
     if not check_date(form["date_of_birth"]):
@@ -154,7 +154,7 @@ def get_account_registration_form_data(request):
     check_registration_form_data(form)
     return form
 
-def check_name(name):
+def name_exists(name):
     result = owner.get_id_with_name(name)
     if not result:
         abort(400, "ERROR: Invalid name or password")

@@ -119,7 +119,7 @@ def insert_random_owner(id):
         db.execute(sql, [name, email, password_hash])
 
 def create_litter(id, father_id, mother_id):
-        name = "test_litter_" + str(id)
+        name = "test_litter" + str(id)
         date_of_birth = create_random_date()
         sql = "INSERT INTO Litters (id, name, father_id, mother_id, date_of_birth) VALUES (?, ?, ?, ?, ?)"
         db.execute(sql, [id, name, father_id, mother_id, date_of_birth])
