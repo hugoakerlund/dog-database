@@ -113,7 +113,7 @@ def create_random_date():
 
 def insert_random_owner(id):
         name = "test_owner" + str(id)
-        email = name + "@" + "testdomain"
+        email = name + "@" + "test_domain" + ".com"
         password_hash = "test_hash"
         sql = "INSERT INTO Owners (name, email, password_hash) VALUES (?, ?, ?)"
         db.execute(sql, [name, email, password_hash])
