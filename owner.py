@@ -37,13 +37,6 @@ def get_dogs(owner_id):
     result = db.query(sql, [owner_id])
     return result
 
-def get_name_with_id(id):
-    sql = "SELECT name FROM Owners WHERE id = ?"
-    name = db.query(sql, [id])
-    if not name:
-        abort(404, "ERROR: owner not found")
-    return name
-
 def get_id_with_name(name):
     sql = "SELECT id FROM Owners WHERE name = ?"
     id = db.query(sql, [name])
