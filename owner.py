@@ -1,6 +1,4 @@
-from flask import abort
 import db
-
 
 def get_owner(owner_id):
     sql = "SELECT * FROM Owners WHERE id = ?"
@@ -41,14 +39,14 @@ def get_id_with_name(name):
     sql = "SELECT id FROM Owners WHERE name = ?"
     id = db.query(sql, [name])
     if not id:
-        abort(404, "ERROR: invalid name or password")
+        return None
     return id[0][0]
 
 def get_password_hash(name):
     sql = "SELECT password_hash FROM Owners WHERE name = ?"
     result = db.query(sql, [name])
     if not result:
-        abort(404, "ERROR: invalid name or password")
+        return None
     return result[0][0]
 
 def insert_owner(form):
