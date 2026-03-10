@@ -1,0 +1,26 @@
+# Dog database
+
+Dog database is a simple web application built with Flask that allows users to view and manage a collection of dogs. The application provides a user-friendly interface to display dog information, add new dogs, and delete existing dogs from the database.
+
+## Installation
+
+Install `flask` with pip:
+
+```
+$ pip install flask
+```
+
+Create database tables and initial data:
+
+```
+$ sqlite3 database.db < schema.sql
+$ python3 seed.py
+```
+
+Run app with
+
+```
+$ flask run
+```
+
+app will be available at https://localhost:5000
