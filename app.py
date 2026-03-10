@@ -91,9 +91,10 @@ def edit_dog_get(dog_id):
     dog_info = dog.get_dog(dog_id)
     if not dog_info:
         abort(404, "ERROR: dog not found")
+    colors = dog.get_colors()
     dog_breeds = dog.get_breeds()
     championship_titles = dog.get_championship_titles()
-    return render_template("html/edit.html", dog=dog_info, dog_breeds=dog_breeds,
+    return render_template("html/edit.html", dog=dog_info, colors=colors, dog_breeds=dog_breeds,
                         championship_titles=championship_titles)
 
 @app.route("/edit/<int:dog_id>", methods=["POST"])
