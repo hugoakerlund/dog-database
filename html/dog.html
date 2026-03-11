@@ -48,6 +48,11 @@
   <p>
     Date or birth: {{ dog.date_of_birth }}
   </P>
+  {% if dog.date_of_death %}
+  <p>
+    Date of death: {{ dog.date_of_death }}
+  </p>
+  {% endif %}
   <p>
     Sex: {{ dog.sex }}
   </P>
