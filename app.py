@@ -132,6 +132,27 @@ def remove_dog_post(dog_id):
     dog.delete_dog(dog_id)
     return redirect("/my_dogs")
 
+@app.route("/edit_litter/<int:litter_id>", methods=["GET"])
+def edit_litter_get(litter_id):
+    require_login()
+    litter_info = litter.get_litter(litter_id)
+    if not litter_info:
+        abort(404, "ERROR: litter not found")
+    return render_template("html/edit_litter.html", litter=litter_info)
+
+@app.route("/edit_litter/<int:litter_id>", methods=["POST"])
+def edit_litter_post(litter_id):
+    require_login()
+    if request.method == "POST":
+        form = input.get_litter_form(request)
+        if not input.check_litter_form(form):
+            return redirect(f"/edit_litter/{litter_id}")
+        try:
+            litter.update_litter(litter_id, form)
+        except sqlite3.IntegrityError as e:
+            return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+        return redirect("/my_litters")
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":

@@ -72,6 +72,15 @@ def insert_litter(form):
     db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"], 
                      form["owner_id"]])
 
+def update_litter(litter_id, form):
+    sql = (
+        "UPDATE Litters "
+        "SET name = ?, father_id = ?, mother_id = ?, date_of_birth = ? "
+        "WHERE id = ?"
+    )
+    db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"], 
+                     litter_id])
+
 def litter_name_exists(name):
     sql = "SELECT id FROM Litters WHERE name = ?"
     result = db.query(sql, [name])
