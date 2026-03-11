@@ -92,7 +92,7 @@ def create_litter_post():
             return f"ERROR: Database error: {e} (possibly invalid foreign key)"
         return redirect("/litters")
 
-@app.route("/edit/<int:dog_id>", methods=["GET"])
+@app.route("/edit_dog/<int:dog_id>", methods=["GET"])
 def edit_dog_get(dog_id):
     require_login()
     dog_info = dog.get_dog(dog_id)
@@ -104,28 +104,28 @@ def edit_dog_get(dog_id):
     return render_template("html/edit.html", dog=dog_info, colors=colors, dog_breeds=dog_breeds,
                         championship_titles=championship_titles)
 
-@app.route("/edit/<int:dog_id>", methods=["POST"])
+@app.route("/edit_dog/<int:dog_id>", methods=["POST"])
 def edit_dog_post(dog_id):
     require_login()
     if request.method == "POST":
         form = input.get_dog_form(request)
         if not input.check_dog_form(form, edit=True):
-            return redirect(f"/edit/{dog_id}")
+            return redirect(f"/edit_dog/{dog_id}")
         try:
             dog.update_dog(dog_id, form)
         except sqlite3.IntegrityError as e:
             return f"ERROR: Database error: {e} (possibly invalid foreign key)"
         return redirect("/my_dogs")
 
-@app.route("/remove/<int:dog_id>", methods=["GET"])
+@app.route("/remove_dog/<int:dog_id>", methods=["GET"])
 def remove_dog_get(dog_id):
     require_login()
     dog_info = dog.get_dog(dog_id)
     if not dog_info:
         abort(404, "ERROR: dog not found")
-    return render_template("html/remove.html", dog=dog_info)
+    return render_template("html/remove_dog.html", dog=dog_info)
 
-@app.route("/remove/<int:dog_id>", methods=["POST"])
+@app.route("/remove_dog/<int:dog_id>", methods=["POST"])
 def remove_dog_post(dog_id):
     require_login()
     check_csrf()

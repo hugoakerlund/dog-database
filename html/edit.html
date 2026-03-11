@@ -28,7 +28,7 @@
     <b>{{ message }}</b>
   </p>
   {% endfor %}
-  <form action="/edit/{{ dog.id }}" method="post" enctype="multipart/form-data">
+  <form action="/edit_dog/{{ dog.id }}" method="post" enctype="multipart/form-data">
     <p>
       Registration number:
       <input type="text" name="registration_number" value="{{ dog.registration_number }}"
