@@ -57,8 +57,8 @@ def create_dog_get():
 def create_dog_post():
     require_login()
     check_csrf()
-    form = input.get_dog_creation_form(request)
-    if not input.check_dog_creation_form(form):
+    form = input.get_dog_form(request)
+    if not input.check_dog_form(form, edit=False):
         return redirect("/create_dog")
     try:
         dog.insert_dog(form)
@@ -76,8 +76,8 @@ def create_litter_post():
     require_login()
     if request.method == "POST":
         check_csrf()
-        form = input.get_litter_creation_form(request)
-        if not input.check_litter_creation_form(form):
+        form = input.get_litter_form(request)
+        if not input.check_litter_form(form):
             return render_template("html/create_litter.html")
         try:
             litter.insert_litter(form)
@@ -101,8 +101,8 @@ def edit_dog_get(dog_id):
 def edit_dog_post(dog_id):
     require_login()
     if request.method == "POST":
-        form = input.get_dog_creation_form(request)
-        if not input.check_dog_creation_form(form):
+        form = input.get_dog_form(request)
+        if not input.check_dog_form(form, edit=True):
             return redirect(f"/edit/{dog_id}")
         try:
             dog.update_dog(dog_id, form)
@@ -150,7 +150,7 @@ def register_get():
 
 @app.route("/register", methods=["POST"])
 def register_post():
-    form = input.get_account_registration_form(request)
+    form = input.get_registration_form(request)
     if not input.check_registration_form(form):
         return redirect("/register")
     try:

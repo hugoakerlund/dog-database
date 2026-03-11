@@ -38,7 +38,7 @@ def check_litter(litter_name):
     return len(litter_name) >= 2 and len(litter_name) <= 20 and \
            litter.get_litter_id_by_name(litter_name) is not None
 
-def check_dog_creation_form(form):
+def check_dog_form(form, edit):
     if not form["registration_number"] or not form["name"] or not form["breed"] or not \
         form["color"] or not form["date_of_birth"] or not form["sex"]:
         flash("ERROR: registration number, name, breed, color, date of birth, and sex are required")
@@ -46,7 +46,7 @@ def check_dog_creation_form(form):
     if not check_registration_number(form["registration_number"]):
         flash("ERROR: invalid registration number format (must be 'FI12345/67')")
         return False
-    if dog.registration_number_exists(form["registration_number"]):
+    if not edit and dog.registration_number_exists(form["registration_number"]):
         flash("ERROR: registration number already exists")
         return False
     if not check_name(form["name"]):
@@ -55,9 +55,8 @@ def check_dog_creation_form(form):
     if not check_date(form["date_of_birth"]):
         flash("ERROR: invalid date of birth format (must be YYYY-MM-DD)")
         return False
-    if form["date_of_death"] and not check_date(form["date_of_death"]) or not \
-        check_death_date(form["date_of_death"], form["date_of_birth"]):
-        flash("ERROR: invalid date of death format (must be YYYY-MM-DD)")
+    if form["date_of_death"] and not check_death_date(form["date_of_death"], form["date_of_birth"]):
+        flash("ERROR: invalid date of death")
         return False
     if form["father"] and not check_registration_number(form["father"]):
         flash("ERROR: invalid father registration number format (must be 'FI12345/67')")
@@ -68,7 +67,7 @@ def check_dog_creation_form(form):
     if form["litter"] and not check_litter(form["litter"]):
         flash("ERROR: invalid litter name (must be between 2 and 20 characters)")
         return False
-    if form["litter"] and litter.litter_name_exists(form["litter"]):
+    if form["litter"] and not edit and litter.litter_name_exists(form["litter"]):
         flash("ERROR: litter name already exists")
         return False
     if not form["image"] or not form["image"].filename:
@@ -98,7 +97,7 @@ def check_dog_creation_form(form):
             return False
     return True
 
-def get_dog_creation_form(request):
+def get_dog_form(request):
     form = {}
     form["registration_number"] = request.form.get("registration_number", "").strip()
     form["name"] = request.form.get("name", "").strip()
@@ -122,7 +121,7 @@ def get_dog_creation_form(request):
 
     return form
 
-def check_litter_creation_form(form):
+def check_litter_form(form):
     if not form["name"] or not form["date_of_birth"] or not form["father_id"] or not form["mother_id"]:
         flash("ERROR: all fields are required")
         return False
@@ -140,7 +139,7 @@ def check_litter_creation_form(form):
         return False
     return True
 
-def get_litter_creation_form(request):
+def get_litter_form(request):
     form = {}
     form["name"] = request.form.get("name", "").strip()
     form["father"] = request.form.get("father", "").strip() or None
@@ -148,7 +147,7 @@ def get_litter_creation_form(request):
     form["mother"] = request.form.get("mother", "").strip() or None
     form["mother_id"] = dog.get_dog_id_by_registration_number(form["mother"])
     form["date_of_birth"] = request.form.get("date_of_birth", "").strip()
-    check_litter_creation_form(form)
+    check_litter_form(form)
     return form
 
 def check_registration_form(form):
@@ -176,7 +175,7 @@ def check_registration_form(form):
     form["password_hash"] = generate_password_hash(form["password1"])
     return True
 
-def get_account_registration_form(request):
+def get_registration_form(request):
     form = {}
     form["name"] = request.form.get("name", "").strip()
     form["email"] = request.form.get("email", "").strip()
