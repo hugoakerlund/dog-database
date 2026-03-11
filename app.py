@@ -153,6 +153,21 @@ def edit_litter_post(litter_id):
             return f"ERROR: Database error: {e} (possibly invalid foreign key)"
         return redirect("/my_litters")
 
+@app.route("/remove_litter/<int:litter_id>", methods=["GET"])
+def remove_litter_get(litter_id):
+    require_login()
+    litter_info = litter.get_litter(litter_id)
+    if not litter_info:
+        abort(404, "ERROR: litter not found")
+    return render_template("html/remove_litter.html", litter=litter_info)
+
+@app.route("/remove_litter/<int:litter_id>", methods=["POST"])
+def remove_litter_post(litter_id):
+    require_login()
+    check_csrf()
+    litter.delete_litter(litter_id)
+    return redirect("/my_litters")
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":

@@ -80,6 +80,10 @@ def update_litter(litter_id, form):
     )
     db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"], 
                      litter_id])
+                    
+def delete_litter(litter_id):
+    sql = "DELETE FROM Litters WHERE id = ?"
+    db.execute(sql, [litter_id])
 
 def litter_name_exists(name):
     sql = "SELECT id FROM Litters WHERE name = ?"

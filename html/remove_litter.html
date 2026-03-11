@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dog Database</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+
+<body>
+    <h1>Remove litter: {{ litter.name }}</h1>
+    <p>
+        <a href="/">Home</a>
+        <a href="/litters">Litters</a>
+        <a href="/owners">Owners</a>
+        {% if session.get('name') %}
+        <a href="/create_dog">Add dog</a>
+        <a href="/create_litter">Add litter</a>
+        <a href="/my_dogs">My dogs</a>
+        <a href="/my_litters">My litters</a>
+        <a href="/logout">Logout</a>
+        {% else %}
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+        {% endif %}
+    </p>
+    <form action="/remove_litter/{{ litter.id }}" method="post">
+        <p>
+            Are you sure you want to remove {{ litter.name }} from the database?
+        </p>
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+        <input type="submit" name="continue" value="Continue" />
+        <input type="submit" name="cancel" value="Cancel" />
+    </form>
+</body>
+
+</html>
