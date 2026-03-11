@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dog Database</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+
+<body>
+    <h1>My Litters</h1>
+    <p>
+        <a href="/">Home</a>
+        <a href="/litters">Litters</a>
+        <a href="/owners">Owners</a>
+        {% if session.get('name') %}
+        <a href="/create_dog">Add dog</a>
+        <a href="/create_litter">Add litter</a>
+        <a href="/my_dogs">My dogs</a>
+        <a href="/logout">Logout</a>
+        {% endif %}
+    </p>
+
+    {% if my_litters %}
+
+    <p>
+        You have currently {{ my_litters| count }} litter(s).
+    </p>
+</body>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Father</th>
+        <th>Mother</th>
+        <th>Date or birth</th>
+    </tr>
+    {% for litter in my_litters %}
+    <tr>
+        <td><a href="/litter/{{ litter.id }}">{{ litter.name }}</a></td>
+        <td><a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number or "Unknown" }}</a></td>
+        <td><a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number or "Unknown" }}</a></td>
+        <td>{{ litter.date_of_birth }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <p>
+      You don't have any litters yet. Add your first litter <a href="/create_litter">here</a>.
+    </p>
+    {% endif %}
+</table>
+
+</html>

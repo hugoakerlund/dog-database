@@ -35,6 +35,21 @@ def get_dogs(owner_id):
     result = db.query(sql, [owner_id])
     return result
 
+def get_litters(owner_id):
+    sql = (
+        "SELECT l.*, "
+        "f.registration_number AS father_registration_number, "
+        "m.registration_number AS mother_registration_number, "
+        "o.name AS owner_name "
+        "FROM Litters l "
+        "LEFT JOIN Dogs f ON l.father_id = f.id "
+        "LEFT JOIN Dogs m ON l.mother_id = m.id "
+        "LEFT JOIN Owners o ON l.owner_id = o.id "
+        "WHERE l.owner_id = ?"
+    )
+    result = db.query(sql, [owner_id])
+    return result
+
 def get_id_with_name(name):
     sql = "SELECT id FROM Owners WHERE name = ?"
     id = db.query(sql, [name])

@@ -45,6 +45,13 @@ def show_my_dogs():
     my_dogs = owner.get_dogs(owner_id)
     return render_template("html/my_dogs.html", my_dogs=my_dogs)
 
+@app.route("/my_litters")
+def show_my_litters():
+    require_login()
+    owner_id = session["owner_id"]
+    my_litters = owner.get_litters(owner_id)
+    return render_template("html/my_litters.html", my_litters=my_litters)
+
 @app.route("/create_dog", methods=["GET"])
 def create_dog_get():
     colors = dog.get_colors()
