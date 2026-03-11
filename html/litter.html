@@ -32,6 +32,9 @@
         Birth date: {{ litter.date_of_birth }}
     </P>
     <p>
+        Owner: <a href="/owner/{{ litter.owner_id }}">{{ litter.owner_name }}</a>
+    </P>
+    <p>
         Dogs in {{ litter.name }}:
     </P>
     <table>

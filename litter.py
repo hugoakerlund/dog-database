@@ -4,10 +4,12 @@ def get_litter(litter_id):
     sql = (
         "SELECT l.*, "
         "f.registration_number AS father_registration_number, "
-        "m.registration_number AS mother_registration_number "
+        "m.registration_number AS mother_registration_number, "
+        "o.name AS owner_name "
         "FROM Litters l "
         "LEFT JOIN Dogs f ON l.father_id = f.id "
         "LEFT JOIN Dogs m ON l.mother_id = m.id "
+        "LEFT JOIN Owners o ON l.owner_id = o.id "
         "WHERE l.id = ?"
     )
     result = db.query(sql, [litter_id])
@@ -22,10 +24,12 @@ def get_litters(page, page_size):
     sql = (
         "SELECT l.*, "
         "f.registration_number AS father_registration_number, "
-        "m.registration_number AS mother_registration_number "
+        "m.registration_number AS mother_registration_number, "
+        "o.name AS owner_name "
         "FROM Litters l "
         "LEFT JOIN Dogs f ON l.father_id = f.id "
         "LEFT JOIN Dogs m ON l.mother_id = m.id "
+        "LEFT JOIN Owners o ON l.owner_id = o.id "
         "GROUP BY l.id "
         "ORDER BY l.date_of_birth DESC "
         "LIMIT ? OFFSET ?"
@@ -61,10 +65,12 @@ def get_dogs_in_litter(litter_id):
 
 def insert_litter(form):
     sql = (
-        "INSERT INTO Litters (name, father_id, mother_id, date_of_birth) "
-        "VALUES (?, ?, ?, ?)"
+        "INSERT INTO Litters (name, father_id, mother_id, date_of_birth, owner_id) "
+        "VALUES (?, ?, ?, ?, ?)"
     )
-    db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"]])
+    print(form["owner_id"])
+    db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"], 
+                     form["owner_id"]])
 
 def litter_name_exists(name):
     sql = "SELECT id FROM Litters WHERE name = ?"

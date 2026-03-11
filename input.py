@@ -147,7 +147,7 @@ def get_litter_form(request):
     form["mother"] = request.form.get("mother", "").strip() or None
     form["mother_id"] = dog.get_dog_id_by_registration_number(form["mother"])
     form["date_of_birth"] = request.form.get("date_of_birth", "").strip()
-    check_litter_form(form)
+    form["owner_id"] = session["owner_id"]
     return form
 
 def check_registration_form(form):

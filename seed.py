@@ -121,8 +121,8 @@ def insert_random_owner(id):
 def create_litter(id, father_id, mother_id):
         name = "test_litter" + str(id)
         date_of_birth = create_random_date()
-        sql = "INSERT INTO Litters (id, name, father_id, mother_id, date_of_birth) VALUES (?, ?, ?, ?, ?)"
-        db.execute(sql, [id, name, father_id, mother_id, date_of_birth])
+        sql = "INSERT INTO Litters (id, name, father_id, mother_id, date_of_birth, owner_id) VALUES (?, ?, ?, ?, ?, ?)"
+        db.execute(sql, [id, name, father_id, mother_id, date_of_birth, id])
 
 
 def insert_random_dog(id):

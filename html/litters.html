@@ -24,6 +24,7 @@
             <th>Father</th>
             <th>Mother</th>
             <th>Date or birth</th>
+            <th>Owner</th>
         </tr>
         {% for litter in litters %}
         <tr>
@@ -31,7 +32,9 @@
             <td><a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number or "Unknown" }}</a></td>
             <td><a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number or "Unknown" }}</a></td>
             <td>{{ litter.date_of_birth }}</td>
-            {% endfor %}
+            <td><a href="/owner/{{ litter.owner_id }}">{{ litter.owner_name }}</a></td>
+        </tr>
+        {% endfor %}
     </table>
 </body>
 <p>

@@ -54,5 +54,6 @@ CREATE TABLE Litters (
   name TEXT UNIQUE,
   father_id TEXT REFERENCES Dogs(id),
   mother_id TEXT REFERENCES Dogs(id),
-  date_of_birth DATE
+  date_of_birth DATE,
+  owner_id INTEGER REFERENCES Owners(id)
 );
