@@ -38,7 +38,7 @@ def check_litter(litter_name):
     return len(litter_name) >= 2 and len(litter_name) <= 20 and \
            litter.get_litter_id_by_name(litter_name) is not None
 
-def check_dog_form(form, edit):
+def check_dog_form(form, edit, old_registration_number=None):
     if not form["registration_number"] or not form["name"] or not form["breed"] or not \
         form["color"] or not form["date_of_birth"] or not form["sex"]:
         flash("ERROR: registration number, name, breed, color, date of birth, and sex are required")
@@ -46,7 +46,7 @@ def check_dog_form(form, edit):
     if not check_registration_number(form["registration_number"]):
         flash("ERROR: invalid registration number format (must be 'FI12345/67')")
         return False
-    if not edit and dog.registration_number_exists(form["registration_number"]):
+    if edit and old_registration_number != form["registration_number"] and dog.registration_number_exists(form["registration_number"]):
         flash("ERROR: registration number already exists")
         return False
     if not check_name(form["name"]):
@@ -121,12 +121,15 @@ def get_dog_form(request):
 
     return form
 
-def check_litter_form(form):
+def check_litter_form(form, edit=False, old_litter_name=None):
     if not form["name"] or not form["date_of_birth"] or not form["father_id"] or not form["mother_id"]:
         flash("ERROR: all fields are required")
         return False
     if not check_name(form["name"]):
-        flash("ERROR: litter name must be between 2 and 20 characters")
+        flash("ERROR: litter name must be between 2 and 20 characters and can only contain letters and spaces")
+        return False
+    if edit and old_litter_name != form["name"] and litter.litter_name_exists(form["name"]):
+        flash("ERROR: litter name already exists")
         return False
     if not check_date(form["date_of_birth"]):
         flash("ERROR: invalid date of birth format (must be YYYY-MM-DD)")

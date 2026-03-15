@@ -87,16 +87,15 @@ def create_litter_get():
 @app.route("/create_litter", methods=[ "POST"])
 def create_litter_post():
     require_login()
-    if request.method == "POST":
-        check_csrf()
-        form = input.get_litter_form(request)
-        if not input.check_litter_form(form):
-            return render_template("html/create_litter.html")
-        try:
-            litter.insert_litter(form)
-        except sqlite3.IntegrityError as e:
-            return f"ERROR: Database error: {e} (possibly invalid foreign key)"
-        return redirect("/litters")
+    check_csrf()
+    form = input.get_litter_form(request)
+    if not input.check_litter_form(form):
+        return render_template("html/create_litter.html")
+    try:
+        litter.insert_litter(form)
+    except sqlite3.IntegrityError as e:
+        return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+    return redirect("/litters")
 
 @app.route("/edit_dog/<int:dog_id>", methods=["GET"])
 def edit_dog_get(dog_id):
@@ -113,15 +112,15 @@ def edit_dog_get(dog_id):
 @app.route("/edit_dog/<int:dog_id>", methods=["POST"])
 def edit_dog_post(dog_id):
     require_login()
-    if request.method == "POST":
-        form = input.get_dog_form(request)
-        if not input.check_dog_form(form, edit=True):
-            return redirect(f"/edit_dog/{dog_id}")
-        try:
-            dog.update_dog(dog_id, form)
-        except sqlite3.IntegrityError as e:
-            return f"ERROR: Database error: {e} (possibly invalid foreign key)"
-        return redirect("/my_dogs")
+    form = input.get_dog_form(request)
+    old_registration_number = dog.get_registration_number(dog_id)
+    if not input.check_dog_form(form, edit=True, old_registration_number=old_registration_number):
+        return redirect(f"/edit_dog/{dog_id}")
+    try:
+        dog.update_dog(dog_id, form)
+    except sqlite3.IntegrityError as e:
+        return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+    return redirect("/my_dogs")
 
 @app.route("/remove_dog/<int:dog_id>", methods=["GET"])
 def remove_dog_get(dog_id):
@@ -150,15 +149,15 @@ def edit_litter_get(litter_id):
 @app.route("/edit_litter/<int:litter_id>", methods=["POST"])
 def edit_litter_post(litter_id):
     require_login()
-    if request.method == "POST":
-        form = input.get_litter_form(request)
-        if not input.check_litter_form(form):
-            return redirect(f"/edit_litter/{litter_id}")
-        try:
-            litter.update_litter(litter_id, form)
-        except sqlite3.IntegrityError as e:
-            return f"ERROR: Database error: {e} (possibly invalid foreign key)"
-        return redirect("/my_litters")
+    form = input.get_litter_form(request)
+    old_litter_name = litter.get_litter(litter_id)["name"]
+    if not input.check_litter_form(form, edit=True, old_litter_name=old_litter_name):
+        return redirect(f"/edit_litter/{litter_id}")
+    try:
+        litter.update_litter(litter_id, form)
+    except sqlite3.IntegrityError as e:
+        return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+    return redirect("/my_litters")
 
 @app.route("/remove_litter/<int:litter_id>", methods=["GET"])
 def remove_litter_get(litter_id):
