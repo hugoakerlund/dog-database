@@ -163,3 +163,22 @@ def registration_number_exists(registration_number):
     sql = "SELECT id FROM Dogs WHERE registration_number = ?"
     result = db.query(sql, [registration_number])
     return bool(result)
+
+def search(query):
+    sql = (
+        "SELECT d.*, "
+        "f.registration_number AS father_registration_number, "
+        "m.registration_number AS mother_registration_number, "
+        "l.name AS litter_name, "
+        "o.name AS owner_name, "
+        "c.title AS championship_title "
+        "FROM Dogs d "
+        "LEFT JOIN Dogs f ON d.father_id = f.id "
+        "LEFT JOIN Dogs m ON d.mother_id = m.id "
+        "LEFT JOIN Litters l ON d.litter_id = l.id "
+        "LEFT JOIN Owners o ON d.owner_id = o.id "
+        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id "
+        "WHERE d.name LIKE ? OR d.registration_number LIKE ? OR d.breed LIKE ?"
+    )
+    like_query = f"%{query}%"
+    return db.query(sql, [like_query, like_query, like_query])

@@ -10,6 +10,7 @@
   <h1>Dog Database</h1>
   <p>
     <a href="/">Home</a>
+    <a href="/search">Search</a>
     <a href="/litters">Litters</a>
     <a href="/owners">Owners</a>
     {% if session.get('name') %}
@@ -23,7 +24,6 @@
     <a href="/register">Register</a>
     {% endif %}
   </p>
-
   <table>
     <tr>
       <th>Registration number</th>

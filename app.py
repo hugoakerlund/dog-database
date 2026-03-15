@@ -31,6 +31,12 @@ def index(page=1):
     return render_template("html/index.html", page=page, page_count=page_count,
                             dogs=dogs, session=session)
 
+@app.route("/search")
+def search():
+    query = request.args.get("query")
+    results = dog.search(query) if query else []
+    return render_template("html/search.html", query=query, results=results)
+
 @app.route("/dog/<int:dog_id>")
 def show_dog(dog_id):
     result = dog.get_dog(dog_id)
