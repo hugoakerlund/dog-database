@@ -127,7 +127,7 @@ def edit_dog_post(dog_id):
 def remove_dog_get(dog_id):
     require_login()
     dog_info = dog.get_dog(dog_id)
-    if not dog_info:
+    if not dog_info or dog_info["owner_id"] != session["owner_id"]:
         abort(404, "ERROR: dog not found")
     return render_template("html/remove_dog.html", dog=dog_info)
 
@@ -135,7 +135,8 @@ def remove_dog_get(dog_id):
 def remove_dog_post(dog_id):
     require_login()
     check_csrf()
-    dog.delete_dog(dog_id)
+    if "continue" in request.form:
+        dog.delete_dog(dog_id)
     return redirect("/my_dogs")
 
 @app.route("/edit_litter/<int:litter_id>", methods=["GET"])
@@ -163,7 +164,7 @@ def edit_litter_post(litter_id):
 def remove_litter_get(litter_id):
     require_login()
     litter_info = litter.get_litter(litter_id)
-    if not litter_info:
+    if not litter_info or litter_info["owner_id"] != session["owner_id"]:
         abort(404, "ERROR: litter not found")
     return render_template("html/remove_litter.html", litter=litter_info)
 
@@ -171,7 +172,8 @@ def remove_litter_get(litter_id):
 def remove_litter_post(litter_id):
     require_login()
     check_csrf()
-    litter.delete_litter(litter_id)
+    if "continue" in request.form:
+        litter.delete_litter(litter_id)
     return redirect("/my_litters")
 
 @app.route("/login", methods=["GET", "POST"])
