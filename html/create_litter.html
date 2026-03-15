@@ -1,50 +1,51 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Dog Database</title>
-  </head>
+{% extends "html/layout.html" %}
 
-  <body>
-    <h1>Add a new litter to the database</h1>
-    <p>
-      <a href="/">Home</a>
-      <a href="/litters">Litters</a>
-      <a href="/owners">Owners</a>
-      {% if session.get('name') %}
-      <a href="/create_dog">Add dog</a>
-      <a href="/create_litter">Add litter</a>
-      <a href="/my_dogs">My dogs</a>
-      <a href="/my_litters">My litters</a>
-      <a href="/logout">Logout</a>
-      {% else %}
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
-      {% endif %}
-    </p>
-    {% for message in get_flashed_messages() %}
-    <p>
-      <b>{{ message }}</b>
-    </p>
-    {% endfor %}
-    <form action="/create_litter" method="post">
-      <p>
-        Name:
-        <input type="text" name="name" maxlength=20 required />
-      </p>
-      <p>
-        Father:
-        <input type="text" name="father" placeholder="Registration number" maxlength=10 />
-      </p>
-      <p>
-        Mother:
-        <input type="text" name="mother" placeholder="Registration number" maxlength=10 />
-      </p>
-      <p>
-        Date of birth:
-        <input type="date" name="date_of_birth" value="yyyy/mm/dd" required />
-      </p>
-      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-      <input type="submit" value="Save" />
-    </form>
-  </body>
-</html>
+{% block title %}Dog Database{% endblock %}
+
+{% block content %}
+
+<h2>Add litter</h2>
+
+<p>
+  <a href="/">Home</a>
+  <a href="/litters">Litters</a>
+  <a href="/owners">Owners</a>
+  {% if session.get('name') %}
+  <a href="/create_dog">Add dog</a>
+  <a href="/create_litter">Add litter</a>
+  <a href="/my_dogs">My dogs</a>
+  <a href="/my_litters">My litters</a>
+  <a href="/logout">Logout</a>
+  {% else %}
+  <a href="/login">Login</a>
+  <a href="/register">Register</a>
+  {% endif %}
+</p>
+{% for message in get_flashed_messages() %}
+<p>
+  <b>{{ message }}</b>
+</p>
+{% endfor %}
+<form action="/create_litter" method="post">
+  <p>
+    Name:
+    <input type="text" name="name" maxlength=20 required />
+  </p>
+  <p>
+    Father:
+    <input type="text" name="father" placeholder="Registration number" maxlength=10 />
+  </p>
+  <p>
+    Mother:
+    <input type="text" name="mother" placeholder="Registration number" maxlength=10 />
+  </p>
+  <p>
+    Date of birth:
+    <input type="date" name="date_of_birth" value="yyyy/mm/dd" required />
+  </p>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Save" />
+</form>
+</body>
+
+{% endblock %}

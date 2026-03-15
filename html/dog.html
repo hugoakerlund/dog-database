@@ -1,101 +1,83 @@
-<!DOCTYPE html>
-<html>
+{% extends "html/layout.html" %}
 
-<head>
-  <title>Dog Database</title>
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
+{% block title %}Dog Database{% endblock %}
 
-<body>
-  <h1>{{ dog.name }}</h1>
-  <p>
-    <a href="/">Home</a>
-    <a href="/litters">Litters</a>
-    <a href="/owners">Owners</a>
-    {% if session.get('name') %}
-    <a href="/create_dog">Add dog</a>
-    <a href="/create_litter">Add litter</a>
-    <a href="/my_dogs">My dogs</a>
-    <a href="/my_litters">My litters</a>
-    <a href="/logout">Logout</a>
-    {% else %}
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
-    {% endif %}
-  </p>
-  <p>
-    Registration number: {{ dog.registration_number }}
-  </P>
+{% block content %}
 
-  {% if dog.image %}
-  <p>
-    Image: <img src="/image/{{ dog.id }}" alt="Dog Image" width="200" height="200">
-  </P>
-  {% else %}
-  <p>
-    No image available for this dog.
-  </P>
-  {% endif %}
-  <p>
-    Name: {{ dog.name }}
-  </P>
-  <p>
-    Color: {{ dog.color}}
-  </P>
-  <p>
-    Breed: {{ dog.breed }}
-  </P>
-  <p>
-    Date or birth: {{ dog.date_of_birth }}
-  </P>
-  {% if dog.date_of_death %}
-  <p>
-    Date of death: {{ dog.date_of_death }}
-  </p>
-  {% endif %}
-  <p>
-    Sex: {{ dog.sex }}
-  </P>
-  <p>
-    Father: {% if dog.father_id %}<a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number if
-      dog.father_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
-  </P>
-  <p>
-    Mother: {% if dog.mother_id %}<a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number if
-      dog.mother_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
-  </P>
-  <p>
-    Owner: <a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a>
-  </P>
-  <p>
-    Litter: {% if dog.litter_id%}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else
-      "Unknown" }}</a>{% else %}Unknown{% endif %} </P>
-  <p>
-    Championship title: {{ dog.championship_title }}
-  </P>
-  <p>
-    Best test: {{ dog.best_test }}
-  </P>
-  <p>
-    Best show: {{ dog.best_show_name if dog.best_show_name else "Unknown" }}
-  </P>
-  <p>
-    Litter score: {{ dog.litter_score }}
-  </P>
-  <p>
-    Score trace: {{ dog.score_trace }}
-  </P>
-  <p>
-    Hip index: {{ dog.hip_index }}
-  </P>
-  <p>
-    Use index: {{ dog.use_index }}
-  </P>
-  {% if dog.owner_id == session.owner_id %}
-  <p>
-    <a href="/edit_dog/{{ dog.id }}">Edit</a> |
-    <a href="/remove_dog/{{ dog.id }}">Remove</a>
-  </p>
-  {% endif %}
+<h2>{{ dog.name }}</h2>
 
-</html>
+<p>
+  Registration number: {{ dog.registration_number }}
+</P>
+{% if dog.image %}
+<p>
+  Image: <img src="/image/{{ dog.id }}" alt="Dog Image" width="200" height="200">
+</P>
+{% else %}
+<p>
+  No image available for this dog.
+</P>
+{% endif %}
+<p>
+  Name: {{ dog.name }}
+</P>
+<p>
+  Color: {{ dog.color}}
+</P>
+<p>
+  Breed: {{ dog.breed }}
+</P>
+<p>
+  Date or birth: {{ dog.date_of_birth }}
+</P>
+{% if dog.date_of_death %}
+<p>
+  Date of death: {{ dog.date_of_death }}
+</p>
+{% endif %}
+<p>
+  Sex: {{ dog.sex }}
+</P>
+<p>
+  Father: {% if dog.father_id %}<a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number if
+    dog.father_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
+</P>
+<p>
+  Mother: {% if dog.mother_id %}<a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number if
+    dog.mother_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
+</P>
+<p>
+  Owner: <a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a>
+</P>
+<p>
+  Litter: {% if dog.litter_id%}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else
+    "Unknown" }}</a>{% else %}Unknown{% endif %} </P>
+<p>
+  Championship title: {{ dog.championship_title }}
+</P>
+<p>
+  Best test: {{ dog.best_test }}
+</P>
+<p>
+  Best show: {{ dog.best_show_name if dog.best_show_name else "Unknown" }}
+</P>
+<p>
+  Litter score: {{ dog.litter_score }}
+</P>
+<p>
+  Score trace: {{ dog.score_trace }}
+</P>
+<p>
+  Hip index: {{ dog.hip_index }}
+</P>
+<p>
+  Use index: {{ dog.use_index }}
+</P>
+{% if dog.owner_id == session.owner_id %}
+<p>
+  <a href="/edit_dog/{{ dog.id }}">Edit</a> |
+  <a href="/remove_dog/{{ dog.id }}">Remove</a>
+</p>
+{% endif %}
+
+{% endblock %}

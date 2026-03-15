@@ -1,45 +1,27 @@
-<!DOCTYPE html>
-<html>
+{% extends "html/layout.html" %}
 
-<head>
-  <title>Dog Database</title>
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
+{% block title %}Dog Database{% endblock %}
 
+{% block content %}
 
-<body>
-  <h1>Login</h1>
+<h2>Login</h2>
+
+{% for message in get_flashed_messages() %}
+<p>
+  <b>{{ message }}</b>
+</p>
+{% endfor %}
+<form action="/login" method="post">
   <p>
-      <a href="/">Home</a>
-      <a href="/litters">Litters</a>
-      <a href="/owners">Owners</a>
-      {% if session.get('name') %}
-      <a href="/create_dog">Add dog</a>
-      <a href="/create_litter">Add litter</a>
-      <a href="/my_dogs">My dogs</a>
-      <a href="/my_litters">My litters</a>
-      <a href="/logout">Logout</a>
-      {% else %}
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
-      {% endif %}
+    Name: <br />
+    <input type="text" name="name" maxlength=20 required />
   </p>
-  {% for message in get_flashed_messages() %}
   <p>
-    <b>{{ message }}</b>
+    Password: <br />
+    <input type="password" name="password" maxlength=35 required />
   </p>
-  {% endfor %}
-  <form action="/login" method="post">
-    <p>
-      Name: <br />
-      <input type="text" name="name" maxlength=20 required />
-    </p>
-    <p>
-      Password: <br />
-      <input type="password" name="password" maxlength=35 required />
-    </p>
-    <input type="submit" value="Login" />
-  </form>
+  <input type="submit" value="Login" />
+</form>
 </body>
 
-</html>
+{% endblock %}

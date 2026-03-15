@@ -1,91 +1,71 @@
-<!DOCTYPE html>
-<html>
+{% extends "html/layout.html" %}
 
-<head>
-    <title>Dog Database</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
+{% block title %}Dog Database{% endblock %}
 
-<body>
-    <h1>Dog Database</h1>
+{% block content %}
 
+<h2>Search</h2>
+
+<form action="/search" method="get">
     <p>
-        <a href="/">Home</a>
-        <a href="/search">Search</a>
-        <a href="/litters">Litters</a>
-        <a href="/owners">Owners</a>
-        {% if session.get('name') %}
-        <a href="/create_dog">Add dog</a>
-        <a href="/create_litter">Add litter</a>
-        <a href="/my_dogs">My dogs</a>
-        <a href="/my_litters">My litters</a>
-        <a href="/logout">Logout</a>
+        <label for="query">Query</label>:
+        {% if query %}
+        <input type="text" id="query" name="query" value="{{ query }}" />
         {% else %}
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
+        <input type="text" id="query" name="query" />
         {% endif %}
     </p>
+    <input type="submit" value="Search" />
+</form>
 
-    <form action="/search" method="get">
-        <p>
-            <label for="query">Query</label>:
-            {% if query %}
-            <input type="text" id="query" name="query" value="{{ query }}" />
+{% if query %}
+<h3>Results</h3>
+<table>
+    <tr>
+        <th>Registration number</th>
+        <th>Name</th>
+        <th>Breed</th>
+        <th>Date or birth</th>
+        <th>Sex</th>
+        <th>Father</th>
+        <th>Mother</th>
+        <th>Owner</th>
+        <th>Litter</th>
+        <th>Championship title</th>
+    </tr>
+
+    {% for dog in results %}
+    <tr>
+        <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
+        <td>{{ dog.name }}</td>
+        <td>{{ dog.breed }}</td>
+        <td>{{ dog.date_of_birth }}</td>
+        <td>{{ dog.sex }}</td>
+        <td>
+            {% if dog.father_id %}
+            <a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number or "Unknown" }}</a>
             {% else %}
-            <input type="text" id="query" name="query" />
+            Unknown
             {% endif %}
-        </p>
-        <input type="submit" value="Search" />
-    </form>
+        </td>
+        <td>
+            {% if dog.mother_id %}
+            <a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number or "Unknown" }}</a>
+            {% else %}
+            Unknown
+            {% endif %}
+        </td>
+        <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
+        <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else
+            %}Unknown{%
+            endif %}</td>
+        <td>{{ dog.championship_title }}</td>
+    </tr>
+    {% endfor %}
 
-    {% if query %}
-    <h3>Results</h3>
-    <table>
-        <tr>
-            <th>Registration number</th>
-            <th>Name</th>
-            <th>Breed</th>
-            <th>Date or birth</th>
-            <th>Sex</th>
-            <th>Father</th>
-            <th>Mother</th>
-            <th>Owner</th>
-            <th>Litter</th>
-            <th>Championship title</th>
-        </tr>
-
-        {% for dog in results %}
-        <tr>
-            <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
-            <td>{{ dog.name }}</td>
-            <td>{{ dog.breed }}</td>
-            <td>{{ dog.date_of_birth }}</td>
-            <td>{{ dog.sex }}</td>
-            <td>
-                {% if dog.father_id %}
-                <a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number or "Unknown" }}</a>
-                {% else %}
-                Unknown
-                {% endif %}
-            </td>
-            <td>
-                {% if dog.mother_id %}
-                <a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number or "Unknown" }}</a>
-                {% else %}
-                Unknown
-                {% endif %}
-            </td>
-            <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
-            <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else
-                %}Unknown{%
-                endif %}</td>
-            <td>{{ dog.championship_title }}</td>
-        </tr>
-        {% endfor %}
-
-    </table>
-    {% endif %}
+</table>
+{% endif %}
 
 </body>
 
-</html>
+{% endblock %}

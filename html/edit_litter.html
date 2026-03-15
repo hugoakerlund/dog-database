@@ -1,55 +1,36 @@
-<!DOCTYPE html>
-<html>
+{% extends "html/layout.html" %}
 
-<head>
-    <title>Dog Database</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
+{% block title %}Dog Database{% endblock %}
 
-<body>
-    <h1>Edit litter: {{ litter.name }}</h1>
+{% block content %}
+
+<h2>Edit {{ litter.name }}</h2>
+
+{% for message in get_flashed_messages() %}
+<p>
+    <b>{{ message }}</b>
+</p>
+{% endfor %}
+<form action="/edit_litter/{{ litter.id }}" method="post" enctype="multipart/form-data">
     <p>
-        <a href="/">Home</a>
-        <a href="/litters">Litters</a>
-        <a href="/owners">Owners</a>
-        {% if session.get('name') %}
-        <a href="/create_dog">Add dog</a>
-        <a href="/create_litter">Add litter</a>
-        <a href="/my_dogs">My dogs</a>
-        <a href="/my_litters">My litters</a>
-        <a href="/logout">Logout</a>
-        {% else %}
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-        {% endif %}
+        Name:
+        <input type="text" name="name" value="{{ litter.name }}" maxlength=20 required />
     </p>
-    {% for message in get_flashed_messages() %}
     <p>
-        <b>{{ message }}</b>
+        Father:
+        <input type="text" name="father" value="{{ litter.father }}" placeholder="Registration number" maxlength=10 />
     </p>
-    {% endfor %}
-    <form action="/edit_litter/{{ litter.id }}" method="post" enctype="multipart/form-data">
-        <p>
-            Name:
-            <input type="text" name="name" value="{{ litter.name }}" maxlength=20 required />
-        </p>
-        <p>
-            Father:
-            <input type="text" name="father" value="{{ litter.father }}" placeholder="Registration number"
-                maxlength=10 />
-        </p>
-        <p>
-            Mother:
-            <input type="text" name="mother" value="{{ litter.mother }}" placeholder="Registration number"
-                maxlength=10 />
-        </p>
-        <p>
-            Date or birth:
-            <input type="date" name="date_of_birth" value="{{ litter.date_of_birth }}" required />
-        </p>
-        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-        <input type="submit" value="Save" />
-    </form>
+    <p>
+        Mother:
+        <input type="text" name="mother" value="{{ litter.mother }}" placeholder="Registration number" maxlength=10 />
+    </p>
+    <p>
+        Date or birth:
+        <input type="date" name="date_of_birth" value="{{ litter.date_of_birth }}" required />
+    </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" value="Save" />
+</form>
 </body>
 
-</html>
+{% endblock %}

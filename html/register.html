@@ -1,52 +1,35 @@
-<!DOCTYPE html>
-<html>
+{% extends "html/layout.html" %}
 
-<head>
-  <title>Dog Database</title>
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
+{% block title %}Dog Database{% endblock %}
 
-<body>
-  <h1>Register</h1>
+{% block content %}
+
+<h2>Register</h2>
+
+{% for message in get_flashed_messages() %}
+<p>
+  <b>{{ message }}</b>
+</p>
+{% endfor %}
+<form action="/register" method="post">
   <p>
-      <a href="/">Home</a>
-      <a href="/litters">Litters</a>
-      <a href="/owners">Owners</a>
-      {% if session.get('name') %}
-      <a href="/create_dog">Add dog</a>
-      <a href="/create_litter">Add litter</a>
-      <a href="/my_dogs">My dogs</a>
-      <a href="/my_litters">My litters</a>
-      <a href="/logout">Logout</a>
-      {% else %}
-      <a href="/login">Login</a>
-      <a href="/register">Register</a>
-      {% endif %}
+    Name: <br />
+    <input type="text" name="name" maxlength=20 required />
   </p>
-  {% for message in get_flashed_messages() %}
   <p>
-    <b>{{ message }}</b>
+    Email: <br />
+    <input type="text" name="email" maxlength=50 required />
   </p>
-  {% endfor %}
-  <form action="/register" method="post">
-    <p>
-      Name: <br />
-      <input type="text" name="name" maxlength=20 required />
-    </p>
-    <p>
-      Email: <br />
-      <input type="text" name="email" maxlength=50 required />
-    </p>
-    <p>
-      Password: <br />
-      <input type="password" name="password1" maxlength=35 required />
-    </p>
-    <p>
-      Password again: <br />
-      <input type="password" name="password2" maxlength=35 required />
-    </p>
-    <input type="submit" value="Create account" maxlength=35 required />
-  </form>
+  <p>
+    Password: <br />
+    <input type="password" name="password1" maxlength=35 required />
+  </p>
+  <p>
+    Password again: <br />
+    <input type="password" name="password2" maxlength=35 required />
+  </p>
+  <input type="submit" value="Create account" maxlength=35 required />
+</form>
 </body>
 
-</html>
+{% endblock %}

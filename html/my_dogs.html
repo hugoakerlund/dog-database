@@ -1,81 +1,63 @@
-<!DOCTYPE html>
-<html>
+{% extends "html/layout.html" %}
 
-<head>
-  <title>Dog Database</title>
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
+{% block title %}Dog Database{% endblock %}
 
-<body>
-  <h1>My Dogs</h1>
+{% block content %}
+
+<h2>My dogs</h2>
+
+{% if my_dogs %}
+
+<p>
+  You have currently {{ my_dogs | count }} dog(s).
+</p>
+<table>
+  <tr>
+    <th>Registration number</th>
+    <th>Name</th>
+    <th>Breed</th>
+    <th>Date or birth</th>
+    <th>Sex</th>
+    <th>Father</th>
+    <th>Mother</th>
+    <th>Owner</th>
+    <th>Litter</th>
+    <th>Championship title</th>
+  </tr>
+
+  {% for my_dog in my_dogs %}
+  <tr>
+    <td><a href="/dog/{{ my_dog.id}}">{{ my_dog.registration_number }}</a></td>
+    <td>{{ my_dog.name }}</td>
+    <td>{{ my_dog.breed }}</td>
+    <td>{{ my_dog.date_of_birth }}</td>
+    <td>{{ my_dog.sex }}</td>
+    <td>
+      {% if my_dog.father_id %}
+      <a href="/dog/{{ my_dog.father_id }}">{{ my_dog.father_registration_number or "Unknown" }}</a>
+      {% else %}
+      Unknown
+      {% endif %}
+    </td>
+    <td>
+      {% if my_dog.mother_id %}
+      <a href="/dog/{{ my_dog.mother_id }}">{{ my_dog.mother_registration_number or "Unknown" }}</a>
+      {% else %}
+      Unknown
+      {% endif %}
+    </td>
+    <td>{{ my_dog.owner_id }}</td>
+    <td>{{ my_dog.litter }}</td>
+    <td>{{ my_dog.championship_title }}</td>
+  </tr>
+  {% endfor %}
+  {% else %}
   <p>
-    <a href="/">Home</a>
-    <a href="/litters">Litters</a>
-    <a href="/owners">Owners</a>
-    {% if session.get('name') %}
-    <a href="/create_dog">Add dog</a>
-    <a href="/create_litter">Add litter</a>
-    <a href="/my_dogs">My dogs</a>
-    <a href="/my_litters">My litters</a>
-    <a href="/logout">Logout</a>
-    {% else %}
-    <a href="/login">Login</a>
-    <a href="/register">Register</a>
-    {% endif %}
+    You don't have any dogs yet. Add your first dog <a href="/create_dog">here</a>.
   </p>
+  {% endif %}
 
-  {% if my_dogs %}
-
-  <p>
-    You have currently {{ my_dogs | count }} dog(s).
-  </p>
-  <table>
-    <tr>
-      <th>Registration number</th>
-      <th>Name</th>
-      <th>Breed</th>
-      <th>Date or birth</th>
-      <th>Sex</th>
-      <th>Father</th>
-      <th>Mother</th>
-      <th>Owner</th>
-      <th>Litter</th>
-      <th>Championship title</th>
-    </tr>
-
-    {% for my_dog in my_dogs %}
-    <tr>
-      <td><a href="/dog/{{ my_dog.id}}">{{ my_dog.registration_number }}</a></td>
-      <td>{{ my_dog.name }}</td>
-      <td>{{ my_dog.breed }}</td>
-      <td>{{ my_dog.date_of_birth }}</td>
-      <td>{{ my_dog.sex }}</td>
-      <td>
-        {% if my_dog.father_id %}
-        <a href="/dog/{{ my_dog.father_id }}">{{ my_dog.father_registration_number or "Unknown" }}</a>
-        {% else %}
-        Unknown
-        {% endif %}
-      </td>
-      <td>
-        {% if my_dog.mother_id %}
-        <a href="/dog/{{ my_dog.mother_id }}">{{ my_dog.mother_registration_number or "Unknown" }}</a>
-        {% else %}
-        Unknown
-        {% endif %}
-      </td>
-      <td>{{ my_dog.owner_id }}</td>
-      <td>{{ my_dog.litter }}</td>
-      <td>{{ my_dog.championship_title }}</td>
-    </tr>
-    {% endfor %}
-    {% else %}
-    <p>
-      You don't have any dogs yet. Add your first dog <a href="/create_dog">here</a>.
-    </p>
-    {% endif %}
-
-  </table>
+</table>
 </body>
 
-</html>
+{% endblock %}

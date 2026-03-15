@@ -1,40 +1,23 @@
-<!DOCTYPE html>
-<html>
+{% extends "html/layout.html" %}
 
-<head>
-    <title>Dog Database</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
+{% block title %}Dog Database{% endblock %}
 
-<body>
-    <h1>Owners</h1>
-    <p>
-        <a href="/">Home</a>
-        <a href="/litters">Litters</a>
-        <a href="/owners">Owners</a>
-        {% if session.get('name') %}
-        <a href="/create_dog">Add dog</a>
-        <a href="/create_litter">Add litter</a>
-        <a href="/my_dogs">My dogs</a>
-        <a href="/my_litters">My litters</a>
-        <a href="/logout">Logout</a>
-        {% else %}
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-        {% endif %}
-    </p>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-        </tr>
-        {% for owner in owners %}
-        <tr>
-            <td><a href="/owner/{{ owner.id }}">{{ owner.name }}</a></td>
-            <td>{{ owner.email }}</a></td>
-        </tr>
-        {% endfor %}
-    </table>
+{% block content %}
+
+<h2>Owners</h2>
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+    </tr>
+    {% for owner in owners %}
+    <tr>
+        <td><a href="/owner/{{ owner.id }}">{{ owner.name }}</a></td>
+        <td>{{ owner.email }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
 </body>
 <p>
     {% if page > 1 %}
@@ -45,4 +28,4 @@
         {% endif %}
 </p>
 
-</html>
+{% endblock %}

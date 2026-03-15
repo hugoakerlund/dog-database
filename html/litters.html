@@ -1,46 +1,29 @@
-<!DOCTYPE html>
-<html>
+{% extends "html/layout.html" %}
 
-<head>
-  <title>Dog Database</title>
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
+{% block title %}Dog Database{% endblock %}
 
-<body>
-    <h1>Litters</h1>
-    <p>
-        <a href="/">Home</a>
-        <a href="/litters">Litters</a>
-        <a href="/owners">Owners</a>
-        {% if session.get('name') %}
-        <a href="/create_dog">Add dog</a>
-        <a href="/create_litter">Add litter</a>
-        <a href="/my_dogs">My dogs</a>
-        <a href="/my_litters">My litters</a>
-        <a href="/logout">Logout</a>
-        {% else %}
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-        {% endif %}
-    </p>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Father</th>
-            <th>Mother</th>
-            <th>Date or birth</th>
-            <th>Owner</th>
-        </tr>
-        {% for litter in litters %}
-        <tr>
-            <td><a href="/litter/{{ litter.id }}">{{ litter.name }}</a></td>
-            <td><a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number or "Unknown" }}</a></td>
-            <td><a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number or "Unknown" }}</a></td>
-            <td>{{ litter.date_of_birth }}</td>
-            <td><a href="/owner/{{ litter.owner_id }}">{{ litter.owner_name }}</a></td>
-        </tr>
-        {% endfor %}
-    </table>
+{% block content %}
+
+<h2>Litters</h2>
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Father</th>
+        <th>Mother</th>
+        <th>Date or birth</th>
+        <th>Owner</th>
+    </tr>
+    {% for litter in litters %}
+    <tr>
+        <td><a href="/litter/{{ litter.id }}">{{ litter.name }}</a></td>
+        <td><a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number or "Unknown" }}</a></td>
+        <td><a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number or "Unknown" }}</a></td>
+        <td>{{ litter.date_of_birth }}</td>
+        <td><a href="/owner/{{ litter.owner_id }}">{{ litter.owner_name }}</a></td>
+    </tr>
+    {% endfor %}
+</table>
 </body>
 <p>
     {% if page > 1 %}
@@ -51,4 +34,4 @@
         {% endif %}
 </p>
 
-</html>
+{% endblock %}

@@ -1,31 +1,16 @@
-<!DOCTYPE html>
-<html>
+{% extends "html/layout.html" %}
 
-<head>
-    <title>Dog Database</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
+{% block title %}Dog Database{% endblock %}
 
-<body>
-    <h1>My Litters</h1>
-    <p>
-        <a href="/">Home</a>
-        <a href="/litters">Litters</a>
-        <a href="/owners">Owners</a>
-        {% if session.get('name') %}
-        <a href="/create_dog">Add dog</a>
-        <a href="/create_litter">Add litter</a>
-        <a href="/my_dogs">My dogs</a>
-        <a href="/my_litters">My litters</a>
-        <a href="/logout">Logout</a>
-        {% endif %}
-    </p>
+{% block content %}
 
-    {% if my_litters %}
+<h2>My litters</h2>
 
-    <p>
-        You have currently {{ my_litters| count }} litter(s).
-    </p>
+{% if my_litters %}
+
+<p>
+    You have currently {{ my_litters| count }} litter(s).
+</p>
 </body>
 <table>
     <tr>
@@ -44,9 +29,9 @@
     {% endfor %}
     {% else %}
     <p>
-      You don't have any litters yet. Add your first litter <a href="/create_litter">here</a>.
+        You don't have any litters yet. Add your first litter <a href="/create_litter">here</a>.
     </p>
     {% endif %}
 </table>
 
-</html>
+{% endblock %}

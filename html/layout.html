@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+
+<body>
+    <div class="header">
+        <h1>Dog Database</h1>
+    </div>
+
+    <div class="nav">
+        <nav>
+            <p>
+                <a href="/">Home</a>
+                <a href="/search">Search</a>
+                <a href="/litters">Litters</a>
+                <a href="/owners">Owners</a>
+                {% if session.get('name') %}
+                <a href="/create_dog">Add dog</a>
+                <a href="/create_litter">Add litter</a>
+                <a href="/my_dogs">My dogs</a>
+                <a href="/my_litters">My litters</a>
+                <a href="/logout">Logout</a>
+                {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+                {% endif %}
+            </p>
+        </nav>
+    </div>
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+
+</html>
