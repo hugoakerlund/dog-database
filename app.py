@@ -5,6 +5,7 @@ import math
 import os
 import config
 import dog
+import dog_show
 import owner
 import input
 import litter
@@ -293,6 +294,33 @@ def show_owners(page=1):
 
     return render_template("html/owners.html", page=page, page_count=page_count, 
                            owners=owners)
+
+@app.route("/dog_show/<int:show_id>")
+def show_dog_show(show_id):
+    show_info = dog_show.get_dog_show(show_id)
+    dogs = dog_show.get_show_participants(show_id)
+    if not show_info:
+        abort(404, "ERROR: dog show not found")
+    return render_template("html/dog_show.html", show=show_info, dogs=dogs)
+
+@app.route("/dog_shows")
+@app.route("/dog_shows/<int:page>")
+def show_dog_shows(page=1):
+    page_size = 10
+    dog_show_count = dog_show.get_dog_show_count()
+    page_count = math.ceil(dog_show_count / page_size)
+    page_count = max(page_count, 1)
+    dog_shows = dog_show.get_dog_shows(page, page_size)
+
+    if not dog_shows:
+        abort(404, "ERROR: no dog shows found")
+    if page < 1:
+        return redirect("/dog_shows/1")
+    if page > page_count:
+        return redirect("/dog_shows/", str(page_count))
+
+    return render_template("html/dog_shows.html", page=page, page_count=page_count, 
+                           dog_shows=dog_shows)
 
 def require_login():
     if "owner_id" not in session:

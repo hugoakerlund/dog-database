@@ -1,0 +1,31 @@
+{% extends "html/layout.html" %}
+
+{% block title %}Dog Database{% endblock %}
+
+{% block content %}
+
+<h2>Dog Shows</h2>
+
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Date</th>
+    </tr>
+    {% for dog_show in dog_shows %}
+    <tr>
+        <td><a href="/dog_show/{{ dog_show.id }}">{{ dog_show.name }}</a></td>
+        <td>{{ dog_show.date }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+<p>
+    {% if page > 1 %}
+    <a href="/dog_shows/{{ page - 1 }}">&lt;&lt;</a>
+    {% endif %}
+    Page {{ page }}/{{ page_count }}
+    {% if page < page_count %} <a href="/dog_shows/{{ page + 1 }}">&gt;&gt;</a>
+        {% endif %}
+</p>
+
+{% endblock %}

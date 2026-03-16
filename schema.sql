@@ -20,7 +20,7 @@ CREATE TABLE Dogs (
   owner_id INTEGER REFERENCES Owners(id),
   litter_id INTEGER REFERENCES Litters(id),
   championship_title_id INTEGER REFERENCES Championship_titles(id),
-  best_test INTEGER CHECK (best_test IN (1, 2, 3, 4, 5)),
+best_test INTEGER CHECK (best_test IN (1, 2, 3, 4, 5)),
   best_show_id INTEGER REFERENCES Dog_shows(id),
   litter_score TEXT,
   score_trace TEXT,
@@ -46,7 +46,15 @@ CREATE TABLE Dog_breeds (
 CREATE TABLE Dog_shows (
   id INTEGER PRIMARY KEY,
   name TEXT UNIQUE,
+  winner_id INTEGER REFERENCES Dogs(id),
   date DATE
+);
+
+CREATE TABLE Show_participants (
+  id INTEGER PRIMARY KEY,
+  dog_id INTEGER REFERENCES Dogs(id),
+  show_id INTEGER REFERENCES Dog_shows(id),
+  result INTEGER REFERENCES Championship_titles(id)
 );
 
 CREATE TABLE Litters (

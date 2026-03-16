@@ -182,6 +182,17 @@ def seed_table_championship_titles():
         title = championship_titles[i]
         db.execute(sql, [title])
 
+def insert_show_participant(id):
+      sql = "INSERT INTO Show_participants (dog_id, show_id, result) VALUES (?,?,?)"
+      dog_id = id
+      show_id = random.randint(1, len(dog_shows))
+      result = random.randint(1, len(championship_titles))
+      db.execute(sql, [dog_id, show_id, result])
+
+def set_show_winner(show_id, dog_id):
+      sql = "UPDATE Dog_shows SET winner_id = ? WHERE id = ?"
+      db.execute(sql, [dog_id, show_id])
+
 with app.app_context():
     n = 100
     seed_table_colors()
@@ -192,3 +203,8 @@ with app.app_context():
     for id in range(1, n):
         insert_random_owner(id)
         insert_random_dog(id)
+        insert_show_participant(id)
+
+    for show_id in range(1, len(dog_shows) + 1):
+        winner_id = random.randint(1, n - 1)
+        set_show_winner(show_id, winner_id)
