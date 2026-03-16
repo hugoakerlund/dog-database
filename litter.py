@@ -68,7 +68,6 @@ def insert_litter(form):
         "INSERT INTO Litters (name, father_id, mother_id, date_of_birth, owner_id) "
         "VALUES (?, ?, ?, ?, ?)"
     )
-    print(form["owner_id"])
     db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"], 
                      form["owner_id"]])
 
