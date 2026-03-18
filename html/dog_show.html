@@ -6,6 +6,11 @@
 
 <h2>{{ show.name }}</h2>
 
+{% for message in get_flashed_messages() %}
+<p>
+  <b>{{ message }}</b>
+</p>
+{% endfor %}
 
 <p>
     Name: {{ show.name }}
@@ -67,5 +72,31 @@
     {% endfor %}
 
 </table>
+
+{% if session.get('owner_id') %}
+  <h3>Add your dog to this show</h3>
+  {% if eligible_dogs %}
+    <form method="post" action="/dog_show/{{ show.id }}/add">
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+      <p>
+        <label>
+          Select one of your dogs:
+          <select name="dog_id" required>
+            {% for dog in eligible_dogs %}
+            <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+            {% endfor %}
+          </select>
+        </label>
+      </p>
+      <p>
+        <input type="submit" value="Add to show" />
+      </p>
+    </form>
+  {% else %}
+    <p>You don't have any dogs eligible for this show (either you have no dogs or all your dogs are already registered).</p>
+  {% endif %}
+{% else %}
+  <p><a href="/login">Log in</a> to add your dog to this show.</p>
+{% endif %}
 
 {% endblock %}

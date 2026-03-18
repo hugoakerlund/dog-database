@@ -47,4 +47,15 @@ def get_dog_show_count():
     result = db.query(sql)
     return result[0][0] if result else 0
 
+
+def is_participant(show_id, dog_id):
+    sql = "SELECT 1 FROM Show_participants WHERE show_id = ? AND dog_id = ?"
+    result = db.query(sql, [show_id, dog_id])
+    return bool(result)
+
+
+def add_participant(show_id, dog_id):
+    sql = "INSERT INTO Show_participants (show_id, dog_id) VALUES (?, ?)"
+    db.execute(sql, [show_id, dog_id])
+
     
