@@ -42,6 +42,9 @@
         <th>Owner</th>
         <th>Litter</th>
         <th>Championship title</th>
+        {% if session.get('owner_id')%}
+        <th>Action</th>
+        {% endif %}
     </tr>
 
     {% for dog in dogs %}
@@ -68,6 +71,15 @@
         <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
         <td>{{ dog.litter_name or "Unknown" }}</td>
         <td>{{ dog.championship_title }}</td>
+        <td>
+            {% if session.get('owner_id') == dog.owner_id %}
+            <form method="post" action="/dog_show/{{ show.id }}/remove" style="margin:0">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+                <input type="hidden" name="dog_id" value="{{ dog.id }}" />
+                <input type="submit" value="Remove" />
+            </form>
+            {% endif %}
+        </td>
     </tr>
     {% endfor %}
 

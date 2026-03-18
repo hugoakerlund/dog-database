@@ -351,6 +351,42 @@ def add_dog_to_show(show_id):
     return redirect(f"/dog_show/{show_id}")
 
 
+@app.route("/dog_show/<int:show_id>/remove", methods=["POST"])
+def remove_dog_from_show(show_id):
+    require_login()
+    check_csrf()
+
+    show_info = dog_show.get_dog_show(show_id)
+    if not show_info:
+        abort(404, "ERROR: dog show not found")
+
+    dog_id = request.form.get("dog_id")
+    if not dog_id:
+        abort(400, "ERROR: dog not selected")
+
+    try:
+        dog_id = int(dog_id)
+    except ValueError:
+        abort(400, "ERROR: invalid dog id")
+
+    owner_id = session["owner_id"]
+    owner_dog_ids = {d["id"] for d in owner.get_dogs(owner_id)}
+    if dog_id not in owner_dog_ids:
+        abort(403, "ERROR: dog does not belong to you")
+
+    if not dog_show.is_participant(show_id, dog_id):
+        flash("Dog is not registered for this show", "error")
+        return redirect(f"/dog_show/{show_id}")
+
+    try:
+        dog_show.remove_participant(show_id, dog_id)
+        flash("Dog removed from show", "success")
+    except sqlite3.IntegrityError as e:
+        flash(f"ERROR: Database error: {e}", "error")
+
+    return redirect(f"/dog_show/{show_id}")
+
+
 @app.route("/dog_shows")
 @app.route("/dog_shows/<int:page>")
 def show_dog_shows(page=1):

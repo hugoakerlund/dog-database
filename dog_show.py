@@ -58,4 +58,9 @@ def add_participant(show_id, dog_id):
     sql = "INSERT INTO Show_participants (show_id, dog_id) VALUES (?, ?)"
     db.execute(sql, [show_id, dog_id])
 
+
+def remove_participant(show_id, dog_id):
+    sql = "DELETE FROM Show_participants WHERE show_id = ? AND dog_id = ?"
+    db.execute(sql, [show_id, dog_id])
+
     
