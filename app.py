@@ -328,6 +328,10 @@ def add_dog_to_show(show_id):
         dog_id = int(dog_id)
     except ValueError:
         abort(400, "ERROR: invalid dog id")
+    
+    if dog.is_dead(dog_id):
+        flash("Cannot add dead dog to the show", "error")
+        return redirect(f"/dog_show/{show_id}")
 
     owner_id = session["owner_id"]
     owner_dog_ids = {d["id"] for d in owner.get_dogs(owner_id)}

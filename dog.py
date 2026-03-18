@@ -108,6 +108,13 @@ def has_image(dog_id):
     image = db.query(sql, [dog_id])
     return bool(image and image[0][0])
 
+def is_dead(dog_id):
+    sql = "SELECT date_of_death FROM Dogs WHERE id = ?"
+    result = db.query(sql, [dog_id])
+    if result[0][0] == None:
+        return False
+    return True
+
 def delete_dog(dog_id):
     sql = "DELETE FROM Dogs WHERE id = ?"
     db.execute(sql, [dog_id])
