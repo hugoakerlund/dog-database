@@ -122,8 +122,9 @@ def delete_dog(dog_id):
 def insert_dog(form):
         sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, 
                                    date_of_birth, date_of_death, sex, father_id, mother_id, 
-                                   litter_id, owner_id, championship_title_id) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                                   litter_id, owner_id, championship_title_id, best_show_id, best_test,
+                                   hip_index, use_index) 
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
         
         params = [
             form["registration_number"],
@@ -138,7 +139,11 @@ def insert_dog(form):
             form["mother_dog_id"],
             form["litter_id"],
             form["owner_id"],
-            form["championship_title_id"]
+            form["championship_title_id"],
+            form["best_show_id"],
+            form["best_test"],
+            form["hip_index"],
+            form["use_index"]
         ]
         db.execute(sql, params)
 
@@ -146,7 +151,8 @@ def update_dog(dog_id, form):
     sql = """UPDATE Dogs 
              SET registration_number = ?, name = ?, image = ?, color = ?, breed = ?, 
                  date_of_birth = ?, date_of_death = ?, sex = ?, father_id = ?, mother_id = ?, 
-                 litter_id = ?, owner_id = ?, championship_title_id = ?
+                 litter_id = ?, owner_id = ?, championship_title_id = ?, best_show_id = ?, best_test = ?, 
+                 hip_index = ?, use_index = ?
              WHERE id = ?"""
     params = [
         form["registration_number"],
@@ -162,6 +168,10 @@ def update_dog(dog_id, form):
         form["litter_id"],
         form["owner_id"],
         form["championship_title_id"],
+        form["best_show_id"],
+        form["best_test"],
+        form["hip_index"],
+        form["use_index"],
         dog_id
     ]
     db.execute(sql, params)

@@ -83,6 +83,18 @@
       {% endfor %}
     </select>
   </p>
+  <p>
+    Best test:
+    <input type="number" name="best_test"  min=1 max=5 />
+  </p>
+  <p>
+    Use index:
+    <input type="number" name="use_index" min=1 max=100 />
+  </p>
+  <p>
+    Hip index:
+    <input type="number" name="hip_index" min=1 max=100 />
+  </p>
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="submit" value="Save" />
 </form>

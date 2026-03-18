@@ -48,6 +48,17 @@ def get_dog_show_count():
     return result[0][0] if result else 0
 
 
+def get_show_id_by_name(name):
+    sql = "SELECT id FROM Dog_shows WHERE name = ?"
+    result = db.query(sql, [name])
+    return result[0][0] if result else None
+
+
+def get_dog_participated_shows(dog_id):
+    sql = "SELECT s.id, s.name, s.date FROM Dog_shows s JOIN Show_participants sp ON s.id = sp.show_id WHERE sp.dog_id = ? ORDER BY s.date DESC"
+    return db.query(sql, [dog_id])
+
+
 def is_participant(show_id, dog_id):
     sql = "SELECT 1 FROM Show_participants WHERE show_id = ? AND dog_id = ?"
     result = db.query(sql, [show_id, dog_id])

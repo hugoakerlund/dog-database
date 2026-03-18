@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import dog
 import litter
 import owner
+import dog_show
 
 def check_registration_number(registration_number):
     if not len(registration_number) == 10 or \
@@ -95,6 +96,38 @@ def check_dog_form(form, edit, old_registration_number=None):
         if not form["litter_id"]:
             flash(f"ERROR: litter with name '{form['litter']}' not found")
             return False
+    if form["best_show"]:
+        form["best_show_id"] = dog_show.get_show_id_by_name(form["best_show"])
+        if not form["best_show_id"]:
+            flash(f"ERROR: best show '{form['best_show']}' not found")
+            return False
+    if form["best_test"]:
+        try:
+            val = int(form["best_test"])
+            if not 1 <= val <= 5:
+                flash(f"ERROR: invalid best test '{form['best_test']}' (must be between 1 and 5)")
+                return False
+        except ValueError:
+            flash(f"ERROR: best test must be a number")
+            return False
+    if form["hip_index"]:
+        try:
+            val = int(form["hip_index"])
+            if not 1 <= val <= 100:
+                flash(f"ERROR: invalid hip index '{form['hip_index']}' (must be between 1 and 100)")
+                return False
+        except ValueError:
+            flash(f"ERROR: hip index must be a number")
+            return False
+    if form["use_index"]:
+        try:
+            val = int(form["use_index"])
+            if not 1 <= val <= 100:
+                flash(f"ERROR: invalid use index '{form['use_index']}' (must be between 1 and 100)")
+                return False
+        except ValueError:
+            flash(f"ERROR: use index must be a number")
+            return False
     return True
 
 def get_dog_form(request):
@@ -114,11 +147,14 @@ def get_dog_form(request):
     form["litter"] = request.form.get("litter", "").strip() or None # Field is optional
     form["litter_id"] = None
     form["championship_title"] = request.form.get("championship_title", "").strip() or None
-    form["owner_id"] = session["owner_id"]
-
     if form["championship_title"]:
         form["championship_title_id"] = dog.get_championship_title_id(form["championship_title"])
-
+    form["best_show"] = request.form.get("best_show", "").strip() or None
+    form["best_show_id"] = None
+    form["best_test"] = request.form.get("best_test", "").strip() or None
+    form["use_index"] = request.form.get("use_index", "").strip() or None
+    form["hip_index"] = request.form.get("hip_index", "").strip() or None
+    form["owner_id"] = session["owner_id"]
     return form
 
 def check_litter_form(form, edit=False, old_litter_name=None):
