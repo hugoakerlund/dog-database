@@ -65,8 +65,15 @@
     <input type="text" name="mother_id" placeholder="Registration number" maxlength=10 />
   </p>
   <p>
-    Litter:
-    <input type="text" name="litter" placeholder="Litter name" maxlength=20 />
+    <label>
+      Litter:
+      <select name="litter">
+        <option value="">None</option>
+        {% for litter in litters %}
+        <option value="{{ litter.name }}">{{ litter.name }}</option>
+        {% endfor %}
+      </select>
+    </label>
   </p>
   <p>
     <label for="championship_title">Championship Title:</label>

@@ -63,8 +63,10 @@ def show_my_litters():
 def create_dog_get():
     colors = dog.get_colors()
     dog_breeds = dog.get_breeds()
+    owner_id = session["owner_id"]
+    my_litters = owner.get_litters(owner_id)
     championship_titles = dog.get_championship_titles()
-    return render_template("html/create_dog.html", colors=colors, dog_breeds=dog_breeds,
+    return render_template("html/create_dog.html", colors=colors, dog_breeds=dog_breeds, litters=my_litters,
                         championship_titles=championship_titles)
 
 @app.route("/create_dog", methods=["POST"])
