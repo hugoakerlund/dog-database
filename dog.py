@@ -116,6 +116,24 @@ def is_dead(dog_id):
     return True
 
 def delete_dog(dog_id):
+    sql = "UPDATE Dogs SET father_id = NULL WHERE father_id = ?"
+    db.execute(sql, [dog_id])
+    
+    sql = "UPDATE Dogs SET mother_id = NULL WHERE mother_id = ?"
+    db.execute(sql, [dog_id])
+    
+    sql = "UPDATE Litters SET father_id = NULL WHERE father_id = ?"
+    db.execute(sql, [dog_id])
+    
+    sql = "UPDATE Litters SET mother_id = NULL WHERE mother_id = ?"
+    db.execute(sql, [dog_id])
+    
+    sql = "UPDATE Dog_shows SET winner_id = NULL WHERE winner_id = ?"
+    db.execute(sql, [dog_id])
+
+    sql = "DELETE FROM Show_participants where dog_id = ?"
+    db.execute(sql, [dog_id])
+    
     sql = "DELETE FROM Dogs WHERE id = ?"
     db.execute(sql, [dog_id])
 
