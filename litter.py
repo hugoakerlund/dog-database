@@ -2,7 +2,8 @@ import db
 
 def get_litter(litter_id):
     sql = (
-        "SELECT l.*, "
+        "SELECT l.id, l.name, l.father_id, l.mother_id, "
+        "l.date_of_birth, l.owner_id, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "o.name AS owner_name "
@@ -22,7 +23,8 @@ def get_litter_count():
 
 def get_litters(page, page_size):
     sql = (
-        "SELECT l.*, "
+        "SELECT l.id, l.name, l.father_id, l.mother_id, "
+        "l.date_of_birth, l.owner_id, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "o.name AS owner_name "
@@ -46,7 +48,10 @@ def get_litter_id_by_name(litter_name):
 
 def get_dogs_in_litter(litter_id):
     sql = (
-        "SELECT d.*, "
+        "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
+        "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
+        "d.litter_id, d.championship_title_id, "
+        "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "

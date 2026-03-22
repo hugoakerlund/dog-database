@@ -2,7 +2,10 @@ import db
 
 def get_dogs(page, page_size):
     sql = (
-        "SELECT d.*, "
+        "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
+        "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
+        "d.litter_id, d.championship_title_id, "
+        "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
@@ -29,7 +32,10 @@ def get_dog_count():
 
 def get_dog(dog_id):
     sql = (
-        "SELECT d.*, "
+        "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
+        "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
+        "d.litter_id, d.championship_title_id, "
+        "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
@@ -59,7 +65,7 @@ def get_championship_title_id(title):
     return result[0][0] if result else None
 
 def get_championship_titles():
-    sql = "SELECT * FROM Championship_titles"
+    sql = "SELECT id, title FROM Championship_titles"
     return db.query(sql)
 
 def get_registration_number(dog_id):
@@ -78,16 +84,19 @@ def get_show_name(show_id):
     return result[0][0] if result else None
 
 def get_colors():
-    sql = "SELECT * FROM Colors"
+    sql = "SELECT id, name FROM Colors"
     return db.query(sql)
 
 def get_breeds():
-    sql = "SELECT * FROM Dog_breeds"
+    sql = "SELECT id, name FROM Dog_breeds"
     return db.query(sql)
 
 def get_owners_dogs(owner_id):
     sql = (
-        "SELECT d.*, "
+        "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
+        "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
+        "d.litter_id, d.championship_title_id, "
+        "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number "
         "FROM Dogs d "
@@ -201,7 +210,10 @@ def registration_number_exists(registration_number):
 
 def search(query):
     sql = (
-        "SELECT d.*, "
+        "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
+        "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
+        "d.litter_id, d.championship_title_id, "
+        "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
