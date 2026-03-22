@@ -14,6 +14,19 @@ def check_registration_number(registration_number):
         return False
     return True
 
+def check_sex(father, mother):
+    father_id = dog.get_dog_id_by_registration_number(father)
+    mother_id = dog.get_dog_id_by_registration_number(mother)
+    if not father_id or not mother_id:
+        return False
+
+    father_dog = dog.get_dog(father_id)
+    mother_dog = dog.get_dog(mother_id)
+    if not father_dog or not mother_dog:
+        return False
+
+    return father_dog["sex"] != mother_dog["sex"]
+
 def check_name(name):
     return len(name) >= 2 and len(name) <= 20 and \
            all(c.isalpha() or c.isspace() for c in name)
@@ -35,7 +48,7 @@ def check_death_date(death_date_str, birth_date_str):
         return False
     return True
 
-def check_litter(litter_name):
+def check_litter_name(litter_name):
     return len(litter_name) >= 2 and len(litter_name) <= 20 and \
            litter.get_litter_id_by_name(litter_name) is not None
 
@@ -64,12 +77,6 @@ def check_dog_form(form, edit, old_registration_number=None):
         return False
     if form["mother"] and not check_registration_number(form["mother"]):
         flash("ERROR: invalid mother registration number format (must be 'FI12345/67')")
-        return False
-    if form["litter"] and not check_litter(form["litter"]):
-        flash("ERROR: invalid litter name (must be between 2 and 20 characters)")
-        return False
-    if form["litter"] and not edit and litter.litter_name_exists(form["litter"]):
-        flash("ERROR: litter name already exists")
         return False
     if not form["image"] or not form["image"].filename:
         flash("ERROR: image is required")
@@ -175,6 +182,12 @@ def check_litter_form(form, edit=False, old_litter_name=None):
         return False
     if not check_registration_number(form["mother"]):
         flash("ERROR: invalid mother registration number format (must be 'FI12345/67')")
+        return False
+    if form["father"] == form["mother"]:
+        flash("ERROR: father and mother cannot be same")
+        return False
+    if not check_sex(form["father"], form["mother"]):
+        flash("ERROR: father and mother cannot be same sex")
         return False
     return True
 
