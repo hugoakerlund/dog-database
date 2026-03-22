@@ -20,10 +20,8 @@ CREATE TABLE Dogs (
   owner_id INTEGER REFERENCES Owners(id),
   litter_id INTEGER REFERENCES Litters(id),
   championship_title_id INTEGER REFERENCES Championship_titles(id),
-best_test INTEGER CHECK (best_test IN (1, 2, 3, 4, 5)),
+  best_test INTEGER CHECK (best_test IN (1, 2, 3, 4, 5)),
   best_show_id INTEGER REFERENCES Dog_shows(id),
-  litter_score TEXT,
-  score_trace TEXT,
   hip_index INTEGER,
   use_index INTEGER
 );
