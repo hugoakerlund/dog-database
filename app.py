@@ -85,7 +85,10 @@ def create_dog_post():
 @app.route("/create_litter", methods=["GET"])
 def create_litter_get():
     require_login()
-    return render_template("html/create_litter.html")
+    owner_id = session["owner_id"]
+    male_dogs = owner.get_male_dogs(owner_id)
+    female_dogs = owner.get_female_dogs(owner_id)
+    return render_template("html/create_litter.html", male_dogs=male_dogs, female_dogs=female_dogs)
 
 @app.route("/create_litter", methods=[ "POST"])
 def create_litter_post():
@@ -98,7 +101,7 @@ def create_litter_post():
         litter.insert_litter(form)
     except sqlite3.IntegrityError as e:
         return f"ERROR: Database error: {e} (possibly invalid foreign key)"
-    return redirect("/litters")
+    return redirect("/my_litters")
 
 @app.route("/edit_dog/<int:dog_id>", methods=["GET"])
 def edit_dog_get(dog_id):

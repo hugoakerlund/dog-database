@@ -17,12 +17,26 @@
     <input type="text" name="name" maxlength=20 required />
   </p>
   <p>
-    Father:
-    <input type="text" name="father" placeholder="Registration number" maxlength=10 />
+    <label>
+      Mother:
+      <select name="mother">
+        <option value="">None</option>
+        {% for dog in female_dogs %}
+        <option value="{{ dog.registration_number }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+        {% endfor %}
+      </select>
+    </label>
   </p>
   <p>
-    Mother:
-    <input type="text" name="mother" placeholder="Registration number" maxlength=10 />
+    <label>
+      Father
+      <select name="father">
+        <option value="">None</option>
+        {% for dog in male_dogs %}
+        <option value="{{ dog.registration_number }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+        {% endfor %}
+      </select>
+    </label>
   </p>
   <p>
     Date of birth:
