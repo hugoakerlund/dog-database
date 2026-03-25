@@ -73,6 +73,9 @@ def check_dog_form(form, edit, old_registration_number=None):
     if edit and old_registration_number != form["registration_number"] and dog.registration_number_exists(form["registration_number"]):
         flash("ERROR: registration number already exists")
         return False
+    if not edit and  dog.registration_number_exists(form["registration_number"]):
+        flash("ERROR: registration number already exists")
+        return False
     if not check_name(form["name"]):
         flash("ERROR: name must be between 2 and 20 characters")
         return False
