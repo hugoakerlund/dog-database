@@ -68,6 +68,16 @@ def get_dogs_in_litter(litter_id):
     result = db.query(sql, [litter_id])
     return result
 
+def get_father_id(litter_id):
+    sql = "SELECT father_id FROM Litters WHERE id = ?"
+    result = db.query(sql, [litter_id])
+    return result[0][0] if result else 0
+
+def get_mother_id(litter_id):
+    sql = "SELECT mother_id FROM Litters WHERE id = ?"
+    result = db.query(sql, [litter_id])
+    return result[0][0] if result else 0
+
 def insert_litter(form):
     sql = (
         "INSERT INTO Litters (name, father_id, mother_id, date_of_birth, owner_id) "
