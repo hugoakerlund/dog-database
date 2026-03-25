@@ -1,36 +1,50 @@
 {% extends "html/layout.html" %}
 
-{% block title %}Dog Database{% endblock %}
+  {% block title %}Dog Database{% endblock %}
 
-{% block content %}
+  {% block content %}
 
-<h2>Edit {{ litter.name }}</h2>
+  <h2>Edit {{ litter.name }}</h2>
 
-{% for message in get_flashed_messages() %}
-<p>
+  {% for message in get_flashed_messages() %}
+  <p>
     <b>{{ message }}</b>
-</p>
-{% endfor %}
-<form action="/edit_litter/{{ litter.id }}" method="post" enctype="multipart/form-data">
+  </p>
+  {% endfor %}
+  <form action="/edit_litter/{{ litter.id }}" method="post" enctype="multipart/form-data">
     <p>
-        Name:
-        <input type="text" name="name" value="{{ litter.name }}" maxlength=20 required />
+      Name:
+      <input type="text" name="name" value="{{ litter.name }}" maxlength=20 required />
     </p>
     <p>
-        Father:
-        <input type="text" name="father" value="{{ litter.father }}" placeholder="Registration number" maxlength=10 />
-    </p>
-    <p>
+      <label>
         Mother:
-        <input type="text" name="mother" value="{{ litter.mother }}" placeholder="Registration number" maxlength=10 />
+        <select name="mother">
+          <option value="">None</option>
+          {% for dog in female_dogs %}
+          <option value="{{ dog.registration_number }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+          {% endfor %}
+        </select>
+      </label>
     </p>
     <p>
-        Date or birth:
-        <input type="date" name="date_of_birth" value="{{ litter.date_of_birth }}" required />
+      <label>
+        Father
+        <select name="father">
+          <option value="">None</option>
+          {% for dog in male_dogs %}
+          <option value="{{ dog.registration_number }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+          {% endfor %}
+        </select>
+      </label>
+    </p>
+    <p>
+      Date or birth:
+      <input type="date" name="date_of_birth" value="{{ litter.date_of_birth }}" required />
     </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Save" />
-</form>
-</body>
+  </form>
+  </body>
 
-{% endblock %}
+  {% endblock %}

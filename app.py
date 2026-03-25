@@ -149,9 +149,13 @@ def remove_dog_post(dog_id):
 def edit_litter_get(litter_id):
     require_login()
     litter_info = litter.get_litter(litter_id)
+    owner_id = session["owner_id"]
+    male_dogs = owner.get_male_dogs(owner_id)
+    female_dogs = owner.get_female_dogs(owner_id)
     if not litter_info:
         abort(404, "ERROR: litter not found")
-    return render_template("html/edit_litter.html", litter=litter_info)
+    return render_template("html/edit_litter.html", litter=litter_info,
+                           male_dogs=male_dogs, female_dogs=female_dogs)
 
 @app.route("/edit_litter/<int:litter_id>", methods=["POST"])
 def edit_litter_post(litter_id):
