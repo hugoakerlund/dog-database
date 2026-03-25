@@ -128,3 +128,8 @@ def email_exists(email):
     sql = "SELECT id FROM Owners WHERE email = ?"
     result = db.query(sql, [email])
     return bool(result)
+
+def is_owner_of_dog(owner_id, dog):
+    sql = "SELECT id FROM Dogs d WHERE d.owner_id = ?"
+    result = db.query(sql, [owner_id])
+    return bool(result)

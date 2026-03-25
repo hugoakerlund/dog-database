@@ -27,6 +27,13 @@ def check_sex(father, mother):
 
     return father_dog["sex"] != mother_dog["sex"]
 
+def check_ownership(parent):
+    print("cheking ownership")
+    owner_id = session["owner_id"]
+    parent_id = dog.get_dog_id_by_registration_number(parent)
+    return owner.is_owner_of_dog(owner_id, parent_id)
+
+
 def check_name(name):
     return len(name) >= 2 and len(name) <= 20 and \
            all(c.isalpha() or c.isspace() for c in name)
@@ -188,6 +195,12 @@ def check_litter_form(form, edit=False, old_litter_name=None):
         return False
     if not check_sex(form["father"], form["mother"]):
         flash("ERROR: father and mother cannot be same sex")
+        return False
+    if not check_ownership(form["father"]):
+        flash("ERROR: you are not the owner of the father")
+        return False
+    if not check_ownership(form["mother"]):
+        flash("ERROR: you are not the owner of the mother")
         return False
     return True
 
