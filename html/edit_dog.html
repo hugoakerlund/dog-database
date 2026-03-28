@@ -59,11 +59,13 @@
   </p>
   <p>
     Father:
-    <input type="text" name="father" value="{{ dog.father_registration_number }}" placeholder="Registration number" maxlength=10 />
+    <input type="text" name="father" value="{{ dog.father_registration_number }}" placeholder="Registration number" maxlength=10
+    pattern="^FI\d{5}/\d{2}$" title="Format: FI12345/12 (FI, five digits, slash, two digits)" />
   </p>
   <p>
     Mother:
-    <input type="text" name="mother" value="{{ dog.mother_registration_number }}" placeholder="Registration number" maxlength=10 />
+    <input type="text" name="mother" value="{{ dog.mother_registration_number }}" placeholder="Registration number" maxlength=10
+    pattern="^FI\d{5}/\d{2}$" title="Format: FI12345/12 (FI, five digits, slash, two digits)" />
   </p>
   <p>
     Litter:
