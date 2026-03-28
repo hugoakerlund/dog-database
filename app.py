@@ -27,7 +27,7 @@ def index(page=1):
     if page < 1:
         return redirect("/1")
     if page > page_count:
-        return redirect("/", str(page_count))
+        return redirect("/" + str(page_count))
 
     return render_template("html/index.html", page=page, page_count=page_count,
                             dogs=dogs, session=session)
@@ -45,19 +45,11 @@ def show_dog(dog_id):
         abort(404, "ERROR: dog not found")
     return render_template("html/dog.html", dog=result, session=session)
 
-@app.route("/my_dogs")
+@app.route("/my_account")
 def show_my_dogs():
     require_login()
     owner_id = session["owner_id"]
-    my_dogs = owner.get_dogs(owner_id)
-    return render_template("html/my_dogs.html", my_dogs=my_dogs)
-
-@app.route("/my_litters")
-def show_my_litters():
-    require_login()
-    owner_id = session["owner_id"]
-    my_litters = owner.get_litters(owner_id)
-    return render_template("html/my_litters.html", my_litters=my_litters)
+    return redirect(f"/owner/{owner_id}")
 
 @app.route("/create_dog", methods=["GET"])
 def create_dog_get():
@@ -255,9 +247,11 @@ def show_image(dog_id):
 def show_owner(owner_id):
     owner_info = owner.get_owner(owner_id)
     owners_dogs = owner.get_dogs(owner_id)
+    owners_litters= owner.get_litters(owner_id)
     if not owner_info:
         abort(404, "ERROR: owner not found")
-    return render_template("html/owner.html", owner=owner_info, dogs=owners_dogs)
+    return render_template("html/owner.html", owner=owner_info, 
+                           dogs=owners_dogs, litters=owners_litters, session=session)
 
 @app.route("/litter/<int:litter_id>")
 def show_litter(litter_id):
@@ -281,7 +275,7 @@ def show_litters(page=1):
     if page < 1:
         return redirect("/litters/1")
     if page > page_count:
-        return redirect("/litters/", str(page_count))
+        return redirect("/litters/" + str(page_count))
 
     return render_template("html/litters.html", page=page, page_count=page_count, 
                            litters=litters)
@@ -300,7 +294,7 @@ def show_owners(page=1):
     if page < 1:
         return redirect("/owners/1")
     if page > page_count:
-        return redirect("/owners/", str(page_count))
+        return redirect("/owners/" + str(page_count))
 
     return render_template("html/owners.html", page=page, page_count=page_count, 
                            owners=owners)
@@ -411,7 +405,7 @@ def show_dog_shows(page=1):
     if page < 1:
         return redirect("/dog_shows/1")
     if page > page_count:
-        return redirect("/dog_shows/", str(page_count))
+        return redirect("/dog_shows/" + str(page_count))
 
     return render_template("html/dog_shows.html", page=page, page_count=page_count, 
                            dog_shows=dog_shows)

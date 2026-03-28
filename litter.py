@@ -14,7 +14,7 @@ def get_litter(litter_id):
         "WHERE l.id = ?"
     )
     result = db.query(sql, [litter_id])
-    return result[0] if result else None
+    return result[0]
 
 def get_litter_count():
     sql = "SELECT COUNT(*) FROM Litters"
