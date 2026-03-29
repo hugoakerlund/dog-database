@@ -63,7 +63,7 @@ def get_male_dogs(owner_id):
         "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
         "LEFT JOIN Owners o ON d.owner_id = o.id "
-        "WHERE d.owner_id = ? AND d.sex = 'M'"
+        "WHERE d.owner_id = ? AND d.sex = 'Male'"
     )
     result = db.query(sql, [owner_id])
     return result
@@ -82,7 +82,7 @@ def get_female_dogs(owner_id):
         "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
         "LEFT JOIN Owners o ON d.owner_id = o.id "
-        "WHERE d.owner_id = ? AND d.sex = 'F'"
+        "WHERE d.owner_id = ? AND d.sex = 'Female'"
     )
     result = db.query(sql, [owner_id])
     return result
