@@ -42,7 +42,6 @@ def search():
 def show_dog(dog_id):
     dog_info  = dog.get_dog(dog_id)
     championship_titles = dog.get_championship_titles(dog_id)
-    print(championship_titles)
     if not dog_info:
         abort(404, "ERROR: dog not found")
     return render_template("html/dog.html", dog=dog_info, 
@@ -122,7 +121,7 @@ def edit_dog_post(dog_id):
         dog.update_dog(dog_id, form)
     except sqlite3.IntegrityError as e:
         return f"ERROR: Database error: {e} (possibly invalid foreign key)"
-    return redirect("/my_dogs")
+    return redirect("/my_account")
 
 @app.route("/remove_dog/<int:dog_id>", methods=["GET"])
 def remove_dog_get(dog_id):
@@ -138,7 +137,7 @@ def remove_dog_post(dog_id):
     check_csrf()
     if "continue" in request.form:
         dog.delete_dog(dog_id)
-    return redirect("/my_dogs")
+    return redirect("/my_account")
 
 @app.route("/edit_litter/<int:litter_id>", methods=["GET"])
 def edit_litter_get(litter_id):
@@ -255,6 +254,23 @@ def show_owner(owner_id):
         abort(404, "ERROR: owner not found")
     return render_template("html/owner.html", owner=owner_info, 
                            dogs=owners_dogs, litters=owners_litters, session=session)
+
+@app.route("/remove_account", methods=["GET"])
+def remove_account_get():
+    require_login()
+    return render_template("html/remove_account.html")
+
+@app.route("/remove_account", methods=["POST"])
+def remove_account_post():
+    require_login()
+    check_csrf()
+    owner_id = session["owner_id"]
+    if "continue" in request.form:
+        owner.remove_owner(owner_id)
+        logout()
+        flash("Account deleted successfully.")
+
+    return redirect("/")
 
 @app.route("/litter/<int:litter_id>")
 def show_litter(litter_id):

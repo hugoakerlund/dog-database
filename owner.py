@@ -1,4 +1,5 @@
 import db
+import dog
 
 def get_owner(owner_id):
     sql = (
@@ -40,6 +41,13 @@ def get_dogs(owner_id):
     )
     result = db.query(sql, [owner_id])
     return result
+
+def get_dog_ids(owner_id):
+    sql = (
+        "SELECT d.id FROM Dogs d WHERE d.owner_id = ?"
+    )
+    result = db.query(sql, [owner_id])
+    return [row[0] for row in result] if result else []
 
 def get_male_dogs(owner_id):
     sql = (
@@ -123,7 +131,20 @@ def email_exists(email):
     result = db.query(sql, [email])
     return bool(result)
 
-def is_owner_of_dog(owner_id, dog):
-    sql = "SELECT id FROM Dogs d WHERE d.owner_id = ?"
-    result = db.query(sql, [owner_id])
     return bool(result)
+
+def remove_owner(owner_id):
+    dog_ids = get_dog_ids(owner_id)
+    if dog_ids:
+        for dog_id in dog_ids:
+            dog.delete_dog(str(dog_id))
+
+    sql = "UPDATE Litters SET owner_id = NULL WHERE owner_id = ?"
+    db.execute(sql, [owner_id])
+
+    sql = "UPDATE Dogs SET owner_id = NULL WHERE owner_id = ?"
+    db.execute(sql, [owner_id])
+
+    sql = "DELETE FROM Owners WHERE id = ?"
+    db.execute(sql, [owner_id])
+
