@@ -133,7 +133,7 @@ def insert_random_dog(id):
         color = random.choice(colors)
         breed = random.choice(dog_breeds)
         date_of_birth = create_random_date()
-        sex = random.choice(["M", "F"])
+        sex = random.choice(["Male", "Female"])
         father_id = random.randint(1, id - 1) if id > 2 else None
         mother_id = random.randint(1, id - 1) if id > 2 else None
 
