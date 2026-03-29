@@ -85,6 +85,9 @@ def check_dog_form(form, edit, old_registration_number=None):
     if form["date_of_death"] and not check_death_date(form["date_of_death"], form["date_of_birth"]):
         flash("ERROR: invalid date of death")
         return False
+    if form["sex"] not in ["Male", "Female"]:
+        flash("ERROR: invalid sex")
+        return False
     if form["father"] and not check_registration_number(form["father"]):
         flash("ERROR: invalid father registration number format (must be 'FI12345/67')")
         return False
