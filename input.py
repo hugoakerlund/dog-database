@@ -27,15 +27,23 @@ def check_sex(father, mother):
 
     return father_dog["sex"] != mother_dog["sex"]
 
-def check_ownership(parent):
+def check_ownership(parent_dog):
     owner_id = session["owner_id"]
-    parent_id = dog.get_dog_id_by_registration_number(parent)
-    return owner.is_owner_of_dog(owner_id, parent_id)
+    parent_dog_id = dog.get_dog_id_by_registration_number(parent_dog)
+    return owner.is_owner_of_dog(owner_id, parent_dog_id)
 
-def check_litter_parents(litter_id, father_id, mother_id):
+def check_litter(litter_id):
+    owner_id = session["owner_id"]
     litter_father_id = litter.get_father_id(litter_id)
     litter_mother_id = litter.get_mother_id(litter_id)
-    return father_id == int(litter_father_id) and mother_id == int(litter_mother_id)
+
+    if not litter_father_id or not litter_mother_id:
+        return False
+
+    father_owner_id = dog.get_owner_id(litter_father_id)
+    mother_owner_id = dog.get_owner_id(litter_mother_id)
+
+    return owner_id == father_owner_id and owner_id == mother_owner_id
 
 def check_name(name):
     return len(name) >= 2 and len(name) <= 20 and \
@@ -57,10 +65,6 @@ def check_death_date(death_date_str, birth_date_str):
     if (death_year, death_month, death_day) < (birth_year, birth_month, birth_day):
         return False
     return True
-
-def check_litter_name(litter_name):
-    return len(litter_name) >= 2 and len(litter_name) <= 20 and \
-           litter.get_litter_id_by_name(litter_name) is not None
 
 def check_dog_form(form, edit, old_registration_number=None):
     if not form["registration_number"] or not form["name"] or not form["breed"] or not \
@@ -88,12 +92,6 @@ def check_dog_form(form, edit, old_registration_number=None):
     if form["sex"] not in ["Male", "Female"]:
         flash("ERROR: invalid sex")
         return False
-    if form["father"] and not check_registration_number(form["father"]):
-        flash("ERROR: invalid father registration number format (must be 'FI12345/67')")
-        return False
-    if form["mother"] and not check_registration_number(form["mother"]):
-        flash("ERROR: invalid mother registration number format (must be 'FI12345/67')")
-        return False
     if not form["image"] or not form["image"].filename:
         flash("ERROR: image is required")
         return False
@@ -104,28 +102,10 @@ def check_dog_form(form, edit, old_registration_number=None):
     if len(form["image_data"]) > 100 * 1024:
         flash("ERROR: image size must be less than 100KB")
         return False
-    if form["father"]:
-        form["father_id"] = dog.get_dog_id_by_registration_number(form["father"])
-        if not form["father_id"]:
-            flash(f"ERROR: father with registration number '{form['father']}' not found")
-            return False
-    if form["mother"]:
-        form["mother_id"] = dog.get_dog_id_by_registration_number(form["mother"])
-        if not form["mother_id"]:
-            flash(f"ERROR: mother with registration number '{form['mother']}' not found")
-            return False
     if form["litter"]:
         form["litter_id"] = litter.get_litter_id_by_name(form["litter"])
-        if not form.get("mother") or not form.get("father"):
-            flash("ERROR: if litter is given father and mother must also be given")
-            return False
-        form["father_id"] = dog.get_dog_id_by_registration_number(form["father"])
-        form["mother_id"] = dog.get_dog_id_by_registration_number(form["mother"])
-        if not form["father_id"] or not form["mother_id"]:
-            flash("ERROR: father or mother registration number not found")
-            return False
-        if not check_litter_parents(form["litter_id"], form["father_id"], form["mother_id"]):
-            flash("ERROR: father and mother are not the parents of litter")
+        if not check_litter(form["litter_id"]):
+            flash("ERROR: you do not owner litter")
             return False
 
     if form["best_show"]:
@@ -172,10 +152,6 @@ def get_dog_form(request):
     form["date_of_birth"] = request.form.get("date_of_birth", "").strip()
     form["date_of_death"] = request.form.get("date_of_death", "").strip() or None # Field is optional
     form["sex"] = request.form.get("sex", "").strip()
-    form["father"] = request.form.get("father", "").strip() or None # Field is optional
-    form["father_id"] = None
-    form["mother"] = request.form.get("mother", "").strip() or None # Field is optional
-    form["mother_id"] = None
     form["litter"] = request.form.get("litter", "").strip() or None # Field is optional
     form["litter_id"] = None
     form["championship_title"] = request.form.get("championship_title", "").strip() or None

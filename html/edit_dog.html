@@ -46,25 +46,22 @@
   </p>
   <p>
     Sex:
-    <input type="radio" id="sexChoice1" name="sex" value="M" />
+    <input type="radio" id="sexChoice1" name="sex" value="Male" />
     <label for="sexChoice1">Male</label>
 
-    <input type="radio" id="sexChoice2" name="sex" value="F" />
+    <input type="radio" id="sexChoice2" name="sex" value="Female" />
     <label for="sexChoice2">Female</label>
   </p>
   <p>
-    Father:
-    <input type="text" name="father" value="{{ dog.father_registration_number }}" placeholder="Registration number" maxlength=10
-    pattern="^FI\d{5}/\d{2}$" title="Format: FI12345/12 (FI, five digits, slash, two digits)" />
-  </p>
-  <p>
-    Mother:
-    <input type="text" name="mother" value="{{ dog.mother_registration_number }}" placeholder="Registration number" maxlength=10
-    pattern="^FI\d{5}/\d{2}$" title="Format: FI12345/12 (FI, five digits, slash, two digits)" />
-  </p>
-  <p>
-    Litter:
-    <input type="text" name="litter" value="{{ dog.litter }}" placeholder="Litter name" maxlength=20 />
+    <label>
+      Litter:
+      <select name="litter">
+        <option value="">None</option>
+        {% for litter in litters %}
+        <option value="{{ litter.name }}">{{ litter.name }}</option>
+        {% endfor %}
+      </select>
+    </label>
   </p>
   <p>
     <label for="best_show">Best Show:</label>

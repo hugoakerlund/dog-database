@@ -39,14 +39,6 @@
   Sex: {{ dog.sex }}
 </P>
 <p>
-  Father: {% if dog.father_id %}<a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number if
-    dog.father_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
-</P>
-<p>
-  Mother: {% if dog.mother_id %}<a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number if
-    dog.mother_registration_number else "Unknown" }}</a>{% else %}Unknown{% endif %}
-</P>
-<p>
   Owner: <a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a>
 </P>
 <p>

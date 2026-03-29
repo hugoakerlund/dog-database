@@ -31,13 +31,11 @@
         <th>Breed</th>
         <th>Date of birth</th>
         <th>Sex</th>
-        <th>Father</th>
-        <th>Mother</th>
         <th>Owner</th>
         <th>Litter</th>
         <th>Show result</th>
         {% if session.get('owner_id')%}
-        <th>Action</th>
+        <th></th>
         {% endif %}
     </tr>
 
@@ -48,20 +46,6 @@
         <td>{{ dog.breed }}</td>
         <td>{{ dog.date_of_birth }}</td>
         <td>{{ dog.sex }}</td>
-        <td>
-            {% if dog.father_id %}
-            <a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number or "Unknown" }}</a>
-            {% else %}
-            Unknown
-            {% endif %}
-        </td>
-        <td>
-            {% if dog.mother_id %}
-            <a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number or "Unknown" }}</a>
-            {% else %}
-            Unknown
-            {% endif %}
-        </td>
         <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
         <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{%
           endif %}</td>

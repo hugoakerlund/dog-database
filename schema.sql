@@ -15,8 +15,6 @@ CREATE TABLE Dogs (
   date_of_birth DATE,
   date_of_death DATE,
   sex TEXT CHECK (sex IN ('Male', 'Female')),
-  father_id TEXT REFERENCES Dogs(id),
-  mother_id TEXT REFERENCES Dogs(id),
   owner_id INTEGER REFERENCES Owners(id),
   litter_id INTEGER REFERENCES Litters(id),
   best_test INTEGER CHECK (best_test IN (1, 2, 3, 4, 5)),

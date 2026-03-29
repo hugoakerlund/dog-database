@@ -105,10 +105,13 @@ def edit_dog_get(dog_id):
         abort(404, "ERROR: dog not found")
     colors = dog.get_colors()
     dog_breeds = dog.get_breeds()
+    owner_id = session["owner_id"]
+    my_litters = owner.get_litters(owner_id)
     championship_titles = dog_show.get_championship_titles()
     participated_shows = dog_show.get_dog_participated_shows(dog_id)
-    return render_template("html/edit_dog.html", dog=dog_info, colors=colors, dog_breeds=dog_breeds,
-                        championship_titles=championship_titles, participated_shows=participated_shows)
+    return render_template("html/edit_dog.html", dog=dog_info, colors=colors, 
+                           dog_breeds=dog_breeds,championship_titles=championship_titles, 
+                           litters=my_litters, participated_shows=participated_shows)
 
 @app.route("/edit_dog/<int:dog_id>", methods=["POST"])
 def edit_dog_post(dog_id):

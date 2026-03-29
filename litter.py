@@ -49,16 +49,11 @@ def get_litter_id_by_name(litter_name):
 def get_dogs_in_litter(litter_id):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
-        "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
-        "d.litter_id, "
+        "d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
-        "f.registration_number AS father_registration_number, "
-        "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
         "o.name AS owner_name "
         "FROM Dogs d "
-        "LEFT JOIN Dogs f ON d.father_id = f.id "
-        "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
         "LEFT JOIN Owners o ON d.owner_id = o.id "
         "WHERE d.litter_id = ?"
@@ -69,12 +64,12 @@ def get_dogs_in_litter(litter_id):
 def get_father_id(litter_id):
     sql = "SELECT father_id FROM Litters WHERE id = ?"
     result = db.query(sql, [litter_id])
-    return result[0][0] if result else 0
+    return result[0][0] if result else None
 
 def get_mother_id(litter_id):
     sql = "SELECT mother_id FROM Litters WHERE id = ?"
     result = db.query(sql, [litter_id])
-    return result[0][0] if result else 0
+    return result[0][0] if result else None
 
 def insert_litter(form):
     sql = (

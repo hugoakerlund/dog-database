@@ -134,9 +134,9 @@ def insert_random_dog(id):
         breed = random.choice(dog_breeds)
         date_of_birth = create_random_date()
         sex = random.choice(["Male", "Female"])
+
         father_id = random.randint(1, id - 1) if id > 2 else None
         mother_id = random.randint(1, id - 1) if id > 2 else None
-
         litter_id = None
         if father_id and mother_id:
             create_litter(id, father_id, mother_id)
@@ -149,12 +149,11 @@ def insert_random_dog(id):
         use_index = random.randint(0,100)
 
         sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, date_of_birth, 
-                                   sex, father_id, mother_id, owner_id, litter_id, 
+                                   sex, owner_id, litter_id, 
                                    best_test, best_show_id, hip_index, use_index) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
         db.execute(sql, [registration_number, name, image, color, breed, date_of_birth, 
-                        sex, father_id, mother_id, owner_id, litter_id, 
-                        best_test, best_show_id, hip_index, use_index])
+                                sex, owner_id, litter_id, best_test, best_show_id, hip_index, use_index])
 
 def seed_table_colors():
      sql = "INSERT INTO Colors (name) VALUES (?)"
