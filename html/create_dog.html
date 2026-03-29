@@ -79,14 +79,6 @@
     </label>
   </p>
   <p>
-    <label for="championship_title">Championship Title:</label>
-    <select name="championship_title" id="championship_title">
-      {% for championship_title in championship_titles %}
-      <option value="{{ championship_title.title }}">{{ championship_title.title }}</option>
-      {% endfor %}
-    </select>
-  </p>
-  <p>
     Best test:
     <input type="number" name="best_test"  min=1 max=5 />
   </p>

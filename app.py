@@ -40,10 +40,13 @@ def search():
 
 @app.route("/dog/<int:dog_id>")
 def show_dog(dog_id):
-    result = dog.get_dog(dog_id)
-    if not result:
+    dog_info  = dog.get_dog(dog_id)
+    championship_titles = dog.get_championship_titles(dog_id)
+    print(championship_titles)
+    if not dog_info:
         abort(404, "ERROR: dog not found")
-    return render_template("html/dog.html", dog=result, session=session)
+    return render_template("html/dog.html", dog=dog_info, 
+                           championship_titles=championship_titles, session=session)
 
 @app.route("/my_account")
 def show_my_dogs():
@@ -57,7 +60,7 @@ def create_dog_get():
     dog_breeds = dog.get_breeds()
     owner_id = session["owner_id"]
     my_litters = owner.get_litters(owner_id)
-    championship_titles = dog.get_championship_titles()
+    championship_titles = dog_show.get_championship_titles()
     return render_template("html/create_dog.html", colors=colors, dog_breeds=dog_breeds, litters=my_litters,
                         championship_titles=championship_titles)
 
@@ -103,7 +106,7 @@ def edit_dog_get(dog_id):
         abort(404, "ERROR: dog not found")
     colors = dog.get_colors()
     dog_breeds = dog.get_breeds()
-    championship_titles = dog.get_championship_titles()
+    championship_titles = dog_show.get_championship_titles()
     participated_shows = dog_show.get_dog_participated_shows(dog_id)
     return render_template("html/edit_dog.html", dog=dog_info, colors=colors, dog_breeds=dog_breeds,
                         championship_titles=championship_titles, participated_shows=participated_shows)
@@ -307,12 +310,15 @@ def show_dog_show(show_id):
         abort(404, "ERROR: dog show not found")
 
     eligible_dogs = []
+    championship_titles = []
     if "owner_id" in session:
         owner_dogs = owner.get_dogs(session["owner_id"])
         participant_ids = {d["id"] for d in dogs}
         eligible_dogs = [d for d in owner_dogs if d["id"] not in participant_ids]
+        championship_titles = dog_show.get_championship_titles()
 
-    return render_template("html/dog_show.html", show=show_info, dogs=dogs, eligible_dogs=eligible_dogs)
+    return render_template("html/dog_show.html", show=show_info, dogs=dogs, 
+                           eligible_dogs=eligible_dogs, championship_titles=championship_titles)
 
 
 @app.route("/dog_show/<int:show_id>/add", methods=["POST"])
@@ -328,10 +334,15 @@ def add_dog_to_show(show_id):
     if not dog_id:
         abort(400, "ERROR: dog not selected")
 
+    championship_title_id = request.form.get("championship_title_id")
+    if not championship_title_id:
+        abort(400, "ERROR: result not selected")
+
     try:
         dog_id = int(dog_id)
+        championship_title_id= int(championship_title_id)
     except ValueError:
-        abort(400, "ERROR: invalid dog id")
+        abort(400, "ERROR: invalid dog id or championship title id")
     
     if dog.is_dead(dog_id):
         flash("Cannot add dead dog to the show", "error")
@@ -347,7 +358,7 @@ def add_dog_to_show(show_id):
         return redirect(f"/dog_show/{show_id}")
 
     try:
-        dog_show.add_participant(show_id, dog_id)
+        dog_show.add_participant(show_id, dog_id, championship_title_id)
         flash("Dog added to show", "success")
     except sqlite3.IntegrityError as e:
         flash(f"ERROR: Database error: {e}", "error")

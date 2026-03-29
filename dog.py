@@ -4,19 +4,17 @@ def get_dogs(page, page_size):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
         "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
-        "d.litter_id, d.championship_title_id, "
+        "d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
-        "o.name AS owner_name, "
-        "c.title AS championship_title "
+        "o.name AS owner_name "
         "FROM Dogs d "
         "LEFT JOIN Dogs f ON d.father_id = f.id "
         "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
         "LEFT JOIN Owners o ON d.owner_id = o.id "
-        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id "
         "GROUP BY d.id "
         "ORDER BY d.id DESC "
         "LIMIT ? OFFSET ?"
@@ -34,19 +32,17 @@ def get_dog(dog_id):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
         "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
-        "d.litter_id, d.championship_title_id, "
+        "d.litter_id,  "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
         "o.name AS owner_name, "
-        "c.title AS championship_title, "
         "s.name AS best_show_name "
         "FROM Dogs d "
         "LEFT JOIN Dogs f ON d.father_id = f.id "
         "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
-        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id "
         "LEFT JOIN Dog_shows s ON d.best_show_id = s.id "
         "LEFT JOIN Owners o ON d.owner_id = o.id "
         "WHERE d.id = ?"
@@ -64,9 +60,14 @@ def get_championship_title_id(title):
     result = db.query(sql, [title])
     return result[0][0] if result else None
 
-def get_championship_titles():
-    sql = "SELECT id, title FROM Championship_titles"
-    return db.query(sql)
+def get_championship_titles(dog_id):
+    sql = (
+        "SELECT c.title AS name "
+        "FROM Show_participants s "
+        "LEFT JOIN Championship_titles c ON s.result = c.id "
+        "WHERE s.dog_id = ?")
+    result = db.query(sql, [dog_id])
+    return result if result else None
 
 def get_registration_number(dog_id):
     sql = "SELECT registration_number FROM Dogs WHERE id = ?"
@@ -95,7 +96,7 @@ def get_owners_dogs(owner_id):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
         "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
-        "d.litter_id, d.championship_title_id, "
+        "d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number "
@@ -149,9 +150,9 @@ def delete_dog(dog_id):
 def insert_dog(form):
         sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, 
                                    date_of_birth, date_of_death, sex, father_id, mother_id, 
-                                   litter_id, owner_id, championship_title_id, best_show_id, best_test,
+                                   litter_id, owner_id, best_show_id, best_test,
                                    hip_index, use_index) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
         
         params = [
             form["registration_number"],
@@ -166,7 +167,6 @@ def insert_dog(form):
             form["mother_id"],
             form["litter_id"],
             form["owner_id"],
-            form["championship_title_id"],
             form["best_show_id"],
             form["best_test"],
             form["hip_index"],
@@ -178,7 +178,7 @@ def update_dog(dog_id, form):
     sql = """UPDATE Dogs 
              SET registration_number = ?, name = ?, image = ?, color = ?, breed = ?, 
                  date_of_birth = ?, date_of_death = ?, sex = ?, father_id = ?, mother_id = ?, 
-                 litter_id = ?, owner_id = ?, championship_title_id = ?, best_show_id = ?, best_test = ?, 
+                 litter_id = ?, owner_id = ?, best_show_id = ?, best_test = ?, 
                  hip_index = ?, use_index = ?
              WHERE id = ?"""
     params = [
@@ -194,7 +194,6 @@ def update_dog(dog_id, form):
         form["mother_id"],
         form["litter_id"],
         form["owner_id"],
-        form["championship_title_id"],
         form["best_show_id"],
         form["best_test"],
         form["hip_index"],
@@ -212,19 +211,17 @@ def search(query):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
         "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
-        "d.litter_id, d.championship_title_id, "
+        "d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
-        "o.name AS owner_name, "
-        "c.title AS championship_title "
+        "o.name AS owner_name "
         "FROM Dogs d "
         "LEFT JOIN Dogs f ON d.father_id = f.id "
         "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
         "LEFT JOIN Owners o ON d.owner_id = o.id "
-        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id "
         "WHERE d.name LIKE ? OR d.registration_number LIKE ? OR d.breed LIKE ?"
     )
     like_query = f"%{query}%"

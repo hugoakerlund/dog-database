@@ -15,21 +15,21 @@ def get_show_participants(show_id):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
         "d.date_of_birth, d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, "
-        "d.litter_id, d.championship_title_id, "
+        "d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
         "o.name AS owner_name, "
-        "c.title AS championship_title "
+        "c.title as show_result "
         "FROM Dog_shows s "
         "JOIN Show_participants pa ON s.id = pa.show_id "
         "JOIN Dogs d ON pa.dog_id = d.id "
         "LEFT JOIN Dogs f ON d.father_id = f.id "
         "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
-        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id "
         "LEFT JOIN Owners o ON d.owner_id = o.id "
+        "LEFT JOIN Championship_titles c ON pa.result = c.id "
         "WHERE s.id = ?"
     )
     return db.query(sql, [show_id])
@@ -44,6 +44,10 @@ def get_dog_shows(page, page_size):
     limit = page_size
     offset = page_size * (page - 1)
     return db.query(sql, [limit, offset])
+
+def get_championship_titles():
+    sql = "SELECT id, title FROM Championship_titles"
+    return db.query(sql)
 
 def get_dog_show_count():
     sql = "SELECT COUNT(*) FROM Dog_shows"
@@ -68,9 +72,9 @@ def is_participant(show_id, dog_id):
     return bool(result)
 
 
-def add_participant(show_id, dog_id):
-    sql = "INSERT INTO Show_participants (show_id, dog_id) VALUES (?, ?)"
-    db.execute(sql, [show_id, dog_id])
+def add_participant(show_id, dog_id, championship_title_id):
+    sql = "INSERT INTO Show_participants (show_id, dog_id, result) VALUES (?, ?, ?)"
+    db.execute(sql, [show_id, dog_id, championship_title_id])
 
 
 def remove_participant(show_id, dog_id):

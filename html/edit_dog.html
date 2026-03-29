@@ -72,15 +72,6 @@
     <input type="text" name="litter" value="{{ dog.litter }}" placeholder="Litter name" maxlength=20 />
   </p>
   <p>
-    <label for="championship_title">Championship Title:</label>
-    <select name="championship_title" id="championship_title">
-      {% for championship_title in championship_titles %}
-      <option value="{{ championship_title.title }}" {% if championship_title.title==dog.championship_title %}selected{%
-        endif %}>{{ championship_title.title }}</option>
-      {% endfor %}
-    </select>
-  </p>
-  <p>
     <label for="best_show">Best Show:</label>
     <select name="best_show" id="best_show">
       <option value="">None</option>

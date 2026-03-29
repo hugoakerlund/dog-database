@@ -53,7 +53,12 @@
   Litter: {% if dog.litter_id%}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else
     "Unknown" }}</a>{% else %}Unknown{% endif %} </P>
 <p>
-  Championship title: {{ dog.championship_title }}
+  {% if championship_titles %}
+  Championship titles:
+  {{ championship_titles | map(attribute='name') | join(', ') }}
+  {% else %}
+  {{ dog.name }} does not have any championship titles currently.
+  {% endif %}
 </P>
 <p>
   Best test: {{ dog.best_test }}

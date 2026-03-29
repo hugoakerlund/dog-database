@@ -25,19 +25,17 @@ def get_owners(page, page_size):
 def get_dogs(owner_id):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, d.date_of_birth, "
-        "d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, d.litter_id, d.championship_title_id, "
+        "d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
-        "o.name AS owner_name, "
-        "c.title AS championship_title "
+        "o.name AS owner_name "
         "FROM Dogs d "
         "LEFT JOIN Dogs f ON d.father_id = f.id "
         "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
         "LEFT JOIN Owners o ON d.owner_id = o.id "
-        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id "
         "WHERE d.owner_id = ?"
     )
     result = db.query(sql, [owner_id])
@@ -46,19 +44,17 @@ def get_dogs(owner_id):
 def get_male_dogs(owner_id):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, d.date_of_birth, "
-        "d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, d.litter_id, d.championship_title_id, "
+        "d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
-        "o.name AS owner_name, "
-        "c.title AS championship_title "
+        "o.name AS owner_name "
         "FROM Dogs d "
         "LEFT JOIN Dogs f ON d.father_id = f.id "
         "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
         "LEFT JOIN Owners o ON d.owner_id = o.id "
-        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id "
         "WHERE d.owner_id = ? AND d.sex = 'M'"
     )
     result = db.query(sql, [owner_id])
@@ -67,19 +63,17 @@ def get_male_dogs(owner_id):
 def get_female_dogs(owner_id):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, d.date_of_birth, "
-        "d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, d.litter_id, d.championship_title_id, "
+        "d.date_of_death, d.sex, d.father_id, d.mother_id, d.owner_id, d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "f.registration_number AS father_registration_number, "
         "m.registration_number AS mother_registration_number, "
         "l.name AS litter_name, "
-        "o.name AS owner_name, "
-        "c.title AS championship_title "
+        "o.name AS owner_name "
         "FROM Dogs d "
         "LEFT JOIN Dogs f ON d.father_id = f.id "
         "LEFT JOIN Dogs m ON d.mother_id = m.id "
         "LEFT JOIN Litters l ON d.litter_id = l.id "
         "LEFT JOIN Owners o ON d.owner_id = o.id "
-        "LEFT JOIN Championship_titles c ON d.championship_title_id = c.id "
         "WHERE d.owner_id = ? AND d.sex = 'F'"
     )
     result = db.query(sql, [owner_id])

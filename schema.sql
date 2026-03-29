@@ -19,7 +19,6 @@ CREATE TABLE Dogs (
   mother_id TEXT REFERENCES Dogs(id),
   owner_id INTEGER REFERENCES Owners(id),
   litter_id INTEGER REFERENCES Litters(id),
-  championship_title_id INTEGER REFERENCES Championship_titles(id),
   best_test INTEGER CHECK (best_test IN (1, 2, 3, 4, 5)),
   best_show_id INTEGER REFERENCES Dog_shows(id),
   hip_index INTEGER,

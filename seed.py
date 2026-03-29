@@ -83,8 +83,8 @@ championship_titles = [
 "S", # Sufficient
 "VP", # Very Promising
 "P", # Promising
-"Puppy BOB ", # Puppy Best of Breed
-"J CAC ", # Junior Certificate of Aptitude for the Beauty Championship
+"Puppy BOB", # Puppy Best of Breed
+"J CAC", # Junior Certificate of Aptitude for the Beauty Championship
 "J CACIB", # Junior Certificate of Aptitude for the International Beauty Championship
 "J BOB", # Junior Best of Breed
 "CAC", # Certificate of Championship Aptitude
@@ -143,18 +143,17 @@ def insert_random_dog(id):
             litter_id = id
 
         owner_id = id
-        championship_title_id = random.randint(1, len(championship_titles) - 1)
         best_test = random.randint(1,5)
         best_show_id = random.randint(1, len(dog_shows) - 1)
         hip_index = random.randint(0,100)
         use_index = random.randint(0,100)
 
         sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, date_of_birth, 
-                                   sex, father_id, mother_id, owner_id, litter_id, championship_title_id, 
+                                   sex, father_id, mother_id, owner_id, litter_id, 
                                    best_test, best_show_id, hip_index, use_index) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
         db.execute(sql, [registration_number, name, image, color, breed, date_of_birth, 
-                        sex, father_id, mother_id, owner_id, litter_id, championship_title_id, 
+                        sex, father_id, mother_id, owner_id, litter_id, 
                         best_test, best_show_id, hip_index, use_index])
 
 def seed_table_colors():

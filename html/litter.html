@@ -35,7 +35,6 @@
         <th>Mother</th>
         <th>Owner</th>
         <th>Litter</th>
-        <th>Championship title</th>
     </tr>
 
     {% for dog in dogs %}
@@ -61,7 +60,6 @@
         </td>
         <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
         <td>{{ dog.litter_name or "Unknown" }}</td>
-        <td>{{ dog.championship_title }}</td>
     </tr>
     {% endfor %}
 

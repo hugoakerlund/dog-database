@@ -41,7 +41,7 @@
         <th>Mother</th>
         <th>Owner</th>
         <th>Litter</th>
-        <th>Championship title</th>
+        <th>Show result</th>
         {% if session.get('owner_id')%}
         <th>Action</th>
         {% endif %}
@@ -71,7 +71,7 @@
         <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
         <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{%
           endif %}</td>
-        <td>{{ dog.championship_title }}</td>
+        <td>{{ dog.show_result}}</td>
         <td>
             {% if session.get('owner_id') == dog.owner_id %}
             <form method="post" action="/dog_show/{{ show.id }}/remove" style="margin:0">
@@ -97,6 +97,16 @@
           <select name="dog_id" required>
             {% for dog in eligible_dogs %}
             <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+            {% endfor %}
+          </select>
+        </label>
+      </p>
+      <p>
+        <label>
+          Select show result:
+          <select name="championship_title_id" id="championship_title">
+            {% for championship_title in championship_titles %}
+            <option value="{{ championship_title.id}}">{{ championship_title.title }}</option>
             {% endfor %}
           </select>
         </label>
