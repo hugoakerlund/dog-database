@@ -6,11 +6,6 @@
 
 <h2>Add dog</h2>
 
-{% for message in get_flashed_messages() %}
-<p>
-  <b>{{ message }}</b>
-</p>
-{% endfor %}
 <form action="/create_dog" method="post" enctype="multipart/form-data">
   <p>
     Registration number:

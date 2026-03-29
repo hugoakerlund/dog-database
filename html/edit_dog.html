@@ -6,11 +6,6 @@
 
 <h2>Edit {{ dog.name }}</h2>
 
-{% for message in get_flashed_messages() %}
-<p>
-  <b>{{ message }}</b>
-</p>
-{% endfor %}
 <form action="/edit_dog/{{ dog.id }}" method="post" enctype="multipart/form-data">
   <p>
     Registration number:

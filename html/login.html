@@ -6,11 +6,6 @@
 
 <h2>Login</h2>
 
-{% for message in get_flashed_messages() %}
-<p>
-  <b>{{ message }}</b>
-</p>
-{% endfor %}
 <form action="/login" method="post">
   <p>
     Name: <br />

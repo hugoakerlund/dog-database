@@ -6,11 +6,6 @@
 
 <h2>Add litter</h2>
 
-{% for message in get_flashed_messages() %}
-<p>
-  <b>{{ message }}</b>
-</p>
-{% endfor %}
 <form action="/create_litter" method="post">
   <p>
     Name:
