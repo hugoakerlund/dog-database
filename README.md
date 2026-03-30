@@ -12,6 +12,7 @@ Dog database is a simple web application built with Flask that allows users to v
 * The app has a user page that shows the dogs and litters that the user owns.
 * The user can choose one or more classifications for the dog (e.g. breed, color).
 * The user can enter their dogs in a dog show. The entry list shows which dogs have entered.
+* The user can comment on other users' dogs
 
 ## Installation
 
