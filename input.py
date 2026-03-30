@@ -209,7 +209,7 @@ def get_litter_form(request):
     form["owner_id"] = session["owner_id"]
     return form
 
-def check_registration_form(form):
+def check_account_form(form, edit=False, old_account_name=None, old_email=None):
     if not form["name"] or not form["email"] or not form["password1"] or not form["password2"]:
         flash("ERROR: all fields are required")
         return False
@@ -222,19 +222,21 @@ def check_registration_form(form):
     if not check_name(form["name"]):
         flash("ERROR: name must be between 2 and 20 characters")
         return False
-    if owner.name_exists(form["name"]):
+    if edit and old_account_name != form["name"] and owner.name_exists(form["name"]) or \
+        not edit and owner.name_exists(form["name"]):
         flash("ERROR: name already taken")
         return False
     if not check_email(form["email"]):
         flash("ERROR: invalid email address")
         return False
-    if owner.email_exists(form["email"]):
+    if edit and old_email != form["email"] and owner.email_exists(form["email"]) or \
+        not edit and owner.email_exists(form["email"]):
         flash("ERROR: email already taken")
         return False
     form["password_hash"] = generate_password_hash(form["password1"])
     return True
 
-def get_registration_form(request):
+def get_account_form(request):
     form = {}
     form["name"] = request.form.get("name", "").strip()
     form["email"] = request.form.get("email", "").strip()

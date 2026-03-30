@@ -208,8 +208,8 @@ def register_get():
 
 @app.route("/register", methods=["POST"])
 def register_post():
-    form = input.get_registration_form(request)
-    if not input.check_registration_form(form):
+    form = input.get_account_form(request)
+    if not input.check_account_form(form):
         return redirect("/register")
     try:
         owner.insert_owner(form)
@@ -273,6 +273,28 @@ def remove_account_post():
         logout()
         flash("Account deleted successfully.")
 
+    return redirect("/")
+
+@app.route("/edit_account", methods=["GET"])
+def edit_account_get():
+    require_login()
+    return render_template("html/edit_account.html")
+
+@app.route("/edit_account", methods=["POST"])
+def edit_account_post():
+    require_login()
+    check_csrf()
+    form = input.get_account_form(request)
+    owner_id = session["owner_id"]
+    old_account_name, old_email = owner.get_account_info(owner_id)
+    if not input.check_account_form(form, True, old_account_name, old_email):
+        return redirect("/edit_account")
+    try:
+        owner.update_owner(owner_id, form)
+        flash("Account updated successfully!", "success")
+    except sqlite3.IntegrityError as e:
+        return f"ERROR: database error {e} (possibly duplicate name or email)"
+    set_session(owner.get_id_with_name(form["name"]), form["name"])
     return redirect("/")
 
 @app.route("/litter/<int:litter_id>")

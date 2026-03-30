@@ -98,6 +98,11 @@ def get_id_with_name(name):
         return None
     return id[0][0]
 
+def get_account_info(owner_id):
+    sql = "SELECT name, email FROM Owners WHERE id = ?"
+    result = db.query(sql, [owner_id])
+    return result[0][0], result[0][1]
+
 def get_password_hash(name):
     sql = "SELECT password_hash FROM Owners WHERE name = ?"
     result = db.query(sql, [name])
@@ -139,3 +144,9 @@ def remove_owner(owner_id):
     sql = "DELETE FROM Owners WHERE id = ?"
     db.execute(sql, [owner_id])
 
+def update_owner(owner_id, form):
+    sql = (
+        "UPDATE Owners SET name = ?, email = ?, password_hash = ? "
+        "WHERE id = ?"
+    )
+    db.execute(sql, [form["name"], form["email"], form["password_hash"], owner_id])
