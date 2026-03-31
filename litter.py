@@ -76,7 +76,7 @@ def insert_litter(form):
         "INSERT INTO Litters (name, father_id, mother_id, date_of_birth, owner_id) "
         "VALUES (?, ?, ?, ?, ?)"
     )
-    db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"], 
+    db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"],
                      form["owner_id"]])
 
 def update_litter(litter_id, form):
@@ -85,9 +85,9 @@ def update_litter(litter_id, form):
         "SET name = ?, father_id = ?, mother_id = ?, date_of_birth = ? "
         "WHERE id = ?"
     )
-    db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"], 
+    db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"],
                      litter_id])
-                    
+
 def delete_litter(litter_id):
     sql = "DELETE FROM Litters WHERE id = ?"
     db.execute(sql, [litter_id])

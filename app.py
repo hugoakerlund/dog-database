@@ -1,15 +1,15 @@
 import sqlite3
-from flask import Flask, make_response, session, redirect, render_template, \
-                  request, send_from_directory, abort, flash
 import math
 import os
+import secrets
+from flask import Flask, make_response, session, redirect, render_template, \
+                  request, send_from_directory, abort, flash
 import config
 import dog
 import dog_show
 import owner
-import input
+import input_validator
 import litter
-import secrets
 
 app = Flask(__name__, template_folder=".")
 app.secret_key = config.SECRET_KEY
@@ -44,14 +44,8 @@ def show_dog(dog_id):
     championship_titles = dog.get_championship_titles(dog_id)
     if not dog_info:
         abort(404, "ERROR: dog not found")
-    return render_template("html/dog.html", dog=dog_info, 
+    return render_template("html/dog.html", dog=dog_info,
                            championship_titles=championship_titles, session=session)
-
-@app.route("/my_account")
-def show_my_dogs():
-    require_login()
-    owner_id = session["owner_id"]
-    return redirect(f"/owner/{owner_id}")
 
 @app.route("/create_dog", methods=["GET"])
 def create_dog_get():
@@ -60,41 +54,20 @@ def create_dog_get():
     owner_id = session["owner_id"]
     my_litters = owner.get_litters(owner_id)
     championship_titles = dog_show.get_championship_titles()
-    return render_template("html/create_dog.html", colors=colors, dog_breeds=dog_breeds, litters=my_litters,
-                        championship_titles=championship_titles)
+    return render_template("html/create_dog.html", colors=colors, dog_breeds=dog_breeds,
+                           litters=my_litters, championship_titles=championship_titles)
 
 @app.route("/create_dog", methods=["POST"])
 def create_dog_post():
     require_login()
     check_csrf()
-    form = input.get_dog_form(request)
-    if not input.check_dog_form(form, edit=False):
+    form = input_validator.get_dog_form(request)
+    if not input_validator.check_dog_form(form):
         return redirect("/create_dog")
     try:
         dog.insert_dog(form)
     except sqlite3.IntegrityError as e:
         return f"ERROR: Database error: {e} (possibly duplicate name or invalid foreign key)"
-    return redirect("/")
-
-@app.route("/create_litter", methods=["GET"])
-def create_litter_get():
-    require_login()
-    owner_id = session["owner_id"]
-    male_dogs = owner.get_male_dogs(owner_id)
-    female_dogs = owner.get_female_dogs(owner_id)
-    return render_template("html/create_litter.html", male_dogs=male_dogs, female_dogs=female_dogs)
-
-@app.route("/create_litter", methods=[ "POST"])
-def create_litter_post():
-    require_login()
-    check_csrf()
-    form = input.get_litter_form(request)
-    if not input.check_litter_form(form):
-        return render_template("html/create_litter.html")
-    try:
-        litter.insert_litter(form)
-    except sqlite3.IntegrityError as e:
-        return f"ERROR: Database error: {e} (possibly invalid foreign key)"
     return redirect("/my_account")
 
 @app.route("/edit_dog/<int:dog_id>", methods=["GET"])
@@ -109,16 +82,15 @@ def edit_dog_get(dog_id):
     my_litters = owner.get_litters(owner_id)
     championship_titles = dog_show.get_championship_titles()
     participated_shows = dog_show.get_dog_participated_shows(dog_id)
-    return render_template("html/edit_dog.html", dog=dog_info, colors=colors, 
-                           dog_breeds=dog_breeds,championship_titles=championship_titles, 
+    return render_template("html/edit_dog.html", dog=dog_info, colors=colors,
+                           dog_breeds=dog_breeds,championship_titles=championship_titles,
                            litters=my_litters, participated_shows=participated_shows)
 
 @app.route("/edit_dog/<int:dog_id>", methods=["POST"])
 def edit_dog_post(dog_id):
     require_login()
-    form = input.get_dog_form(request)
-    old_registration_number = dog.get_registration_number(dog_id)
-    if not input.check_dog_form(form, edit=True, old_registration_number=old_registration_number):
+    form = input_validator.get_dog_form(request, dog_id)
+    if not input_validator.check_dog_form(form, edit=True):
         return redirect(f"/edit_dog/{dog_id}")
     try:
         dog.update_dog(dog_id, form)
@@ -142,6 +114,28 @@ def remove_dog_post(dog_id):
         dog.delete_dog(dog_id)
     return redirect("/my_account")
 
+@app.route("/create_litter", methods=["GET"])
+def create_litter_get():
+    require_login()
+    owner_id = session["owner_id"]
+    male_dogs = owner.get_male_dogs(owner_id)
+    female_dogs = owner.get_female_dogs(owner_id)
+    return render_template("html/create_litter.html", male_dogs=male_dogs, female_dogs=female_dogs)
+
+@app.route("/create_litter", methods=[ "POST"])
+def create_litter_post():
+    require_login()
+    check_csrf()
+    form = input_validator.get_litter_form(request)
+    if not input_validator.check_litter_form(form):
+        return render_template("html/create_litter.html")
+    try:
+        litter.insert_litter(form)
+    except sqlite3.IntegrityError as e:
+        return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+    return redirect("/my_account")
+
+
 @app.route("/edit_litter/<int:litter_id>", methods=["GET"])
 def edit_litter_get(litter_id):
     require_login()
@@ -157,9 +151,8 @@ def edit_litter_get(litter_id):
 @app.route("/edit_litter/<int:litter_id>", methods=["POST"])
 def edit_litter_post(litter_id):
     require_login()
-    form = input.get_litter_form(request)
-    old_litter_name = litter.get_litter(litter_id)["name"]
-    if not input.check_litter_form(form, edit=True, old_litter_name=old_litter_name):
+    form = input_validator.get_litter_form(request, litter_id)
+    if not input_validator.check_litter_form(form, edit=True):
         return redirect(f"/edit_litter/{litter_id}")
     try:
         litter.update_litter(litter_id, form)
@@ -183,17 +176,18 @@ def remove_litter_post(litter_id):
         litter.delete_litter(litter_id)
     return redirect("/my_account")
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        if not input.check_login(request):
-            return redirect("/login")
-        owner_id = owner.get_id_with_name(request.form.get("name", "").strip())
-        name = request.form.get("name", "").strip()
-        set_session(owner_id, name)
-        return redirect("/")
-    elif request.method == "GET":
-        return render_template("html/login.html")
+@app.route("/login", methods=["GET"])
+def login_get():
+    return render_template("html/login.html")
+
+@app.route("/login", methods=["POST"])
+def login_post():
+    if not input_validator.check_login(request):
+        return redirect("/login")
+    owner_id = owner.get_id_with_name(request.form.get("name", "").strip())
+    name = request.form.get("name", "").strip()
+    set_session(owner_id, name)
+    return redirect("/")
 
 @app.route("/logout")
 def logout():
@@ -208,8 +202,8 @@ def register_get():
 
 @app.route("/register", methods=["POST"])
 def register_post():
-    form = input.get_account_form(request)
-    if not input.check_account_form(form):
+    form = input_validator.get_account_form(request)
+    if not input_validator.check_account_form(form):
         return redirect("/register")
     try:
         owner.insert_owner(form)
@@ -223,7 +217,7 @@ def register_post():
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'favicon.ico', mimetype='image/vnd.microsoft.icon')
-                               
+
 @app.route("/image/<int:dog_id>")
 def show_image(dog_id):
     image = dog.get_image(dog_id)
@@ -255,8 +249,14 @@ def show_owner(owner_id):
     owners_litters= owner.get_litters(owner_id)
     if not owner_info:
         abort(404, "ERROR: owner not found")
-    return render_template("html/owner.html", owner=owner_info, 
+    return render_template("html/owner.html", owner=owner_info,
                            dogs=owners_dogs, litters=owners_litters, session=session)
+
+@app.route("/my_account")
+def show_my_dogs():
+    require_login()
+    owner_id = session["owner_id"]
+    return redirect(f"/owner/{owner_id}")
 
 @app.route("/remove_account", methods=["GET"])
 def remove_account_get():
@@ -284,18 +284,16 @@ def edit_account_get():
 def edit_account_post():
     require_login()
     check_csrf()
-    form = input.get_account_form(request)
-    owner_id = session["owner_id"]
-    old_account_name, old_email = owner.get_account_info(owner_id)
-    if not input.check_account_form(form, True, old_account_name, old_email):
+    form = input_validator.get_account_form(request, True)
+    if not input_validator.check_account_form(form, True):
         return redirect("/edit_account")
     try:
-        owner.update_owner(owner_id, form)
+        owner.update_owner(form)
         flash("Account updated successfully!", "success")
     except sqlite3.IntegrityError as e:
         return f"ERROR: database error {e} (possibly duplicate name or email)"
     set_session(owner.get_id_with_name(form["name"]), form["name"])
-    return redirect("/")
+    return redirect("/my_account")
 
 @app.route("/litter/<int:litter_id>")
 def show_litter(litter_id):
@@ -321,7 +319,7 @@ def show_litters(page=1):
     if page > page_count:
         return redirect("/litters/" + str(page_count))
 
-    return render_template("html/litters.html", page=page, page_count=page_count, 
+    return render_template("html/litters.html", page=page, page_count=page_count,
                            litters=litters)
 
 @app.route("/owners")
@@ -340,7 +338,7 @@ def show_owners(page=1):
     if page > page_count:
         return redirect("/owners/" + str(page_count))
 
-    return render_template("html/owners.html", page=page, page_count=page_count, 
+    return render_template("html/owners.html", page=page, page_count=page_count,
                            owners=owners)
 
 @app.route("/dog_show/<int:show_id>")
@@ -358,48 +356,20 @@ def show_dog_show(show_id):
         eligible_dogs = [d for d in owner_dogs if d["id"] not in participant_ids]
         championship_titles = dog_show.get_championship_titles()
 
-    return render_template("html/dog_show.html", show=show_info, dogs=dogs, 
+    return render_template("html/dog_show.html", show=show_info, dogs=dogs,
                            eligible_dogs=eligible_dogs, championship_titles=championship_titles)
-
 
 @app.route("/dog_show/<int:show_id>/add", methods=["POST"])
 def add_dog_to_show(show_id):
     require_login()
     check_csrf()
-
-    show_info = dog_show.get_dog_show(show_id)
-    if not show_info:
-        abort(404, "ERROR: dog show not found")
-
-    dog_id = request.form.get("dog_id")
-    if not dog_id:
-        abort(400, "ERROR: dog not selected")
-
-    championship_title_id = request.form.get("championship_title_id")
-    if not championship_title_id:
-        abort(400, "ERROR: result not selected")
-
-    try:
-        dog_id = int(dog_id)
-        championship_title_id= int(championship_title_id)
-    except ValueError:
-        abort(400, "ERROR: invalid dog id or championship title id")
-    
-    if dog.is_dead(dog_id):
-        flash("Cannot add dead dog to the show", "error")
-        return redirect(f"/dog_show/{show_id}")
-
-    owner_id = session["owner_id"]
-    owner_dog_ids = {d["id"] for d in owner.get_dogs(owner_id)}
-    if dog_id not in owner_dog_ids:
-        abort(403, "ERROR: dog does not belong to you")
-
-    if dog_show.is_participant(show_id, dog_id):
-        flash("Dog is already registered for this show", "error")
+    form = input_validator.get_dog_show_form(request, show_id)
+    if not input_validator.check_dog_show_form(form):
         return redirect(f"/dog_show/{show_id}")
 
     try:
-        dog_show.add_participant(show_id, dog_id, championship_title_id)
+        dog_show.add_participant(show_id, form["dog_id"]
+                                 , form["championship_title_id"])
         flash("Dog added to show", "success")
     except sqlite3.IntegrityError as e:
         flash(f"ERROR: Database error: {e}", "error")
@@ -411,31 +381,12 @@ def add_dog_to_show(show_id):
 def remove_dog_from_show(show_id):
     require_login()
     check_csrf()
-
-    show_info = dog_show.get_dog_show(show_id)
-    if not show_info:
-        abort(404, "ERROR: dog show not found")
-
-    dog_id = request.form.get("dog_id")
-    if not dog_id:
-        abort(400, "ERROR: dog not selected")
-
-    try:
-        dog_id = int(dog_id)
-    except ValueError:
-        abort(400, "ERROR: invalid dog id")
-
-    owner_id = session["owner_id"]
-    owner_dog_ids = {d["id"] for d in owner.get_dogs(owner_id)}
-    if dog_id not in owner_dog_ids:
-        abort(403, "ERROR: dog does not belong to you")
-
-    if not dog_show.is_participant(show_id, dog_id):
-        flash("Dog is not registered for this show", "error")
+    form = input_validator.get_dog_show_form(request, show_id, True)
+    if not input_validator.check_dog_show_form(form, True):
         return redirect(f"/dog_show/{show_id}")
 
     try:
-        dog_show.remove_participant(show_id, dog_id)
+        dog_show.remove_participant(form["show_id"], form["dog_id"])
         flash("Dog removed from show", "success")
     except sqlite3.IntegrityError as e:
         flash(f"ERROR: Database error: {e}", "error")
@@ -459,7 +410,7 @@ def show_dog_shows(page=1):
     if page > page_count:
         return redirect("/dog_shows/" + str(page_count))
 
-    return render_template("html/dog_shows.html", page=page, page_count=page_count, 
+    return render_template("html/dog_shows.html", page=page, page_count=page_count,
                            dog_shows=dog_shows)
 
 def require_login():

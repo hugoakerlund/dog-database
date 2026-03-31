@@ -93,10 +93,10 @@ def get_litters(owner_id):
 
 def get_id_with_name(name):
     sql = "SELECT id FROM Owners WHERE name = ?"
-    id = db.query(sql, [name])
-    if not id:
+    owner_id = db.query(sql, [name])
+    if not owner_id:
         return None
-    return id[0][0]
+    return owner_id[0][0]
 
 def get_account_info(owner_id):
     sql = "SELECT name, email FROM Owners WHERE id = ?"
@@ -144,9 +144,9 @@ def remove_owner(owner_id):
     sql = "DELETE FROM Owners WHERE id = ?"
     db.execute(sql, [owner_id])
 
-def update_owner(owner_id, form):
+def update_owner(form):
     sql = (
         "UPDATE Owners SET name = ?, email = ?, password_hash = ? "
         "WHERE id = ?"
     )
-    db.execute(sql, [form["name"], form["email"], form["password_hash"], owner_id])
+    db.execute(sql, [form["name"], form["email"], form["password_hash"], form["owner_id"]])

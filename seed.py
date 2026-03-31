@@ -106,103 +106,109 @@ def create_random_string(n):
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(n))
 
 def create_random_date():
-        year = random.randint(2000, 2024)
-        month = random.randint(1, 12)
-        day = random.randint(1, 28)
-        return f"{year}-{month:02d}-{day:02d}"
+    year = random.randint(2000, 2024)
+    month = random.randint(1, 12)
+    day = random.randint(1, 28)
+    return f"{year}-{month:02d}-{day:02d}"
 
-def insert_random_owner(id):
-        name = "test_owner" + str(id)
-        email = name + "@" + "test_domain" + ".com"
-        password_hash = "test_hash"
-        sql = "INSERT INTO Owners (name, email, password_hash) VALUES (?, ?, ?)"
-        db.execute(sql, [name, email, password_hash])
+def insert_random_owner(n):
+    name = "test_owner" + str(n)
+    email = name + "@" + "test_domain" + ".com"
+    password_hash = "test_hash"
+    sql = "INSERT INTO Owners (name, email, password_hash) VALUES (?, ?, ?)"
+    db.execute(sql, [name, email, password_hash])
 
-def create_litter(id, father_id, mother_id):
-        name = "test_litter" + str(id)
-        date_of_birth = create_random_date()
-        sql = "INSERT INTO Litters (id, name, father_id, mother_id, date_of_birth, owner_id) VALUES (?, ?, ?, ?, ?, ?)"
-        db.execute(sql, [id, name, father_id, mother_id, date_of_birth, id])
+def create_litter(n, father_id, mother_id):
+    litter_id = n
+    litter_owner_id = n
+    name = "test_litter" + str(litter_id)
+    date_of_birth = create_random_date()
+    sql = (
+        "INSERT INTO Litters "
+            "(id, name, father_id, mother_id, date_of_birth, owner_id) "
+            "VALUES (?, ?, ?, ?, ?, ?)"
+    )
+    db.execute(sql, [litter_id, name, father_id, mother_id, date_of_birth, litter_owner_id])
 
 
-def insert_random_dog(id):
-        year = f"{id:04}"
-        registration_number = "FI" + f"{id:05}" + "/" + year[2:]
-        name = random.choice(dog_names)
-        image = random.choice(pictures)
-        color = random.choice(colors)
-        breed = random.choice(dog_breeds)
-        date_of_birth = create_random_date()
-        sex = random.choice(["Male", "Female"])
+def insert_random_dog(n):
+    year = f"{n:04}"
+    registration_number = "FI" + f"{n:05}" + "/" + year[2:]
+    name = random.choice(dog_names)
+    image = random.choice(pictures)
+    color = random.choice(colors)
+    breed = random.choice(dog_breeds)
+    date_of_birth = create_random_date()
+    sex = random.choice(["Male", "Female"])
 
-        father_id = random.randint(1, id - 1) if id > 2 else None
-        mother_id = random.randint(1, id - 1) if id > 2 else None
-        litter_id = None
-        if father_id and mother_id:
-            create_litter(id, father_id, mother_id)
-            litter_id = id
+    father_id = random.randint(1, n- 1) if n > 2 else None
+    mother_id = random.randint(1, n- 1) if n > 2 else None
+    litter_id = None
+    if father_id and mother_id:
+        create_litter(n, father_id, mother_id)
+        litter_id = n
 
-        owner_id = id
-        best_test = random.randint(1,5)
-        best_show_id = random.randint(1, len(dog_shows) - 1)
-        hip_index = random.randint(0,100)
-        use_index = random.randint(0,100)
+    dog_owner_id = n
+    best_test = random.randint(1,5)
+    best_show_id = random.randint(1, len(dog_shows) - 1)
+    hip_index = random.randint(0,100)
+    use_index = random.randint(0,100)
 
-        sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, date_of_birth, 
-                                   sex, owner_id, litter_id, 
-                                   best_test, best_show_id, hip_index, use_index) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-        db.execute(sql, [registration_number, name, image, color, breed, date_of_birth, 
-                                sex, owner_id, litter_id, best_test, best_show_id, hip_index, use_index])
+    sql = (
+        "INSERT INTO Dogs (registration_number, name, image, color, breed, date_of_birth, "
+            "sex, owner_id, litter_id, "
+            "best_test, best_show_id, hip_index, use_index) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    )
+    db.execute(sql, [registration_number, name, image, color, breed,
+                            date_of_birth,sex, dog_owner_id, litter_id, best_test,
+                            best_show_id, hip_index, use_index])
 
 def seed_table_colors():
-     sql = "INSERT INTO Colors (name) VALUES (?)"
-     for i in range(len(colors)):
-          color = colors[i]
-          db.execute(sql, [color])
-    
+    sql = "INSERT INTO Colors (name) VALUES (?)"
+    for color in colors:
+        db.execute(sql, [color])
+
 def seed_table_dog_shows():
-     sql = "INSERT INTO Dog_shows (name, date) VALUES (?,?)"
-     for i in range(len(dog_shows)):
-          name = dog_shows[i][0]
-          date = dog_shows[i][1]
-          db.execute(sql, [name, date])
+    sql = "INSERT INTO Dog_shows (name, date) VALUES (?,?)"
+    for dog_show in dog_shows:
+        name = dog_show[0]
+        date = dog_show[1]
+        db.execute(sql, [name, date])
 
 def seed_table_dog_breeds():
-      sql = "INSERT INTO Dog_breeds (name) VALUES (?)"
-      for i in range(len(dog_breeds)):
-        breed = dog_breeds[i]
+    sql = "INSERT INTO Dog_breeds (name) VALUES (?)"
+    for breed in dog_breeds:
         db.execute(sql, [breed])
-    
+
 def seed_table_championship_titles():
-      sql = "INSERT INTO Championship_titles (title) VALUES (?)"
-      for i in range(len(championship_titles)):
-        title = championship_titles[i]
+    sql = "INSERT INTO Championship_titles (title) VALUES (?)"
+    for title in championship_titles:
         db.execute(sql, [title])
 
-def insert_show_participant(id):
-      sql = "INSERT INTO Show_participants (dog_id, show_id, result) VALUES (?,?,?)"
-      dog_id = id
-      show_id = random.randint(1, len(dog_shows))
-      result = random.randint(1, len(championship_titles))
-      db.execute(sql, [dog_id, show_id, result])
+def insert_show_participant(n):
+    sql = "INSERT INTO Show_participants (dog_id, show_id, result) VALUES (?,?,?)"
+    dog_id = n
+    show = random.randint(1, len(dog_shows))
+    result = random.randint(1, len(championship_titles))
+    db.execute(sql, [dog_id, show, result])
 
-def set_show_winner(show_id, dog_id):
-      sql = "UPDATE Dog_shows SET winner_id = ? WHERE id = ?"
-      db.execute(sql, [dog_id, show_id])
+def set_show_winner(show, dog_id):
+    sql = "UPDATE Dog_shows SET winner_id = ? WHERE id = ?"
+    db.execute(sql, [dog_id, show])
 
 with app.app_context():
-    n = 100
+    DOG_COUNT = 100
     seed_table_colors()
     seed_table_dog_breeds()
     seed_table_dog_shows()
     seed_table_championship_titles()
 
-    for id in range(1, n):
-        insert_random_owner(id)
-        insert_random_dog(id)
-        insert_show_participant(id)
+    for owner_id in range(1, DOG_COUNT):
+        insert_random_owner(owner_id)
+        insert_random_dog(owner_id)
+        insert_show_participant(owner_id)
 
     for show_id in range(1, len(dog_shows) + 1):
-        winner_id = random.randint(1, n - 1)
+        winner_id = random.randint(1, DOG_COUNT - 1)
         set_show_winner(show_id, winner_id)

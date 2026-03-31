@@ -109,58 +109,62 @@ def has_image(dog_id):
 def is_dead(dog_id):
     sql = "SELECT date_of_death FROM Dogs WHERE id = ?"
     result = db.query(sql, [dog_id])
-    if result[0][0] == None:
+    if result[0][0] is None:
         return False
     return True
 
 def delete_dog(dog_id):
-    
+
     sql = "UPDATE Litters SET father_id = NULL WHERE father_id = ?"
     db.execute(sql, [dog_id])
-    
+
     sql = "UPDATE Litters SET mother_id = NULL WHERE mother_id = ?"
     db.execute(sql, [dog_id])
-    
+
     sql = "UPDATE Dog_shows SET winner_id = NULL WHERE winner_id = ?"
     db.execute(sql, [dog_id])
 
     sql = "DELETE FROM Show_participants where dog_id = ?"
     db.execute(sql, [dog_id])
-    
+
     sql = "DELETE FROM Dogs WHERE id = ?"
     db.execute(sql, [dog_id])
 
 def insert_dog(form):
-        sql = """INSERT INTO Dogs (registration_number, name, image, color, breed, 
-                                   date_of_birth, date_of_death, sex, litter_id, 
-                                   owner_id, best_show_id, best_test, hip_index, 
-                                   use_index) 
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-        
-        params = [
-            form["registration_number"],
-            form["name"],
-            form["image_data"],
-            form["color"],
-            form["breed"],
-            form["date_of_birth"],
-            form["date_of_death"],
-            form["sex"],
-            form["litter_id"],
-            form["owner_id"],
-            form["best_show_id"],
-            form["best_test"],
-            form["hip_index"],
-            form["use_index"]
-        ]
-        db.execute(sql, params)
+    sql = (
+        "INSERT INTO Dogs (registration_number, name, image, color, breed, "
+                          "date_of_birth, date_of_death, sex, litter_id, "
+                          "owner_id, best_show_id, best_test, hip_index, "
+                          "use_index) "
+               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    )
+
+    params = [
+        form["registration_number"],
+        form["name"],
+        form["image_data"],
+        form["color"],
+        form["breed"],
+        form["date_of_birth"],
+        form["date_of_death"],
+        form["sex"],
+        form["litter_id"],
+        form["owner_id"],
+        form["best_show_id"],
+        form["best_test"],
+        form["hip_index"],
+        form["use_index"]
+    ]
+    db.execute(sql, params)
 
 def update_dog(dog_id, form):
-    sql = """UPDATE Dogs 
-             SET registration_number = ?, name = ?, image = ?, color = ?, breed = ?, 
-                 date_of_birth = ?, date_of_death = ?, sex = ?, litter_id = ?, 
-                 owner_id = ?, best_show_id = ?, best_test = ?,  hip_index = ?, use_index = ?
-             WHERE id = ?"""
+    sql = (
+        "UPDATE Dogs "
+            "SET registration_number = ?, name = ?, image = ?, color = ?, breed = ?, "
+            "date_of_birth = ?, date_of_death = ?, sex = ?, litter_id = ?, "
+            "owner_id = ?, best_show_id = ?, best_test = ?,  hip_index = ?, use_index = ? "
+            "WHERE id = ?"
+    )
     params = [
         form["registration_number"],
         form["name"],

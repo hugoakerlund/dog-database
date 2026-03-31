@@ -57,7 +57,12 @@ def get_show_id_by_name(name):
 
 
 def get_dog_participated_shows(dog_id):
-    sql = "SELECT s.id, s.name, s.date FROM Dog_shows s JOIN Show_participants sp ON s.id = sp.show_id WHERE sp.dog_id = ? ORDER BY s.date DESC"
+    sql = (
+        "SELECT s.id, s.name, s.date "
+            "FROM Dog_shows s "
+            "JOIN Show_participants sp ON s.id = sp.show_id "
+            "WHERE sp.dog_id = ? ORDER BY s.date DESC"
+    )
     return db.query(sql, [dog_id])
 
 
