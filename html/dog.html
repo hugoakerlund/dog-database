@@ -72,4 +72,38 @@
 </p>
 {% endif %}
 
+<h2>Comments</h3>
+
+{% if comments %}
+    {% for comment in comments %}
+    <p>Date: {{ comment.date }}</p>
+    <p>Owner: <a href="/owner/{{ comment.owner_id}}">{{ comment.commenter }}</a> commented:</p>
+    <p>{{ comment.content }}</p>
+    {% if comment.owner_id == session.owner_id %}
+    <p>
+        <a href="/edit_comment/{{ comment.id }}">Edit</a>
+        <a href="/remove_comment/{{ comment.id }}">Remove</a>
+    </p>
+    {% endif %}
+    {% endfor %}
+{% else %}
+    {{ dog.name }} does not currently have any comments.
+{% endif %}
+
+{% if session.owner_id %}
+<h3>Add comment</h3>
+
+<form action="/create_comment" method="post">
+  <p>
+    <label for="content">Comment</label><br/>
+    <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
+  </p>
+  <input type="hidden" name="dog_id" value={{ dog.id }} />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Send" />
+</form>
+
+{% endif %}
+
+
 {% endblock %}

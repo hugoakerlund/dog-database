@@ -76,6 +76,17 @@ def get_show_name(show_id):
     result = db.query(sql, [show_id])
     return result[0][0] if result else None
 
+def get_comments(dog_id):
+    sql = (
+        "SELECT c.id, c.content, c.owner_id, "
+        "o.name AS commenter, "
+        "c.dog_id, c.date "
+        "FROM Comments c "
+        "LEFT JOIN Owners o ON c.owner_id = o.id "
+        "WHERE dog_id = ?"
+    )
+    return db.query(sql, [dog_id])
+
 def get_colors():
     sql = "SELECT id, name FROM Colors"
     return db.query(sql)
@@ -154,6 +165,18 @@ def insert_dog(form):
         form["best_test"],
         form["hip_index"],
         form["use_index"]
+    ]
+    db.execute(sql, params)
+
+def insert_comment(form):
+    sql = (
+        "INSERT INTO Comments (content, owner_id, dog_id, date) "
+        "VALUES (?, ?, ?, datetime('now', 'localtime'))"
+    )
+    params = [
+        form["content"], 
+        form["owner_id"], 
+        form["dog_id"], 
     ]
     db.execute(sql, params)
 

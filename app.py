@@ -42,9 +42,10 @@ def search():
 def show_dog(dog_id):
     dog_info  = dog.get_dog(dog_id)
     championship_titles = dog.get_championship_titles(dog_id)
+    comments = dog.get_comments(dog_id)
     if not dog_info:
         abort(404, "ERROR: dog not found")
-    return render_template("html/dog.html", dog=dog_info,
+    return render_template("html/dog.html", dog=dog_info, comments=comments,
                            championship_titles=championship_titles, session=session)
 
 @app.route("/create_dog", methods=["GET"])
@@ -69,6 +70,20 @@ def create_dog_post():
     except sqlite3.IntegrityError as e:
         return f"ERROR: Database error: {e} (possibly duplicate name or invalid foreign key)"
     return redirect("/my_account")
+
+@app.route("/create_comment/", methods=["POST"])
+def create_comment():
+    require_login()
+    check_csrf()
+    form = input_validator.get_comment_form(request)
+    if not input_validator.check_comment_form(form):
+        return redirect(f"/dog/{form["dog_id"]}")
+    try:
+        dog.insert_comment(form)
+    except sqlite3.IntegrityError as e:
+        return f"ERROR: Database error: {e} (possibly duplicate name or invalid foreign key)"
+    flash("Comment added successfully!", "success")
+    return redirect(f"/dog/{form["dog_id"]}")
 
 @app.route("/edit_dog/<int:dog_id>", methods=["GET"])
 def edit_dog_get(dog_id):

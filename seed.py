@@ -111,6 +111,16 @@ def create_random_date():
     day = random.randint(1, 28)
     return f"{year}-{month:02d}-{day:02d}"
 
+def insert_random_comment(n):
+    content = "This is a comment."
+    owner_id = n
+    dog_id = n
+    sql = (
+        "INSERT INTO Comments (content, owner_id, dog_id, date) "
+        "VALUES (?, ?, ?, datetime('now', 'localtime'))"
+    )
+    db.execute(sql, [content, owner_id, dog_id])
+
 def insert_random_owner(n):
     name = "test_owner" + str(n)
     email = name + "@" + "test_domain" + ".com"
@@ -208,6 +218,7 @@ with app.app_context():
         insert_random_owner(owner_id)
         insert_random_dog(owner_id)
         insert_show_participant(owner_id)
+        insert_random_comment(owner_id)
 
     for show_id in range(1, len(dog_shows) + 1):
         winner_id = random.randint(1, DOG_COUNT - 1)

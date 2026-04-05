@@ -331,6 +331,28 @@ def get_account_form(request, edit=False):
     form["password2"] = request.form.get("password2", "")
     return form
 
+def get_comment_form(request):
+    form = {}
+    form["dog_id"] = request.form.get("dog_id", "").strip()
+    form["owner_id"] = session["owner_id"]
+    form["content"] = request.form.get("content", "").strip()
+    return form
+
+def check_comment_form(form):
+    if not form["dog_id"]:
+        flash("ERROR: missing filed dog_id")
+        return False
+    if not dog.get_dog(form["dog_id"]):
+        flash("ERROR: dog does not exist")
+        return False
+    if not form["owner_id"]:
+        flash("ERROR: you must be logged in in order to leave a comment")
+        return False
+    if not form["content"]:
+        flash("ERROR: comment field cannot be empty")
+        return False
+    return True
+
 def check_email(email):
     return email.count("@") == 1 and email.count(".") == 1 and \
            email.index("@") < email.rindex(".") and email.index("@") > 0 and \
