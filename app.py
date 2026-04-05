@@ -69,6 +69,7 @@ def create_dog_post():
         dog.insert_dog(form)
     except sqlite3.IntegrityError as e:
         return f"ERROR: Database error: {e} (possibly duplicate name or invalid foreign key)"
+    flash("Dog created successfully!", "success")
     return redirect("/my_account")
 
 @app.route("/create_comment/", methods=["POST"])
@@ -111,6 +112,7 @@ def edit_dog_post(dog_id):
         dog.update_dog(dog_id, form)
     except sqlite3.IntegrityError as e:
         return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+    flash("Dog updated successfully!", "success")
     return redirect("/my_account")
 
 @app.route("/remove_dog/<int:dog_id>", methods=["GET"])
@@ -127,6 +129,7 @@ def remove_dog_post(dog_id):
     check_csrf()
     if "continue" in request.form:
         dog.delete_dog(dog_id)
+    flash("Dog deleted successfully!", "success")
     return redirect("/my_account")
 
 @app.route("/create_litter", methods=["GET"])
@@ -148,6 +151,7 @@ def create_litter_post():
         litter.insert_litter(form)
     except sqlite3.IntegrityError as e:
         return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+    flash("Litter created successfully!", "success")
     return redirect("/my_account")
 
 
@@ -173,6 +177,7 @@ def edit_litter_post(litter_id):
         litter.update_litter(litter_id, form)
     except sqlite3.IntegrityError as e:
         return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+    flash("Litter edited successfully!", "success")
     return redirect("/my_account")
 
 @app.route("/remove_litter/<int:litter_id>", methods=["GET"])
@@ -189,6 +194,7 @@ def remove_litter_post(litter_id):
     check_csrf()
     if "continue" in request.form:
         litter.delete_litter(litter_id)
+    flash("Litter deleted successfully!", "success")
     return redirect("/my_account")
 
 @app.route("/login", methods=["GET"])
@@ -202,6 +208,7 @@ def login_post():
     owner_id = owner.get_id_with_name(request.form.get("name", "").strip())
     name = request.form.get("name", "").strip()
     set_session(owner_id, name)
+    flash("Login successfull!", "success")
     return redirect("/")
 
 @app.route("/logout")
@@ -209,6 +216,7 @@ def logout():
     require_login()
     del session["owner_id"]
     del session["name"]
+    flash("Logout successfull!", "success")
     return redirect("/")
 
 @app.route("/register", methods=["GET"])
@@ -222,10 +230,11 @@ def register_post():
         return redirect("/register")
     try:
         owner.insert_owner(form)
-        flash("Account created successfully!", "success")
     except sqlite3.IntegrityError as e:
         return f"ERROR: database error {e} (possibly duplicate name or email)"
+    flash("Account created successfully!", "success")
     set_session(owner.get_id_with_name(form["name"]), form["name"])
+    flash("Account created successfully!", "success")
     return redirect("/")
 
 @app.route('/favicon.ico')
@@ -285,8 +294,8 @@ def remove_account_post():
     owner_id = session["owner_id"]
     if "continue" in request.form:
         owner.remove_owner(owner_id)
+        flash("Account deleted successfully!", "success")
         logout()
-        flash("Account deleted successfully.")
 
     return redirect("/")
 
@@ -308,6 +317,7 @@ def edit_account_post():
     except sqlite3.IntegrityError as e:
         return f"ERROR: database error {e} (possibly duplicate name or email)"
     set_session(owner.get_id_with_name(form["name"]), form["name"])
+    flash("Account edited successfully.")
     return redirect("/my_account")
 
 @app.route("/litter/<int:litter_id>")
@@ -385,10 +395,9 @@ def add_dog_to_show(show_id):
     try:
         dog_show.add_participant(show_id, form["dog_id"]
                                  , form["championship_title_id"])
-        flash("Dog added to show", "success")
     except sqlite3.IntegrityError as e:
         flash(f"ERROR: Database error: {e}", "error")
-
+    flash("Dog added to show successfully!", "success")
     return redirect(f"/dog_show/{show_id}")
 
 
@@ -402,10 +411,9 @@ def remove_dog_from_show(show_id):
 
     try:
         dog_show.remove_participant(form["show_id"], form["dog_id"])
-        flash("Dog removed from show", "success")
     except sqlite3.IntegrityError as e:
         flash(f"ERROR: Database error: {e}", "error")
-
+    flash("Dog removed from show successfully", "success")
     return redirect(f"/dog_show/{show_id}")
 
 
