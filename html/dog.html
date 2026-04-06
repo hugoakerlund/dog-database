@@ -72,7 +72,27 @@
 </p>
 {% endif %}
 
-<h2>Comments</h3>
+
+{% if session.owner_id %}
+<h3>Add comment</h3>
+
+<form action="/create_comment" method="post">
+  <p>
+    <label for="content">Comment</label><br/>
+    <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
+  </p>
+  <input type="hidden" name="dog_id" value={{ dog.id }} />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" value="Send" />
+</form>
+
+{% else %}
+    <p>
+        <a href="/login">Login</a> to leave a comment.
+    </p>
+{% endif %}
+
+<h3>Comments</h3>
 
 {% if comments %}
     {% for comment in comments %}
@@ -88,21 +108,6 @@
     {% endfor %}
 {% else %}
     {{ dog.name }} does not currently have any comments.
-{% endif %}
-
-{% if session.owner_id %}
-<h3>Add comment</h3>
-
-<form action="/create_comment" method="post">
-  <p>
-    <label for="content">Comment</label><br/>
-    <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
-  </p>
-  <input type="hidden" name="dog_id" value={{ dog.id }} />
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <input type="submit" value="Send" />
-</form>
-
 {% endif %}
 
 
