@@ -7,24 +7,27 @@
 <h2>Register</h2>
 
 <form action="/register" method="post">
-  <p>
-    Name: <br />
-    <input type="text" name="name" maxlength=20 required />
-  </p>
-  <p>
-    Email: <br />
-    <input type="text" name="email" maxlength=50 required />
-  </p>
-  <p>
-    Password: <br />
-    <input type="password" name="password1" maxlength=35 required />
-  </p>
-  <p>
-    Password again: <br />
-    <input type="password" name="password2" maxlength=35 required />
-  </p>
-  <input type="submit" value="Create account" maxlength=35 required />
+    <p>
+        Name: <br />
+        <input type="text" name="name" maxlength=20 required 
+            value="{{ filled.name }}"
+        />
+    </p>
+    <p>
+        Email: <br />
+        <input type="text" name="email" maxlength=50 required
+            value="{{ filled.email }}"
+        />
+    </p>
+    <p>
+        Password: <br />
+        <input type="password" name="password1" maxlength=35 required />
+    </p>
+    <p>
+        Password again: <br />
+        <input type="password" name="password2" maxlength=35 required />
+    </p>
+    <input type="submit" value="Create account" maxlength=35 required />
 </form>
-</body>
 
 {% endblock %}

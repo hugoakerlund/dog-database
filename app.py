@@ -221,14 +221,14 @@ def logout():
     return redirect("/")
 
 @app.route("/register", methods=["GET"])
-def register_get():
-    return render_template("html/register.html")
+def register_get(filled={}):
+    return render_template("html/register.html", filled=filled)
 
 @app.route("/register", methods=["POST"])
 def register_post():
     form = input_validator.get_account_form(request)
     if not input_validator.check_account_form(form):
-        return redirect("/register")
+        return register_get(form)
     try:
         owner.insert_owner(form)
     except sqlite3.IntegrityError as e:
