@@ -49,13 +49,13 @@ def show_dog(dog_id):
                            championship_titles=championship_titles, session=session)
 
 @app.route("/create_dog", methods=["GET"])
-def create_dog_get():
+def create_dog_get(filled={}):
     colors = dog.get_colors()
     dog_breeds = dog.get_breeds()
     owner_id = session["owner_id"]
     my_litters = owner.get_litters(owner_id)
     championship_titles = dog_show.get_championship_titles()
-    return render_template("html/create_dog.html", colors=colors, dog_breeds=dog_breeds,
+    return render_template("html/create_dog.html", filled=filled, colors=colors, dog_breeds=dog_breeds,
                            litters=my_litters, championship_titles=championship_titles)
 
 @app.route("/create_dog", methods=["POST"])
@@ -64,7 +64,7 @@ def create_dog_post():
     check_csrf()
     form = input_validator.get_dog_form(request)
     if not input_validator.check_dog_form(form):
-        return redirect("/create_dog")
+        return create_dog_get(form)
     try:
         dog.insert_dog(form)
     except sqlite3.IntegrityError as e:
@@ -87,7 +87,7 @@ def create_comment():
     return redirect(f"/dog/{form["dog_id"]}")
 
 @app.route("/edit_dog/<int:dog_id>", methods=["GET"])
-def edit_dog_get(dog_id):
+def edit_dog_get(dog_id, filled={}):
     require_login()
     dog_info = dog.get_dog(dog_id)
     if not dog_info:
@@ -98,7 +98,7 @@ def edit_dog_get(dog_id):
     my_litters = owner.get_litters(owner_id)
     championship_titles = dog_show.get_championship_titles()
     participated_shows = dog_show.get_dog_participated_shows(dog_id)
-    return render_template("html/edit_dog.html", dog=dog_info, colors=colors,
+    return render_template("html/edit_dog.html", filled=filled, dog=dog_info, colors=colors,
                            dog_breeds=dog_breeds,championship_titles=championship_titles,
                            litters=my_litters, participated_shows=participated_shows)
 
@@ -107,7 +107,7 @@ def edit_dog_post(dog_id):
     require_login()
     form = input_validator.get_dog_form(request, dog_id)
     if not input_validator.check_dog_form(form, edit=True):
-        return redirect(f"/edit_dog/{dog_id}")
+        return edit_dog_get(dog_id, form)
     try:
         dog.update_dog(dog_id, form)
     except sqlite3.IntegrityError as e:
@@ -133,12 +133,13 @@ def remove_dog_post(dog_id):
     return redirect("/my_account")
 
 @app.route("/create_litter", methods=["GET"])
-def create_litter_get():
+def create_litter_get(filled={}):
     require_login()
     owner_id = session["owner_id"]
     male_dogs = owner.get_male_dogs(owner_id)
     female_dogs = owner.get_female_dogs(owner_id)
-    return render_template("html/create_litter.html", male_dogs=male_dogs, female_dogs=female_dogs)
+    return render_template("html/create_litter.html", filled=filled,
+                           male_dogs=male_dogs, female_dogs=female_dogs)
 
 @app.route("/create_litter", methods=[ "POST"])
 def create_litter_post():
@@ -146,7 +147,7 @@ def create_litter_post():
     check_csrf()
     form = input_validator.get_litter_form(request)
     if not input_validator.check_litter_form(form):
-        return render_template("html/create_litter.html")
+        return create_litter_get(form)
     try:
         litter.insert_litter(form)
     except sqlite3.IntegrityError as e:
@@ -156,7 +157,7 @@ def create_litter_post():
 
 
 @app.route("/edit_litter/<int:litter_id>", methods=["GET"])
-def edit_litter_get(litter_id):
+def edit_litter_get(litter_id, filled={}):
     require_login()
     litter_info = litter.get_litter(litter_id)
     owner_id = session["owner_id"]
@@ -164,7 +165,7 @@ def edit_litter_get(litter_id):
     female_dogs = owner.get_female_dogs(owner_id)
     if not litter_info:
         abort(404, "ERROR: litter not found")
-    return render_template("html/edit_litter.html", litter=litter_info,
+    return render_template("html/edit_litter.html", filled=filled, litter=litter_info,
                            male_dogs=male_dogs, female_dogs=female_dogs)
 
 @app.route("/edit_litter/<int:litter_id>", methods=["POST"])
@@ -172,7 +173,7 @@ def edit_litter_post(litter_id):
     require_login()
     form = input_validator.get_litter_form(request, litter_id)
     if not input_validator.check_litter_form(form, edit=True):
-        return redirect(f"/edit_litter/{litter_id}")
+        return edit_litter_get(litter_id, form)
     try:
         litter.update_litter(litter_id, form)
     except sqlite3.IntegrityError as e:
@@ -232,7 +233,6 @@ def register_post():
         owner.insert_owner(form)
     except sqlite3.IntegrityError as e:
         return f"ERROR: database error {e} (possibly duplicate name or email)"
-    flash("Account created successfully!", "success")
     set_session(owner.get_id_with_name(form["name"]), form["name"])
     flash("Account created successfully!", "success")
     return redirect("/")
@@ -300,9 +300,12 @@ def remove_account_post():
     return redirect("/")
 
 @app.route("/edit_account", methods=["GET"])
-def edit_account_get():
+def edit_account_get(filled={}):
     require_login()
-    return render_template("html/edit_account.html")
+    owner_id = session["owner_id"]
+    owner_info = owner.get_owner(owner_id)
+    return render_template("html/edit_account.html", filled=filled,
+                           owner=owner_info)
 
 @app.route("/edit_account", methods=["POST"])
 def edit_account_post():
@@ -310,14 +313,13 @@ def edit_account_post():
     check_csrf()
     form = input_validator.get_account_form(request, True)
     if not input_validator.check_account_form(form, True):
-        return redirect("/edit_account")
+        return edit_account_get(form)
     try:
         owner.update_owner(form)
-        flash("Account updated successfully!", "success")
     except sqlite3.IntegrityError as e:
         return f"ERROR: database error {e} (possibly duplicate name or email)"
     set_session(owner.get_id_with_name(form["name"]), form["name"])
-    flash("Account edited successfully.")
+    flash("Account updated successfully!")
     return redirect("/my_account")
 
 @app.route("/litter/<int:litter_id>")

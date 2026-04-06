@@ -42,6 +42,11 @@ def get_dog(dog_id):
     result = db.query(sql, [dog_id])
     return result[0] if result else None
 
+def get_image(dog_id):
+    sql = "SELECT image FROM Dogs WHERE id = ?"
+    result = db.query(sql, [dog_id])
+    return int(result[0][0]) if result else None
+
 def get_owner_id(dog_id):
     sql = "SELECT owner_id FROM Dogs WHERE id = ?"
     result = db.query(sql, [dog_id])

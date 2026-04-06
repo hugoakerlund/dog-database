@@ -7,25 +7,37 @@
 <h2>Edit account</h2>
 
 <form action="/edit_account" method="post">
-  <p>
-    Name: <br />
-    <input type="text" name="name" maxlength=20 required />
-  </p>
-  <p>
-    Email: <br />
-    <input type="text" name="email" maxlength=50 required />
-  </p>
-  <p>
-    Password: <br />
-    <input type="password" name="password1" maxlength=35 required />
-  </p>
-  <p>
-    Password again: <br />
-    <input type="password" name="password2" maxlength=35 required />
-  </p>
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <input type="submit" name="continue" value="Continue" />
-  <input type="submit" name="cancel" value="Cancel" />
+    <p>
+        Name: <br />
+        <input type="text" name="name" maxlength=20 required
+            {% if filled %}
+            value="{{ filled.name }}"
+            {% else %}
+            value="{{ owner.name }}"
+            {% endif %}
+        />
+    </p>
+    <p>
+        Email: <br />
+        <input type="text" name="email" maxlength=50 required
+            {% if filled %}
+            value="{{ filled.email }}"
+            {% else %}
+            value="{{ owner.email }}"
+            {% endif %}
+        />
+    </p>
+    <p>
+        Password: <br />
+        <input type="password" name="password1" maxlength=35 required />
+    </p>
+    <p>
+        Password again: <br />
+        <input type="password" name="password2" maxlength=35 required />
+    </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" name="continue" value="Continue" />
+    <input type="submit" name="cancel" value="Cancel" />
 </form>
 </body>
 

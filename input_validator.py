@@ -94,11 +94,26 @@ def check_dog_form(form, edit=False):
             dog.registration_number_exists(form["registration_number"]):
             flash("ERROR: registration number already exists")
             return False
-    elif dog.registration_number_exists(form["registration_number"]):
-        flash("ERROR: registration number already exists")
-        return False
+        if not form["image"]:
+            form["image_data"] = dog.get_image(form["dog_id"])
+    else:
+        if dog.registration_number_exists(form["registration_number"]):
+            flash("ERROR: registration number already exists")
+            return False
+        if not form["image"] or not form["image"].filename:
+            flash("ERROR: image is required")
+            return False
+    if form["image"]:
+        if not form["image"].filename.lower().endswith(('.jpg', '.jpeg')):
+            flash("ERROR: only .jpg and .jpeg images are allowed")
+            return False
+        form["image_data"] = form["image"].read()
+        if len(form["image_data"]) > 100 * 1024:
+            flash("ERROR: image size must be less than 100KB")
+            return False
     if not check_name(form["name"]):
-        flash("ERROR: name must be between 2 and 20 characters")
+        flash("ERROR: name must be between 2 and 20 characters \
+              and can only include letters and spaces")
         return False
     if not check_date(form["date_of_birth"]):
         flash("ERROR: invalid date of birth format (must be YYYY-MM-DD)")
@@ -109,20 +124,10 @@ def check_dog_form(form, edit=False):
     if form["sex"] not in ["Male", "Female"]:
         flash("ERROR: invalid sex")
         return False
-    if not form["image"] or not form["image"].filename:
-        flash("ERROR: image is required")
-        return False
-    if not form["image"].filename.lower().endswith(('.jpg', '.jpeg')):
-        flash("ERROR: only .jpg and .jpeg images are allowed")
-        return False
-    form["image_data"] = form["image"].read()
-    if len(form["image_data"]) > 100 * 1024:
-        flash("ERROR: image size must be less than 100KB")
-        return False
     if form["litter"]:
         form["litter_id"] = litter.get_litter_id_by_name(form["litter"])
         if not check_litter(form["litter_id"]):
-            flash("ERROR: you do not owner litter")
+            flash("ERROR: you are not the owner of the litter")
             return False
 
     if form["best_show"]:
@@ -159,7 +164,6 @@ def check_dog_form(form, edit=False):
             return False
     return True
 
-# Statements with 'or None' are optional fields
 def get_dog_form(request, dog_id=None):
     form = {}
     form["dog_id"] = dog_id
@@ -204,6 +208,9 @@ def check_litter_form(form, edit=False):
     if edit:
         old_litter_name = litter.get_litter(form["litter_id"])["name"]
         if old_litter_name != form["name"] and litter.litter_name_exists(form["name"]):
+            flash("ERROR: litter name already exists")
+            return False
+    elif litter.litter_name_exists(form["name"]):
             flash("ERROR: litter name already exists")
             return False
     if not check_date(form["date_of_birth"]):
@@ -303,7 +310,8 @@ def check_account_form(form, edit=False):
         flash("ERROR: password must be atleast 8 characters long")
         return False
     if not check_name(form["name"]):
-        flash("ERROR: name must be between 2 and 20 characters")
+        flash("ERROR: name must be between 2 and 20 characters \
+              and can only include letters and spaces")
         return False
     if edit:
         old_account_name, old_email = owner.get_account_info(form["owner_id"])
