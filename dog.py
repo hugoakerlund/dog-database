@@ -149,12 +149,10 @@ def delete_dog(dog_id):
 def insert_dog(form):
     sql = (
         "INSERT INTO Dogs (registration_number, name, image, color, breed, "
-                          "date_of_birth, date_of_death, sex, litter_id, "
-                          "owner_id, best_show_id, best_test, hip_index, "
-                          "use_index) "
-               "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        "date_of_birth, date_of_death, sex, litter_id, owner_id, "
+        "best_show_id, best_test, hip_index, use_index) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     )
-
     params = [
         form["registration_number"],
         form["name"],
@@ -187,11 +185,10 @@ def insert_comment(form):
 
 def update_dog(dog_id, form):
     sql = (
-        "UPDATE Dogs "
-            "SET registration_number = ?, name = ?, image = ?, color = ?, breed = ?, "
-            "date_of_birth = ?, date_of_death = ?, sex = ?, litter_id = ?, "
-            "owner_id = ?, best_show_id = ?, best_test = ?,  hip_index = ?, use_index = ? "
-            "WHERE id = ?"
+        "UPDATE Dogs SET registration_number = ?, name = ?, image = ?, color = ?, "
+        "breed = ?, date_of_birth = ?, date_of_death = ?, sex = ?, litter_id = ?, "
+        "owner_id = ?, best_show_id = ?, best_test = ?,  hip_index = ?, use_index = ? "
+        "WHERE id = ?"
     )
     params = [
         form["registration_number"],

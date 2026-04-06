@@ -67,4 +67,4 @@ CREATE TABLE Comments (
     owner_id INTEGER REFERENCES Owners(id),
     dog_id INTEGER REFERENCES Dogs(id),
     date DATE
-)
+);

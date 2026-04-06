@@ -5,99 +5,103 @@ import db
 from app import app
 
 colors = [
-'Brown', 
-'Chocolate', 
-'Liver',
-'Red',
-'Gold',
-'Yellow',
-'Cream',
-'Fawn',
-'Black',
-'Blue',
-'Gray',
-'Silver',
-'White']
+    'Brown', 
+    'Chocolate', 
+    'Liver',
+    'Red',
+    'Gold',
+    'Yellow',
+    'Cream',
+    'Fawn',
+    'Black',
+    'Blue',
+    'Gray',
+    'Silver',
+    'White'
+]
 
 dog_breeds = [
-'Affenpinscher',
-'Afghan Hound',
-'Africanis',
-'Aidi',
-'Airedale Terrier',
-'Akbash',
-'Akita',
-'Aksaray Malaklisi',
-'Alano Español',
-'Alapaha Blue Blood Bulldog',
-'Alaskan Husky',
-'Alaskan Klee Kai',
-'Alaskan Malamute',
-'Alopekis',
-'Alpine Dachsbracke',
-'American Bulldog',
-'American Bully',
-'American Cocker Spaniel',
-'American English Coonhound',
-'American Eskimo Dog',
-'Finnish Spitz']
+    'Affenpinscher',
+    'Afghan Hound',
+    'Africanis',
+    'Aidi',
+    'Airedale Terrier',
+    'Akbash',
+    'Akita',
+    'Aksaray Malaklisi',
+    'Alano Español',
+    'Alapaha Blue Blood Bulldog',
+    'Alaskan Husky',
+    'Alaskan Klee Kai',
+    'Alaskan Malamute',
+    'Alopekis',
+    'Alpine Dachsbracke',
+    'American Bulldog',
+    'American Bully',
+    'American Cocker Spaniel',
+    'American English Coonhound',
+    'American Eskimo Dog',
+    'Finnish Spitz'
+]
 
 dog_names = [
-'Max',
-'Charlie',
-'Bella',
-'Poppy',
-'Daisy',
-'Buster',
-'Alfie',
-'Millie',
-'Molly',
-'Rosie',
-'Buddy',
-'Barney',
-'Lola',
-'Roxy',
-'Ruby',
-'Tilly',
-'Bailey',
-'Marley',
-'Tia',
-'Bonnie',
-'Toby',
-'Milo',
-'Archie',
-'Holly',
-'Lucy']
+    'Max',
+    'Charlie',
+    'Bella',
+    'Poppy',
+    'Daisy',
+    'Buster',
+    'Alfie',
+    'Millie',
+    'Molly',
+    'Rosie',
+    'Buddy',
+    'Barney',
+    'Lola',
+    'Roxy',
+    'Ruby',
+    'Tilly',
+    'Bailey',
+    'Marley',
+    'Tia',
+    'Bonnie',
+    'Toby',
+    'Milo',
+    'Archie',
+    'Holly',
+    'Lucy'
+]
 
 dog_shows = [
-('Spring Dog Show', '2024-03-15'),
-('Summer Dog Show', '2024-06-20'),
-('Autumn Dog Show', '2024-09-10'),
-('Winter Dog Show', '2024-12-05')]
+    ('Spring Dog Show', '2024-03-15'),
+    ('Summer Dog Show', '2024-06-20'),
+    ('Autumn Dog Show', '2024-09-10'),
+    ('Winter Dog Show', '2024-12-05')
+]
 
 championship_titles = [
-"None", # No title
-"Exc", # Excellent
-"VG", # Very Good
-"G", # Good
-"S", # Sufficient
-"VP", # Very Promising
-"P", # Promising
-"Puppy BOB", # Puppy Best of Breed
-"J CAC", # Junior Certificate of Aptitude for the Beauty Championship
-"J CACIB", # Junior Certificate of Aptitude for the International Beauty Championship
-"J BOB", # Junior Best of Breed
-"CAC", # Certificate of Championship Aptitude
-"CACIB", # Certificate of Aptitude for the International Beauty Championship
-"BOB", # Best of Breed
-"BOS", # Best Opposite Sex - optional
-"V CAC", # Veteran Certificate of Aptitude:
-"V CACIB", # Veteran Certificate of Aptitude International:
-"V BOB", # Veteran Best of Breed
-"V BOS", # Veteran Best Opposite Sex - optional
-"BOG", # Best of Group
-"J BIS", # Junior Best in Show
-"BIS", # Best in Show
+    "None", # No title
+    "Exc", # Excellent
+    "VG", # Very Good
+    "G", # Good
+    "S", # Sufficient
+    "VP", # Very Promising
+    "P", # Promising
+    "Puppy BOB", # Puppy Best of Breed
+    "J CAC", # Junior Certificate of Aptitude for the Beauty Championship
+    "J CACIB", # Junior Certificate of Aptitude for the International Beauty Championship
+    "J BOB", # Junior Best of Breed
+    "CAC", # Certificate of Championship Aptitude
+    "CACIB", # Certificate of Aptitude for the International Beauty Championship
+    "BOB", # Best of Breed
+    "BOS", # Best Opposite Sex - optional
+    "V CAC", # Veteran Certificate of Aptitude:
+    "V CACIB", # Veteran Certificate of Aptitude International:
+    "V BOB", # Veteran Best of Breed
+    "V BOS", # Veteran Best Opposite Sex - optional
+    "BOG", # Best of Group
+    "J BIS", # Junior Best in Show
+    "BIS" # Best in Show
 ]
 
 pictures = os.listdir('static/pictures')
@@ -117,7 +121,7 @@ def insert_random_comment(n):
     dog_id = n
     sql = (
         "INSERT INTO Comments (content, owner_id, dog_id, date) "
-        "VALUES (?, ?, ?, datetime('now', 'localtime'))"
+            "VALUES (?, ?, ?, datetime('now', 'localtime'))"
     )
     db.execute(sql, [content, owner_id, dog_id])
 
@@ -171,8 +175,8 @@ def insert_random_dog(n):
             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     )
     db.execute(sql, [registration_number, name, image, color, breed,
-                            date_of_birth,sex, dog_owner_id, litter_id, best_test,
-                            best_show_id, hip_index, use_index])
+                     date_of_birth,sex, dog_owner_id, litter_id, best_test,
+                     best_show_id, hip_index, use_index])
 
 def seed_table_colors():
     sql = "INSERT INTO Colors (name) VALUES (?)"

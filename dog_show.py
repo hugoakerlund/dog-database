@@ -7,7 +7,7 @@ def get_dog_show(show_id):
         "FROM Dog_shows s "
         "LEFT JOIN Dogs d ON s.winner_id = d.id "
         "WHERE s.id = ?"
-        )
+    )
     result = db.query(sql, [show_id])
     return result[0] if result else None
 
@@ -59,9 +59,9 @@ def get_show_id_by_name(name):
 def get_dog_participated_shows(dog_id):
     sql = (
         "SELECT s.id, s.name, s.date "
-            "FROM Dog_shows s "
-            "JOIN Show_participants sp ON s.id = sp.show_id "
-            "WHERE sp.dog_id = ? ORDER BY s.date DESC"
+        "FROM Dog_shows s "
+        "JOIN Show_participants sp ON s.id = sp.show_id "
+        "WHERE sp.dog_id = ? ORDER BY s.date DESC"
     )
     return db.query(sql, [dog_id])
 

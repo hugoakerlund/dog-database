@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-</head>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    </head>
 
-<body>
-    <div class="header">
-        <h1>Dog Database</h1>
-    </div>
+    <body>
+        <div class="header">
+            <h1>Dog Database</h1>
+        </div>
 
-    <div class="nav">
-        <nav>
-            <p>
-                <a href="/">Home</a>
-                <a href="/search">Search</a>
-                <a href="/litters">Litters</a>
-                <a href="/owners">Owners</a>
-                <a href="/dog_shows">Dog Shows</a>
-                {% if session.get('name') %}
-                <a href="/create_dog">Add dog</a>
-                <a href="/create_litter">Add litter</a>
-                <a href="/my_account">My account</a>
-                <a href="/logout">Logout</a>
-                {% else %}
-                <a href="/login">Login</a>
-                <a href="/register">Register</a>
-                {% endif %}
-            </p>
-        </nav>
-    </div>
+        <div class="nav">
+            <nav>
+                <p>
+                    <a href="/">Home</a>
+                    <a href="/search">Search</a>
+                    <a href="/litters">Litters</a>
+                    <a href="/owners">Owners</a>
+                    <a href="/dog_shows">Dog Shows</a>
+                    {% if session.get('name') %}
+                    <a href="/create_dog">Add dog</a>
+                    <a href="/create_litter">Add litter</a>
+                    <a href="/my_account">My account</a>
+                    <a href="/logout">Logout</a>
+                    {% else %}
+                    <a href="/login">Login</a>
+                    <a href="/register">Register</a>
+                    {% endif %}
+                </p>
+            </nav>
+        </div>
 
-    {% for message in get_flashed_messages() %}
-    <p>
-      <b>{{ message }}</b>
-    </p>
-    {% endfor %}
+        {% for message in get_flashed_messages() %}
+        <p>
+            <b>{{ message }}</b>
+        </p>
+        {% endfor %}
 
-    <div>
-        {% block content %}
-        {% endblock %}
-    </div>
+        <div>
+            {% block content %}
+            {% endblock %}
+        </div>
 
-</body>
+    </body>
 
 </html>

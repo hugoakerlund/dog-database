@@ -65,11 +65,11 @@
     </p>
     <p>
         Date of death:
-        <input type="date" name="date_of_death" value="{{ dog.date_of_death }}"
+        <input type="date" name="date_of_death"
             {% if filled %}
-            value="{{ filled.date_of_birth }}"
+            value="{{ filled.date_of_death }}"
             {% else %}
-            value="{{ dog.date_of_birth }}"
+            value="{{ dog.date_of_death }}"
             {% endif %}
         />
     </p>
@@ -88,7 +88,9 @@
         <select name="litter" id="litter">
             <option value="">None</option>
             {% for litter in litters %}
-            <option value="{{ litter.name }}" {% if litter.name == dog.litter_name %}selected{% endif %}>{{ litter.name }}</option>
+            <option value="{{ litter.name }}"
+                {% if litter.name == dog.litter_name %}selected{% endif %}>{{ litter.name }}
+            </option>
             {% endfor %}
         </select>
     </p>
@@ -97,8 +99,9 @@
         <select name="best_show" id="best_show">
             <option value="">None</option>
             {% for show in participated_shows %}
-            <option value="{{ show.name }}" {% if show.name == dog.best_show_name %}selected{% endif %}>{{ show.name }} ({{
-                show.date }})</option>
+            <option value="{{ show.name }}" 
+                {% if show.name == dog.best_show_name %}selected{% endif %}>{{ show.name }} ({{ show.date }})
+            </option>
             {% endfor %}
         </select>
     </p>
@@ -135,6 +138,5 @@
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Save" />
 </form>
-</body>
 
 {% endblock %}

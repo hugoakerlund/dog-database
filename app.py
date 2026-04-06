@@ -3,7 +3,7 @@ import math
 import os
 import secrets
 from flask import Flask, make_response, session, redirect, render_template, \
-                  request, send_from_directory, abort, flash
+    request, send_from_directory, abort, flash
 import config
 import dog
 import dog_show
@@ -30,7 +30,7 @@ def index(page=1):
         return redirect("/" + str(page_count))
 
     return render_template("html/index.html", page=page, page_count=page_count,
-                            dogs=dogs, session=session)
+                           dogs=dogs, session=session)
 
 @app.route("/search")
 def search():

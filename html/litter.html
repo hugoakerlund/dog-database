@@ -16,11 +16,12 @@
     Mother: <a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number }}</a>
 </P>
 <p>
-    Birth date: {{ litter.date_of_birth }}
+    Date of birth: {{ litter.date_of_birth }}
 </P>
 <p>
     Owner: <a href="/owner/{{ litter.owner_id }}">{{ litter.owner_name }}</a>
 </P>
+{% if dogs %}
 <p>
     Dogs in {{ litter.name }}:
 </P>
@@ -64,7 +65,9 @@
     {% endfor %}
 
 </table>
-</body>
+{% else %}
+There are currently no dogs in this litter.
+{% endif %}
 {% if litter.owner_id == session.owner_id %}
 <p>
     <a href="/edit_litter/{{ litter.id }}">Edit</a> |

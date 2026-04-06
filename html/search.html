@@ -30,7 +30,6 @@
         <th>Owner</th>
         <th>Litter</th>
     </tr>
-
     {% for dog in results %}
     <tr>
         <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
@@ -44,10 +43,7 @@
             endif %}</td>
     </tr>
     {% endfor %}
-
 </table>
 {% endif %}
-
-</body>
 
 {% endblock %}

@@ -1,45 +1,51 @@
-  {% extends "html/layout.html" %}
+{% extends "html/layout.html" %}
 
-  {% block title %}Dog Database{% endblock %}
+{% block title %}Dog Database{% endblock %}
 
-  {% block content %}
+{% block content %}
 
-  <h2>Home</h2>
+<h2>Home</h2>
 
-  <table>
+{% if dogs %}
+
+<table>
     <tr>
-      <th>Registration number</th>
-      <th>Name</th>
-      <th>Breed</th>
-      <th>Date or birth</th>
-      <th>Sex</th>
-      <th>Owner</th>
-      <th>Litter</th>
+        <th>Registration number</th>
+        <th>Name</th>
+        <th>Breed</th>
+        <th>Date or birth</th>
+        <th>Sex</th>
+        <th>Owner</th>
+        <th>Litter</th>
     </tr>
 
     {% for dog in dogs %}
     <tr>
-      <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
-      <td>{{ dog.name }}</td>
-      <td>{{ dog.breed }}</td>
-      <td>{{ dog.date_of_birth }}</td>
-      <td>{{ dog.sex }}</td>
-      <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
-      <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{%
-        endif %}</td>
+        <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
+        <td>{{ dog.name }}</td>
+        <td>{{ dog.breed }}</td>
+        <td>{{ dog.date_of_birth }}</td>
+        <td>{{ dog.sex }}</td>
+        <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
+        <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{%
+            endif %}</td>
     </tr>
     {% endfor %}
 
-  </table>
-</body>
+</table>
+
 <p>
-  {% if page > 1 %}
-  <a href="/{{ page - 1 }}">&lt;&lt;</a>
-  {% endif %}
-  Page {{ page }}/{{ page_count }}
-  {% if page < page_count %}
-  <a href="/{{ page + 1 }}">&gt;&gt;</a>
-  {% endif %}
+    {% if page > 1 %}
+    <a href="/{{ page - 1 }}">&lt;&lt;</a>
+    {% endif %}
+    Page {{ page }}/{{ page_count }}
+    {% if page < page_count %}
+    <a href="/{{ page + 1 }}">&gt;&gt;</a>
+    {% endif %}
 </p>
+
+{% else %}
+There are currently no dogs in the database.
+{% endif %}
 
 {% endblock %}

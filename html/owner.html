@@ -12,24 +12,20 @@
 <p>
     Email: {{ owner.email }}
 </P>
-
 {% if session.owner_id == owner.id %}
 <p>
-  <a href="/edit_account">Edit</a> |
-  <a href="/remove_account">Remove</a>
+    <a href="/edit_account">Edit</a> |
+    <a href="/remove_account">Remove</a>
 </p>
 {% endif %}
-
 {% if dogs %}
-
 <p>
-  {% if session.owner_id == owner.id %}
-  You currently have {{ dogs | count }} dog(s).
-  {% else %}
-  {{ owner.name }} currently has {{ dogs | count }} dog(s).
-  {% endif %}
+    {% if session.owner_id == owner.id %}
+    You currently have {{ dogs | count }} dog(s).
+    {% else %}
+    {{ owner.name }} currently has {{ dogs | count }} dog(s).
+    {% endif %}
 </p>
-
 <table>
     <tr>
         <th>Registration number</th>
@@ -40,7 +36,6 @@
         <th>Owner</th>
         <th>Litter</th>
     </tr>
-
     {% for dog in dogs %}
     <tr>
         <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
@@ -53,56 +48,51 @@
             %}Unknown{% endif %}</td>
     </tr>
     {% endfor %}
-
 </table>
 {% else %}
 <p>
-  {% if session.owner_id == owner.id %}
-  You don't have any dogs yet.
-  Add your first litter <a href="/create_dog">here</a>.
-  {% else %}
-  {{ owner.name }} doesn't have any dogs yet. 
-  {% endif %}
+    {% if session.owner_id == owner.id %}
+    You don't have any dogs yet.
+    Add your first litter <a href="/create_dog">here</a>.
+    {% else %}
+    {{ owner.name }} doesn't have any dogs yet. 
+    {% endif %}
 </p>
 {% endif %}
 
-
 {% if litters %}
-
 <p>
-  {% if session.owner_id == owner.id %}
-  You currently have {{ litters | count }} litter(s).
-  {% else %}
-  {{ owner.name }} currently has {{ litters | count }} litter(s).
-  {% endif %}
-</p>
-
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Father</th>
-    <th>Mother</th>
-    <th>Date or birth</th>
-  </tr>
-  {% for litter in litters %}
-  <tr>
-    <td><a href="/litter/{{ litter.id }}">{{ litter.name }}</a></td>
-    <td><a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number or "Unknown" }}</a></td>
-    <td><a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number or "Unknown" }}</a></td>
-    <td>{{ litter.date_of_birth }}</td>
-  </tr>
-  {% endfor %}
-  {% else %}
-  <p>
     {% if session.owner_id == owner.id %}
-    You don't have any litters yet.
-    Add your first litter <a href="/create_litter">here</a>.
+    You currently have {{ litters | count }} litter(s).
     {% else %}
-    {{ owner.name }} doesn't have any litters yet. 
+    {{ owner.name }} currently has {{ litters | count }} litter(s).
     {% endif %}
-  </p>
-  {% endif %}
+</p>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Father</th>
+        <th>Mother</th>
+        <th>Date or birth</th>
+    </tr>
+    {% for litter in litters %}
+    <tr>
+        <td><a href="/litter/{{ litter.id }}">{{ litter.name }}</a></td>
+        <td><a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number or "Unknown" }}</a></td>
+        <td><a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number or "Unknown" }}</a></td>
+        <td>{{ litter.date_of_birth }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <p>
+        {% if session.owner_id == owner.id %}
+        You don't have any litters yet.
+        Add your first litter <a href="/create_litter">here</a>.
+        {% else %}
+        {{ owner.name }} doesn't have any litters yet. 
+        {% endif %}
+    </p>
+    {% endif %}
 </table>
-</body>
 
 {% endblock %}

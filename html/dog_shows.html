@@ -18,14 +18,14 @@
     </tr>
     {% endfor %}
 </table>
-</body>
+
 <p>
     {% if page > 1 %}
     <a href="/dog_shows/{{ page - 1 }}">&lt;&lt;</a>
     {% endif %}
     Page {{ page }}/{{ page_count }}
     {% if page < page_count %} <a href="/dog_shows/{{ page + 1 }}">&gt;&gt;</a>
-        {% endif %}
+    {% endif %}
 </p>
 
 {% endblock %}

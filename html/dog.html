@@ -7,68 +7,75 @@
 <h2>{{ dog.name }}</h2>
 
 <p>
-  Registration number: {{ dog.registration_number }}
+    Registration number: {{ dog.registration_number }}
 </P>
 {% if dog.image %}
 <p>
-  Image: <img src="/image/{{ dog.id }}" alt="Dog Image" width="200" height="200">
+    Image: <img src="/image/{{ dog.id }}" alt="Dog Image" width="200" height="200">
 </P>
 {% else %}
 <p>
-  No image available for this dog.
+    No image available for this dog.
 </P>
 {% endif %}
 <p>
-  Name: {{ dog.name }}
+    Name: {{ dog.name }}
 </P>
 <p>
-  Color: {{ dog.color}}
+    Color: {{ dog.color}}
 </P>
 <p>
-  Breed: {{ dog.breed }}
+    Breed: {{ dog.breed }}
 </P>
 <p>
-  Date or birth: {{ dog.date_of_birth }}
+    Date or birth: {{ dog.date_of_birth }}
 </P>
 {% if dog.date_of_death %}
 <p>
-  Date of death: {{ dog.date_of_death }}
+    Date of death: {{ dog.date_of_death }}
 </p>
 {% endif %}
 <p>
-  Sex: {{ dog.sex }}
+    Sex: {{ dog.sex }}
 </P>
 <p>
-  Owner: <a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a>
+    Owner: <a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a>
 </P>
 <p>
-  Litter: {% if dog.litter_id%}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else
-    "Unknown" }}</a>{% else %}Unknown{% endif %} </P>
-<p>
-  {% if championship_titles %}
-  Championship titles:
-  {{ championship_titles | map(attribute='name') | join(', ') }}
-  {% else %}
-  {{ dog.name }} does not have any championship titles currently.
-  {% endif %}
+    Litter: {% if dog.litter_id%}
+    <a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name if dog.litter_name else "Unknown" }}</a>
+    {% else %}
+    Unknown
+    {% endif %} 
 </P>
 <p>
-  Best test: {{ dog.best_test }}
+    {% if championship_titles %}
+    Championship titles:
+    {{ championship_titles | map(attribute='name') | join(', ') }}
+    {% else %}
+    {{ dog.name }} does not have any championship titles currently.
+    {% endif %}
 </P>
 <p>
-  Best show: {% if dog.best_show_id %}<a href="/dog_show/{{ dog.best_show_id }}">{{ dog.best_show_name if dog.best_show_name else
-    "Unknown" }}</a>{% else %}Unknown{% endif %}
+    Best test: {{ dog.best_test }}
+</P>
+<p>
+    Best show: {% if dog.best_show_id %}
+    <a href="/dog_show/{{ dog.best_show_id }}">{{ dog.best_show_name if dog.best_show_name else "Unknown" }}</a>
+    {% else %}
+    Unknown
+    {% endif %}
 </p>
 <p>
-  Hip index: {{ dog.hip_index }}
+    Hip index: {{ dog.hip_index }}
 </P>
 <p>
-  Use index: {{ dog.use_index }}
+    Use index: {{ dog.use_index }}
 </P>
 {% if dog.owner_id == session.owner_id %}
 <p>
-  <a href="/edit_dog/{{ dog.id }}">Edit</a> |
-  <a href="/remove_dog/{{ dog.id }}">Remove</a>
+    <a href="/edit_dog/{{ dog.id }}">Edit</a> |
+    <a href="/remove_dog/{{ dog.id }}">Remove</a>
 </p>
 {% endif %}
 
@@ -77,38 +84,37 @@
 <h3>Add comment</h3>
 
 <form action="/create_comment" method="post">
-  <p>
-    <label for="content">Comment</label><br/>
-    <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
-  </p>
-  <input type="hidden" name="dog_id" value={{ dog.id }} />
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <input type="submit" value="Send" />
+    <p>
+        <label for="content">Comment</label><br/>
+        <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"></textarea>
+    </p>
+    <input type="hidden" name="dog_id" value={{ dog.id }} />
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" value="Send" />
 </form>
 
 {% else %}
-    <p>
-        <a href="/login">Login</a> to leave a comment.
-    </p>
+<p>
+    <a href="/login">Login</a> to leave a comment.
+</p>
 {% endif %}
 
 <h3>Comments</h3>
 
 {% if comments %}
-    {% for comment in comments %}
-    <p>Date: {{ comment.date }}</p>
-    <p>Owner: <a href="/owner/{{ comment.owner_id}}">{{ comment.commenter }}</a> commented:</p>
-    <p>{{ comment.content }}</p>
-    {% if comment.owner_id == session.owner_id %}
-    <p>
-        <a href="/edit_comment/{{ comment.id }}">Edit</a>
-        <a href="/remove_comment/{{ comment.id }}">Remove</a>
-    </p>
-    {% endif %}
-    {% endfor %}
-{% else %}
-    {{ dog.name }} does not currently have any comments.
+{% for comment in comments %}
+<p>Date: {{ comment.date }}</p>
+<p>Owner: <a href="/owner/{{ comment.owner_id}}">{{ comment.commenter }}</a> commented:</p>
+<p>{{ comment.content }}</p>
+{% if comment.owner_id == session.owner_id %}
+<p>
+    <a href="/edit_comment/{{ comment.id }}">Edit</a>
+    <a href="/remove_comment/{{ comment.id }}">Remove</a>
+</p>
 {% endif %}
-
+{% endfor %}
+{% else %}
+{{ dog.name }} does not currently have any comments.
+{% endif %}
 
 {% endblock %}
