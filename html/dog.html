@@ -105,11 +105,15 @@
 {% for comment in comments %}
 <p>Date: {{ comment.date }}</p>
 <p>Owner: <a href="/owner/{{ comment.owner_id}}">{{ comment.commenter }}</a> commented:</p>
-<p>{{ comment.content }}</p>
+<p>{{ comment.content | show_lines }}</p>
 {% if comment.owner_id == session.owner_id %}
 <p>
     <a href="/edit_comment/{{ comment.id }}">Edit</a>
-    <a href="/remove_comment/{{ comment.id }}">Remove</a>
+    <form method="post" action="/remove_comment/{{ comment.id }}" style="margin:0">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+        <input type="hidden" name="dog_id" value="{{ dog.id }}" />
+        <input type="submit" value="Remove" />
+    </form>
 </p>
 {% endif %}
 {% endfor %}

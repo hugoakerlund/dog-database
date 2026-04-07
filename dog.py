@@ -76,6 +76,11 @@ def get_dog_id_by_registration_number(registration_number):
     result = db.query(sql, [registration_number])
     return result[0][0] if result else None
 
+def get_dog_id_by_comment(comment_id):
+    sql = "SELECT dog_id FROM Comments WHERE id = ?"
+    result = db.query(sql, [comment_id])
+    return result[0][0] if result else None
+
 def get_show_name(show_id):
     sql = "SELECT name FROM Dog_shows WHERE id = ?"
     result = db.query(sql, [show_id])
@@ -91,6 +96,15 @@ def get_comments(dog_id):
         "WHERE dog_id = ?"
     )
     return db.query(sql, [dog_id])
+
+def get_comment(comment_id):
+    sql = (
+        "SELECT c.id, c.content, c.owner_id, c.dog_id, c.date "
+        "FROM Comments c "
+        "WHERE id = ?"
+    )
+    result = db.query(sql, [comment_id])
+    return result[0] if result else None
 
 def get_colors():
     sql = "SELECT id, name FROM Colors"
@@ -180,6 +194,21 @@ def insert_comment(form):
         form["content"], 
         form["owner_id"], 
         form["dog_id"], 
+    ]
+    db.execute(sql, params)
+
+def remove_comment(comment_id):
+    sql = "DELETE FROM Comments WHERE id = ?"
+    db.execute(sql, [comment_id])
+
+def update_comment(form):
+    sql = (
+        "UPDATE Comments SET content = ? "
+        "WHERE id = ?"
+    )
+    params = [
+        form["content"],
+        form["comment_id"]
     ]
     db.execute(sql, params)
 

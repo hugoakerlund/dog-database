@@ -1,0 +1,22 @@
+{% extends "html/layout.html" %}
+
+{% block title %}Dog Database{% endblock %}
+
+{% block content %}
+
+<h2>Edit comment</h2>
+
+<form action="/edit_comment/{{ comment.id }}" method="post">
+    <p>
+        <label for="content">Comment</label><br/>
+        <textarea id="content" name="content" rows="5" cols="40" maxlength="5000"
+        >{% if filled %}{{ filled.content | e }}{% else %}{{ comment.content | e }}{% endif %}
+        </textarea>
+    </p>
+    <input type="hidden" name="comment_id" value="{{ comment.id }}" />
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    <input type="submit" name="continue" value="continue" />
+    <input type="submit" name="cancel" value="cancel" />
+</form>
+
+{% endblock %}

@@ -2,6 +2,7 @@ import sqlite3
 import math
 import os
 import secrets
+import markupsafe
 from flask import Flask, make_response, session, redirect, render_template, \
     request, send_from_directory, abort, flash
 import config
@@ -13,6 +14,12 @@ import litter
 
 app = Flask(__name__, template_folder=".")
 app.secret_key = config.SECRET_KEY
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
 
 @app.route("/")
 @app.route("/<int:page>")
@@ -86,6 +93,42 @@ def create_comment():
     flash("Comment added successfully!", "success")
     return redirect(f"/dog/{form["dog_id"]}")
 
+@app.route("/remove_comment/<int:comment_id>", methods=["POST"])
+def remove_comment(comment_id):
+    require_login()
+    check_csrf()
+    dog_id = request.form.get("dog_id", "") or None
+    if not dog_id:
+        abort(404, "dog does not exist")
+    else:
+        dog.remove_comment(comment_id)
+    flash("Comment removed successfully!", "success")
+    return redirect(f"/dog/{dog_id}")
+
+@app.route("/edit_comment/<int:comment_id>", methods=["GET"])
+def edit_comment_get(comment_id, filled={}):
+    require_login()
+    comment = dog.get_comment(comment_id)
+    if not comment:
+        abort(404, "ERROR: comment not found")
+    return render_template("html/edit_comment.html", filled=filled, comment=comment)
+
+@app.route("/edit_comment/<int:comment_id>", methods=["POST"])
+def edit_comment_post(comment_id):
+    require_login()
+    check_csrf()
+    form = input_validator.get_comment_form(request, True)
+    if "continue" in request.form:
+        form = input_validator.get_comment_form(request, True)
+        if not input_validator.check_comment_form(form, edit=True):
+            return edit_comment_get(comment_id, form)
+        try:
+            dog.update_comment(form)
+        except sqlite3.IntegrityError as e:
+            return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+        flash("Comment updated successfully!", "success")
+    return redirect(f"/dog/{form["dog_id"]}")
+
 @app.route("/edit_dog/<int:dog_id>", methods=["GET"])
 def edit_dog_get(dog_id, filled={}):
     require_login()
@@ -105,6 +148,7 @@ def edit_dog_get(dog_id, filled={}):
 @app.route("/edit_dog/<int:dog_id>", methods=["POST"])
 def edit_dog_post(dog_id):
     require_login()
+    check_csrf()
     form = input_validator.get_dog_form(request, dog_id)
     if not input_validator.check_dog_form(form, edit=True):
         return edit_dog_get(dog_id, form)
@@ -171,6 +215,7 @@ def edit_litter_get(litter_id, filled={}):
 @app.route("/edit_litter/<int:litter_id>", methods=["POST"])
 def edit_litter_post(litter_id):
     require_login()
+    check_csrf()
     form = input_validator.get_litter_form(request, litter_id)
     if not input_validator.check_litter_form(form, edit=True):
         return edit_litter_get(litter_id, form)

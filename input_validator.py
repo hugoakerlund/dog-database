@@ -413,14 +413,21 @@ def check_account_edit_fields(form):
         return False
     return True
 
-def get_comment_form(request):
+def get_comment_form(request, edit=False):
     form = {}
-    form["dog_id"] = request.form.get("dog_id", "").strip()
-    form["owner_id"] = session["owner_id"]
+    if edit:
+        form["comment_id"] = request.form.get("comment_id", "").strip()
+        form["dog_id"] = dog.get_dog_id_by_comment(form["comment_id"])
+    else:
+        form["dog_id"] = request.form.get("dog_id", "").strip()
     form["content"] = request.form.get("content", "").strip()
+    form["owner_id"] = session["owner_id"]
     return form
 
-def check_comment_form(form):
+def check_comment_form(form, edit=False ):
+    if edit:
+        if not check_comment_exists(form):
+            return False
     if not check_comment_required_fieds(form):
         return False
     if not check_dog_exists(form):
@@ -434,11 +441,19 @@ def check_comment_required_fieds(form):
     if not form["content"]:
         flash("ERROR: comment field cannot be empty", "error")
         return False
+    if len(form["content"]) > 5000:
+        flash("ERROR: comment field cannot be longer than 5000 characters", "error")
+        return False
     return True
 
 def check_dog_exists(form):
     if not dog.get_dog(form["dog_id"]):
         flash("ERROR: dog does not exist", "error")
+        return False
+    return True
+
+def check_comment_exists(form):
+    if not form["comment_id"]:
         return False
     return True
 
