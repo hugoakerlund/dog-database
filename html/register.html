@@ -9,13 +9,14 @@
 <form action="/register" method="post">
     <p>
         Name: <br />
-        <input type="text" name="name" maxlength=20 required 
+        <input type="text" name="name" maxlength=20 required
             value="{{ filled.name }}"
         />
     </p>
     <p>
         Email: <br />
         <input type="text" name="email" maxlength=50 required
+            pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Format: username@example.com"
             value="{{ filled.email }}"
         />
     </p>

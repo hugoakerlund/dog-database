@@ -20,6 +20,7 @@
     <p>
         Email: <br />
         <input type="text" name="email" maxlength=50 required
+            pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Format: username@example.com"
             {% if filled %}
             value="{{ filled.email }}"
             {% else %}
