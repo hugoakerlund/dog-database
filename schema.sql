@@ -8,6 +8,7 @@ CREATE TABLE Owners (
 CREATE TABLE Dogs (
     id INTEGER PRIMARY KEY,
     registration_number TEXT UNIQUE,
+    registration_date DATE,
     name TEXT,
     image BLOB,
     color TEXT REFERENCES Colors(name),

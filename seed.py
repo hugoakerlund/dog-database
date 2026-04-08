@@ -169,10 +169,10 @@ def insert_random_dog(n):
     use_index = random.randint(0,100)
 
     sql = (
-        "INSERT INTO Dogs (registration_number, name, image, color, breed, date_of_birth, "
-            "sex, owner_id, litter_id, "
-            "best_test, best_show_id, hip_index, use_index) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO Dogs (registration_number, registration_date, name, "
+        "image, color, breed, date_of_birth, sex, owner_id, litter_id, "
+        "best_test, best_show_id, hip_index, use_index) "
+        "VALUES (?, datetime('now', 'localtime'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     )
     db.execute(sql, [registration_number, name, image, color, breed,
                      date_of_birth,sex, dog_owner_id, litter_id, best_test,

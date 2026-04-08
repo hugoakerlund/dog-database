@@ -1,5 +1,6 @@
 from flask import session, flash, abort
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
 import dog
 import litter
 import owner
@@ -100,11 +101,16 @@ def check_name(name):
 
 def check_date(date_str):
     year, month, day = date_str.split("-")
-    if year.isdigit() and month.isdigit() and day.isdigit() and \
-        len(date_str) == 10 and date_str[4] == "-" and date_str[7] == "-":
-        return True
-    flash("ERROR: invalid date format (must be YYYY-MM-DD)", "error")
-    return False
+    if not year.isdigit() or not month.isdigit() or not day.isdigit() or \
+        not len(date_str) == 10 or not date_str[4] == "-" or not date_str[7] == "-":
+        flash("ERROR: invalid date format (must be YYYY-MM-DD)", "error")
+        return False
+    today = date.today()
+    given_date = date(int(year), int(month), int(day))
+    if today < given_date:
+        flash("ERROR: date cannot be in the future", "error")
+        return False
+    return True
 
 def check_sex(form):
     if form["sex"] not in ["Male", "Female"]:

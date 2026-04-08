@@ -2,9 +2,8 @@ import db
 
 def get_dogs(page, page_size):
     sql = (
-        "SELECT d.id, d.registration_number, d.name, d.image, d.color, "
-        "d.breed, d.date_of_birth, d.date_of_death, d.sex, d.owner_id, "
-        "d.litter_id, "
+        "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
+        "d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "l.name AS litter_name, "
         "o.name AS owner_name "
@@ -26,10 +25,9 @@ def get_dog_count():
 
 def get_dog(dog_id):
     sql = (
-        "SELECT d.id, d.registration_number, d.name, d.image, d.color, "
-        "d.breed, d.date_of_birth, d.date_of_death, d.sex, d.owner_id, "
-        "d.litter_id,  "
-        "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
+        "SELECT d.id, d.registration_number, d.registration_date, d.name, d.image, "
+        "d.color, d.breed, d.date_of_birth, d.date_of_death, d.sex, d.owner_id, "
+        "d.litter_id, d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "l.name AS litter_name, "
         "o.name AS owner_name, "
         "s.name AS best_show_name "
@@ -157,10 +155,10 @@ def delete_dog(dog_id):
 
 def insert_dog(form):
     sql = (
-        "INSERT INTO Dogs (registration_number, name, image, color, breed, "
-        "date_of_birth, date_of_death, sex, litter_id, owner_id, "
+        "INSERT INTO Dogs (registration_number, registration_date, name, image, "
+        "color, breed, date_of_birth, date_of_death, sex, litter_id, owner_id, "
         "best_show_id, best_test, hip_index, use_index) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+        "VALUES (?, datetime('now', 'localtime'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
     )
     params = [
         form["registration_number"],
