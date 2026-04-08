@@ -186,9 +186,9 @@ def insert_comment(form):
         "VALUES (?, ?, ?, datetime('now', 'localtime'))"
     )
     params = [
-        form["content"], 
-        form["owner_id"], 
-        form["dog_id"], 
+        form["content"],
+        form["owner_id"],
+        form["dog_id"],
     ]
     db.execute(sql, params)
 

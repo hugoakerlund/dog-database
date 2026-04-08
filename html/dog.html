@@ -6,18 +6,18 @@
 
 <h2>{{ dog.name }}</h2>
 
-<p>
-    Registration number: {{ dog.registration_number }}
-</P>
 {% if dog.image %}
 <p>
     Image: <img src="/image/{{ dog.id }}" alt="Dog Image" width="200" height="200">
 </P>
 {% else %}
 <p>
-    No image available for this dog.
+    {{ dog.owner_name }} has not added an image for {{ dog.name }}.
 </P>
 {% endif %}
+<p>
+    Registration number: {{ dog.registration_number }}
+</P>
 <p>
     Name: {{ dog.name }}
 </P>

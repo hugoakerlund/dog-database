@@ -10,7 +10,8 @@ def get_dog_form(request, dog_id=None):
     form["dog_id"] = dog_id
     form["registration_number"] = request.form.get("registration_number", "").strip()
     form["name"] = request.form.get("name", "").strip()
-    form["image"] = request.files.get("image")
+    form["image"] = request.files.get("image", "")
+    form["image_data"] = None
     form["color"] = request.form.get("color", "").strip()
     form["breed"] = request.form.get("breed", "").strip()
     form["date_of_birth"] = request.form.get("date_of_birth", "").strip()
@@ -37,17 +38,6 @@ def check_dog_form(form, edit=False):
     else:
         if dog.registration_number_exists(form["registration_number"]):
             flash("ERROR: registration number already exists ", "error")
-            return False
-        if not form["image"] or not form["image"].filename:
-            flash("ERROR: image is required", "error")
-            return False
-    if form["image"]:
-        if not form["image"].filename.lower().endswith(('.jpg', '.jpeg')):
-            flash("ERROR: only .jpg and .jpeg images are allowed", "error")
-            return False
-        form["image_data"] = form["image"].read()
-        if len(form["image_data"]) > 100 * 1024:
-            flash("ERROR: image size must be less than 100KB", "error")
             return False
     if not check_name(form["name"]):
         return False
@@ -123,6 +113,14 @@ def check_sex(form):
     return True
 
 def check_dog_optional_fields(form):
+    if form["image"]:
+        if not form["image"].filename.lower().endswith(('.jpg', '.jpeg')):
+            flash("ERROR: only .jpg and .jpeg images are allowed", "error")
+            return False
+        form["image_data"] = form["image"].read()
+        if len(form["image_data"]) > 100 * 1024:
+            flash("ERROR: image size must be less than 100KB", "error")
+            return False
     if form["date_of_death"] and not check_death_date(form["date_of_death"], form["date_of_birth"]):
         return False
     if form["litter"]:
@@ -366,7 +364,7 @@ def check_account_form(form, edit=False):
         return False
     if not check_account_passwords(form):
         return False
-    if edit: 
+    if edit:
         if not check_account_edit_fields(form):
             return False
     else:
