@@ -36,6 +36,8 @@ def check_dog_form(form, edit=False):
     if edit:
         if not check_dog_edit_fields(form):
             return False
+        if not check_registration_date(form):
+            return False
     else:
         if dog.registration_number_exists(form["registration_number"]):
             flash("ERROR: registration number already exists ", "error")
@@ -89,6 +91,26 @@ def check_dog_edit_fields(form):
         return False
     if not form["image"]:
         form["image_data"] = dog.get_image(form["dog_id"])
+    return True
+
+def check_registration_date(form):
+    dog_data = dog.get_dog(form["dog_id"])
+    if not dog_data:
+        flash("ERROR: dog not found", "error")
+        return False
+
+    registration_date = dog_data["registration_date"].split(' ')[0]
+    date_of_birth  = form["date_of_birth"]
+
+    year, month, day = registration_date.split("-")
+    registration_date = date(int(year), int(month), int(day))
+
+    year, month, day = date_of_birth.split("-")
+    date_of_birth= date(int(year), int(month), int(day))
+
+    if registration_date < date_of_birth:
+        flash(f"ERROR: dog must be born before its registration date: {registration_date}", "error")
+        return False
     return True
 
 def check_name(name):
