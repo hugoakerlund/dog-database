@@ -40,6 +40,23 @@ def get_dog(dog_id):
     result = db.query(sql, [dog_id])
     return result[0] if result else None
 
+def get_dog_by_registration_number(registration_number):
+    sql = (
+        "SELECT d.id, d.registration_number, d.registration_date, d.name, d.image, "
+        "d.color, d.breed, d.date_of_birth, d.date_of_death, d.sex, d.owner_id, "
+        "d.litter_id, d.best_test, d.best_show_id, d.hip_index, d.use_index, "
+        "l.name AS litter_name, "
+        "o.name AS owner_name, "
+        "s.name AS best_show_name "
+        "FROM Dogs d "
+        "LEFT JOIN Litters l ON d.litter_id = l.id "
+        "LEFT JOIN Dog_shows s ON d.best_show_id = s.id "
+        "LEFT JOIN Owners o ON d.owner_id = o.id "
+        "WHERE d.registration_number = ?"
+    )
+    result = db.query(sql, [registration_number])
+    return result[0] if result else None
+
 def get_owner_id(dog_id):
     sql = "SELECT owner_id FROM Dogs WHERE id = ?"
     result = db.query(sql, [dog_id])

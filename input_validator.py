@@ -225,14 +225,7 @@ def check_litter_form(form, edit=False):
         return False
     if not check_date(form["date_of_birth"]):
         return False
-    if  not check_registration_number(form["father"]) or not check_registration_number(form["mother"]):
-        return False
-    if form["father"] == form["mother"]:
-        flash("ERROR: father and mother cannot be same", "error")
-        return False
-    if not check_father_and_mother_sex(form["father"], form["mother"]):
-        return False
-    if not check_ownership(form["father"]) or not check_ownership(form["mother"]):
+    if not check_father_and_mother(form):
         return False
     if edit:
         if not check_litter_edit_fields(form):
@@ -264,22 +257,43 @@ def check_litter_edit_fields(form):
         return False
     return True
 
-def check_father_and_mother_sex(father, mother):
-    father_id = dog.get_dog_id_by_registration_number(father)
-    mother_id = dog.get_dog_id_by_registration_number(mother)
-    if not father_id or not mother_id:
+def check_father_and_mother(form):
+    if  not check_registration_number(form["father"]) or not check_registration_number(form["mother"]):
         return False
-
-    father_dog = dog.get_dog(father_id)
-    mother_dog = dog.get_dog(mother_id)
+    father_dog = dog.get_dog_by_registration_number(form["father"])
+    mother_dog = dog.get_dog_by_registration_number(form["mother"])
     if not father_dog or not mother_dog:
+        flash("ERROR: father or mother not found", "error")
         return False
+    if not check_father_and_mother_sex(father_dog, mother_dog):
+        return False
+    if not check_father_and_mother_date_of_birth(form["date_of_birth"],
+                                                 mother_dog["date_of_birth"], father_dog["date_of_birth"]):
+        return False
+    if not check_ownership(form["father"]) or not check_ownership(form["mother"]):
+        return False
+    return True
 
-    if father_dog["sex"] != mother_dog["sex"]:
-        return True
+def check_father_and_mother_sex(father_dog, mother_dog):
+    if father_dog["sex"] == mother_dog["sex"]:
+        flash("ERROR: father and mother cannot be same sex", "error")
+        return False
+    return True
 
-    flash("ERROR: father and mother cannot be same sex", "error")
-    return False
+def check_father_and_mother_date_of_birth(litter_date_of_birth, father_date_of_birth, mother_date_of_birth):
+    year, month, day = litter_date_of_birth.split("-")
+    litter_date_of_birth = date(int(year), int(month), int(day))
+
+    year, month, day = father_date_of_birth.split("-")
+    father_date_of_birth = date(int(year), int(month), int(day))
+
+    year, month, day = mother_date_of_birth.split("-")
+    mother_date_of_birth = date(int(year), int(month), int(day))
+
+    if litter_date_of_birth < mother_date_of_birth or litter_date_of_birth < father_date_of_birth:
+        flash("ERROR: father and mother must be born before litter", "error")
+        return False
+    return True
 
 def check_ownership(parent_dog):
     owner_id = session["owner_id"]
