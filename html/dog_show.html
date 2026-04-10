@@ -55,6 +55,7 @@
             <form method="post" action="/dog_show/{{ show.id }}/remove" style="margin:0">
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
                 <input type="hidden" name="dog_id" value="{{ dog.id }}" />
+                <input type="hidden" name="show_id" value="{{ show.id }}" />
                 <input type="submit" value="Remove" />
             </form>
             {% endif %}
@@ -84,12 +85,13 @@
             Select show result:
             <select name="championship_title_id" id="championship_title">
                 {% for championship_title in championship_titles %}
-                <option value="{{ championship_title.id}}">{{ championship_title.title }}</option>
+                <option value="{{ championship_title.id }}">{{ championship_title.title }}</option>
                 {% endfor %}
             </select>
         </label>
     </p>
     <p>
+        <input type="hidden" name="show_id" value="{{ show.id }}" />
         <input type="submit" value="Add to show" />
     </p>
 </form>

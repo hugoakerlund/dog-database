@@ -9,12 +9,20 @@
 <p>
     Name: {{ litter.name }}
 </P>
+{% if litter.father_id %}
 <p>
     Father: <a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number }}</a>
 </P>
+{% else %}
+Father of {{ litter.name }} has been removed from the database.
+{% endif %}
+{% if litter.mother_id %}
 <p>
     Mother: <a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number }}</a>
 </P>
+{% else %}
+Mother of {{ litter.name }} has been removed from the database.
+{% endif %}
 <p>
     Date of birth: {{ litter.date_of_birth }}
 </P>
@@ -23,7 +31,7 @@
 </P>
 {% if dogs %}
 <p>
-    Dogs in {{ litter.name }}:
+    There are {{ dogs | count }} dogs(s) in {{ litter.name }}:
 </P>
 <table>
     <tr>

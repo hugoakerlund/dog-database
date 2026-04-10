@@ -26,9 +26,9 @@
         Name:
         <input type="text" name="name" maxlength=20 required
             {% if filled %}
-            value="{{ filled.name }}" 
+            value="{{ filled.name }}"
             {% else %}
-            value="{{ dog.name }}" 
+            value="{{ dog.name }}"
             {% endif %}
         />
     </p>
@@ -85,29 +85,41 @@
     </p>
     <p>
         <label for="litter">Litter:</label>
-        <select name="litter" id="litter">
+        <select name="litter_id" id="litter">
             <option value="">None</option>
             {% for litter in litters %}
-            <option value="{{ litter.name }}"
-                {% if litter.name == dog.litter_name %}selected{% endif %}>{{ litter.name }}
-            </option>
+                {% if filled %}
+                <option value="{{ litter.id }}"
+                    {% if litter.id|string == filled.litter_id|string %}selected{% endif %}>{{ litter.name }}
+                </option>
+                {% else %}
+                <option value="{{ litter.id }}"
+                    {% if litter.id|string == dog.litter_id|string %}selected{% endif %}>{{ litter.name }}
+                </option>
+                {% endif %}
             {% endfor %}
         </select>
     </p>
     <p>
         <label for="best_show">Best Show:</label>
-        <select name="best_show" id="best_show">
+        <select name="best_show_id" id="best_show">
             <option value="">None</option>
             {% for show in participated_shows %}
-            <option value="{{ show.name }}" 
-                {% if show.name == dog.best_show_name %}selected{% endif %}>{{ show.name }} ({{ show.date }})
-            </option>
+                {% if filled %}
+                <option value="{{ show.id }}"
+                    {% if show.id|string == filled.best_show_id|string %}selected{% endif %}>{{ show.name }} ({{ show.date }})
+                </option>
+                {% else %}
+                <option value="{{ show.id }}"
+                    {% if show.id|string == dog.best_show_id|string %}selected{% endif %}>{{ show.name }} ({{ show.date }})
+                </option>
+                {% endif %}
             {% endfor %}
         </select>
     </p>
     <p>
         Best test:
-        <input type="number" name="best_test" min=1 max=5 
+        <input type="number" name="best_test" min=1 max=5
             {% if filled %}
             value="{{ filled.best_test }}"
             {% else %}
@@ -135,6 +147,7 @@
             {% endif %}
         />
     </p>
+    <input type="hidden" name="dog_id" value="{{ dog.id }}" />
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Save" />
 </form>

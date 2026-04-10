@@ -1,3 +1,4 @@
+from flask import session
 import db
 
 def get_dogs(page, page_size):
@@ -164,6 +165,9 @@ def delete_dog(dog_id):
     sql = "UPDATE Dog_shows SET winner_id = NULL WHERE winner_id = ?"
     db.execute(sql, [dog_id])
 
+    sql = "DELETE FROM Comments where dog_id = ?"
+    db.execute(sql, [dog_id])
+
     sql = "DELETE FROM Show_participants where dog_id = ?"
     db.execute(sql, [dog_id])
 
@@ -187,7 +191,7 @@ def insert_dog(form):
         form["date_of_death"],
         form["sex"],
         form["litter_id"],
-        form["owner_id"],
+        session["owner_id"],
         form["best_show_id"],
         form["best_test"],
         form["hip_index"],
@@ -202,7 +206,7 @@ def insert_comment(form):
     )
     params = [
         form["content"],
-        form["owner_id"],
+        session["owner_id"],
         form["dog_id"],
     ]
     db.execute(sql, params)
@@ -239,7 +243,7 @@ def update_dog(dog_id, form):
         form["date_of_death"],
         form["sex"],
         form["litter_id"],
-        form["owner_id"],
+        session["owner_id"],
         form["best_show_id"],
         form["best_test"],
         form["hip_index"],

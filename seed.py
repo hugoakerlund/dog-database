@@ -5,8 +5,8 @@ import db
 from app import app
 
 colors = [
-    'Brown', 
-    'Chocolate', 
+    'Brown',
+    'Chocolate',
     'Liver',
     'Red',
     'Gold',

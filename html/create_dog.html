@@ -69,11 +69,11 @@
     </p>
     <p>
         <label for="litter">Litter:</label>
-        <select name="litter" id="litter">
+        <select name="litter_id" id="litter">
             <option value="">None</option>
             {% for litter in litters %}
-            <option value="{{ litter.name }}" 
-                {% if litter.name == filled.litter %}selected{% endif %}>{{ litter.name }}
+            <option value="{{ litter.id }}"
+                {% if litter.id|string == filled.litter_id|string %}selected{% endif %}>{{ litter.name }}
             </option>
             {% endfor %}
         </select>

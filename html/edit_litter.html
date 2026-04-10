@@ -19,16 +19,16 @@
     </p>
     <p>
         <label for="father">Father:</label>
-        <select name="father" id="father">
+        <select name="father_id" id="father">
             <option value="">None</option>
             {% for dog in male_dogs %}
             {% if filled %}
-            <option value="{{ dog.registration_number }}" 
+            <option value="{{ dog.id }}"
                 {% if dog.registration_number == filled.father %}selected{% endif %}>
                 {{ dog.name }} ({{ dog.registration_number }})
             </option>
             {% else %}
-            <option value="{{ dog.registration_number }}"
+            <option value="{{ dog.id }}"
                 {% if dog.registration_number == litter.father_registration_number %}selected{% endif %}>
                 {{ dog.name }} ({{ dog.registration_number }})
             </option>
@@ -38,16 +38,16 @@
     </p>
     <p>
         <label for="mother">Mother:</label>
-        <select name="mother" id="mother">
+        <select name="mother_id" id="mother">
             <option value="">None</option>
             {% for dog in female_dogs %}
             {% if filled %}
-            <option value="{{ dog.registration_number }}"
+            <option value="{{ dog.id }}"
                 {% if dog.registration_number == filled.mother %}selected{% endif %}>
                 {{ dog.name }} ({{ dog.registration_number }})
             </option>
             {% else %}
-            <option value="{{ dog.registration_number }}"
+            <option value="{{ dog.id }}"
                 {% if dog.registration_number == litter.mother_registration_number %}selected{% endif %}>
                 {{ dog.name }} ({{ dog.registration_number }})
             </option>
@@ -65,6 +65,7 @@
             {% endif %}
         />
     </p>
+    <input type="hidden" name="litter_id" value="{{ litter.id }}" />
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Save" />
 </form>

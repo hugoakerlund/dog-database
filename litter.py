@@ -1,3 +1,4 @@
+from flask import session
 import db
 
 def get_litter(litter_id):
@@ -77,7 +78,7 @@ def insert_litter(form):
         "VALUES (?, ?, ?, ?, ?)"
     )
     db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"],
-                     form["owner_id"]])
+                     session["owner_id"]])
 
 def update_litter(litter_id, form):
     sql = (
@@ -89,6 +90,9 @@ def update_litter(litter_id, form):
                      litter_id])
 
 def delete_litter(litter_id):
+    sql = "UPDATE Dogs SET litter_id = NULL WHERE litter_id = ?"
+    db.execute(sql, [litter_id])
+
     sql = "DELETE FROM Litters WHERE id = ?"
     db.execute(sql, [litter_id])
 

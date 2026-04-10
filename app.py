@@ -61,9 +61,8 @@ def create_dog_get(filled={}):
     dog_breeds = dog.get_breeds()
     owner_id = session["owner_id"]
     my_litters = owner.get_litters(owner_id)
-    championship_titles = dog_show.get_championship_titles()
-    return render_template("html/create_dog.html", filled=filled, colors=colors, dog_breeds=dog_breeds,
-                           litters=my_litters, championship_titles=championship_titles)
+    return render_template("html/create_dog.html", filled=filled, colors=colors,
+                           dog_breeds=dog_breeds, litters=my_litters)
 
 @app.route("/create_dog", methods=["POST"])
 def create_dog_post():
@@ -139,17 +138,15 @@ def edit_dog_get(dog_id, filled={}):
     dog_breeds = dog.get_breeds()
     owner_id = session["owner_id"]
     my_litters = owner.get_litters(owner_id)
-    championship_titles = dog_show.get_championship_titles()
     participated_shows = dog_show.get_dog_participated_shows(dog_id)
     return render_template("html/edit_dog.html", filled=filled, dog=dog_info, colors=colors,
-                           dog_breeds=dog_breeds,championship_titles=championship_titles,
-                           litters=my_litters, participated_shows=participated_shows)
+                           dog_breeds=dog_breeds, litters=my_litters, participated_shows=participated_shows)
 
 @app.route("/edit_dog/<int:dog_id>", methods=["POST"])
 def edit_dog_post(dog_id):
     require_login()
     check_csrf()
-    form = input_validator.get_dog_form(request, dog_id)
+    form = input_validator.get_dog_form(request)
     if not input_validator.check_dog_form(form, edit=True):
         return edit_dog_get(dog_id, form)
     try:
@@ -216,7 +213,7 @@ def edit_litter_get(litter_id, filled={}):
 def edit_litter_post(litter_id):
     require_login()
     check_csrf()
-    form = input_validator.get_litter_form(request, litter_id)
+    form = input_validator.get_litter_form(request)
     if not input_validator.check_litter_form(form, edit=True):
         return edit_litter_get(litter_id, form)
     try:
@@ -356,7 +353,7 @@ def edit_account_get(filled={}):
 def edit_account_post():
     require_login()
     check_csrf()
-    form = input_validator.get_account_form(request, True)
+    form = input_validator.get_account_form(request)
     if not input_validator.check_account_form(form, True):
         return edit_account_get(form)
     try:
@@ -435,7 +432,7 @@ def show_dog_show(show_id):
 def add_dog_to_show(show_id):
     require_login()
     check_csrf()
-    form = input_validator.get_dog_show_form(request, show_id)
+    form = input_validator.get_dog_show_form(request)
     if not input_validator.check_dog_show_form(form):
         return redirect(f"/dog_show/{show_id}")
 
@@ -452,7 +449,7 @@ def add_dog_to_show(show_id):
 def remove_dog_from_show(show_id):
     require_login()
     check_csrf()
-    form = input_validator.get_dog_show_form(request, show_id, True)
+    form = input_validator.get_dog_show_form(request)
     if not input_validator.check_dog_show_form(form, True):
         return redirect(f"/dog_show/{show_id}")
 
@@ -460,7 +457,7 @@ def remove_dog_from_show(show_id):
         dog_show.remove_participant(form["show_id"], form["dog_id"])
     except sqlite3.IntegrityError as e:
         flash(f"ERROR: Database error: {e}", "error")
-    flash("Dog removed from show successfully", "success")
+    flash("Dog removed from show successfully!", "success")
     return redirect(f"/dog_show/{show_id}")
 
 

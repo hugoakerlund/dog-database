@@ -9,38 +9,38 @@
 <form action="/create_litter" method="post">
     <p>
         Name:
-        <input type="text" name="name" maxlength=20 required 
+        <input type="text" name="name" maxlength=20 required
             value="{{ filled.name }}"
         />
     </p>
     <p>
         <label for="father">Father:</label>
-        <select name="father" id="father">
+        <select name="father_id" id="father">
             <option value="">None</option>
             {% for dog in male_dogs %}
             {% if filled %}
-            <option value="{{ dog.registration_number }}"
-                {% if dog.registration_number == filled.father %}selected{% endif %}>
+            <option value="{{ dog.id }}"
+                {% if dog.id|string == filled.father_id|string %}selected{% endif %}>
                 {{ dog.name }} ({{ dog.registration_number }})
             </option>
             {% else %}
-            <option value="{{ dog.registration_number }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+            <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.registration_number }})</option>
             {% endif %}
             {% endfor %}
         </select>
     </p>
     <p>
         <label for="mother">Mother:</label>
-        <select name="mother" id="mother">
+        <select name="mother_id" id="mother">
             <option value="">None</option>
             {% for dog in female_dogs %}
             {% if filled %}
-            <option value="{{ dog.registration_number }}" 
-                {% if dog.registration_number == filled.mother %}selected{% endif %}>
+            <option value="{{ dog.id }}"
+                {% if dog.id|string == filled.mother_id|string %}selected{% endif %}>
                 {{ dog.name }} ({{ dog.registration_number }})
             </option>
             {% else %}
-            <option value="{{ dog.registration_number }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+            <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.registration_number }})</option>
             {% endif %}
             {% endfor %}
         </select>

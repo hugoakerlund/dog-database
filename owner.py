@@ -1,5 +1,6 @@
 import db
 import dog
+import litter
 
 def get_owner(owner_id):
     sql = (
@@ -47,7 +48,7 @@ def get_dog_ids(owner_id):
 
 def get_male_dogs(owner_id):
     sql = (
-        "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, " 
+        "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
         "d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "l.name AS litter_name, "
@@ -62,7 +63,7 @@ def get_male_dogs(owner_id):
 
 def get_female_dogs(owner_id):
     sql = (
-        "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, " 
+        "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
         "d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id, "
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "l.name AS litter_name, "
@@ -90,6 +91,20 @@ def get_litters(owner_id):
     )
     result = db.query(sql, [owner_id])
     return result
+
+def get_litter_ids(owner_id):
+    sql = (
+        "SELECT l.id FROM Litters l WHERE l.owner_id = ?"
+    )
+    result = db.query(sql, [owner_id])
+    return [row[0] for row in result] if result else []
+
+def get_comment_ids(owner_id):
+    sql = (
+        "SELECT c.id FROM Comments c WHERE c.owner_id = ?"
+    )
+    result = db.query(sql, [owner_id])
+    return [row[0] for row in result] if result else []
 
 def get_id_with_name(name):
     sql = "SELECT id FROM Owners WHERE name = ?"
@@ -130,16 +145,20 @@ def is_owner_of_dog(owner_id, dog_id):
     return bool(result)
 
 def remove_owner(owner_id):
+    comment_ids = get_comment_ids(owner_id)
+    if comment_ids:
+        for comment_id in comment_ids:
+            dog.remove_comment(comment_id)
+
     dog_ids = get_dog_ids(owner_id)
     if dog_ids:
         for dog_id in dog_ids:
             dog.delete_dog(str(dog_id))
 
-    sql = "UPDATE Litters SET owner_id = NULL WHERE owner_id = ?"
-    db.execute(sql, [owner_id])
-
-    sql = "UPDATE Dogs SET owner_id = NULL WHERE owner_id = ?"
-    db.execute(sql, [owner_id])
+    litter_ids = get_litter_ids(owner_id)
+    if litter_ids:
+        for litter_id in litter_ids:
+            litter.delete_litter(litter_id)
 
     sql = "DELETE FROM Owners WHERE id = ?"
     db.execute(sql, [owner_id])
