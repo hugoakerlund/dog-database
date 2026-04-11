@@ -142,7 +142,7 @@ def check_dog_optional_fields(form):
         return False
     if form["date_of_death"] and not check_death_date(form["date_of_death"], form["date_of_birth"]):
         return False
-    if form["litter_id"] and not check_litter(form["litter_id"]):
+    if form["litter_id"] and not check_litter(form):
             return False
     if form["best_show_id"] and not check_best_show(form["best_show_id"]):
             return False
@@ -180,18 +180,22 @@ def check_best_show(best_show_id):
         return False
     return True
 
-def check_litter(litter_id):
-    owner_id = session["owner_id"]
-    litter_father_id = litter.get_father_id(litter_id)
-    litter_mother_id = litter.get_mother_id(litter_id)
+def check_litter(form):
+    litter_father_id = litter.get_father_id(form["litter_id"])
+    litter_mother_id = litter.get_mother_id(form["litter_id"])
 
     if not litter_father_id or not litter_mother_id:
-        flash("ERROR: litters both parents could not be found!", "error")
+        flash("ERROR: litters both parents could not be found (one of them may have been deleted)!", "error")
+        return False
+
+    if form["dog_id"] == litter_father_id or form["dog_id"] == litter_mother_id:
+        flash("ERROR: a dog cannot be its litters father!", "error")
         return False
 
     father_owner_id = dog.get_owner_id(litter_father_id)
     mother_owner_id = dog.get_owner_id(litter_mother_id)
 
+    owner_id = session["owner_id"]
     if owner_id == father_owner_id and owner_id == mother_owner_id:
         return True
     flash("ERROR: you are not the owner of the litter!", "error")
