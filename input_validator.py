@@ -181,8 +181,9 @@ def check_best_show(best_show_id):
     return True
 
 def check_litter(form):
-    litter_father_id = litter.get_father_id(form["litter_id"])
-    litter_mother_id = litter.get_mother_id(form["litter_id"])
+    litter_data = litter.get_litter(form["litter_id"])
+    litter_father_id = litter_data["father_id"]
+    litter_mother_id = litter_data["mother_id"]
 
     if not litter_father_id or not litter_mother_id:
         flash("ERROR: litters both parents could not be found (one of them may have been deleted)!", "error")
@@ -196,10 +197,17 @@ def check_litter(form):
     mother_owner_id = dog.get_owner_id(litter_mother_id)
 
     owner_id = session["owner_id"]
-    if owner_id == father_owner_id and owner_id == mother_owner_id:
-        return True
-    flash("ERROR: you are not the owner of the litter!", "error")
-    return False
+    if owner_id != father_owner_id or owner_id != mother_owner_id:
+        flash("ERROR: you are not the owner of the litter!", "error")
+        return False
+
+    litter_date_of_birth = litter_data["date_of_birth"]
+    dog_date_of_birth = form["date_of_birth"]
+    if litter_date_of_birth != dog_date_of_birth:
+        flash(f"ERROR: dogs date of birth ({dog_date_of_birth}) \
+                      does not match the litters date of birth ({litter_date_of_birth})!", "error")
+        return False
+    return True
 
 def check_test(score):
     try:
