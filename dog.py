@@ -92,6 +92,11 @@ def get_dog_id_by_comment(comment_id):
     result = db.query(sql, [comment_id])
     return result[0][0] if result else None
 
+def get_participated_shows(dog_id):
+    sql = "SELECT show_id FROM Show_participants WHERE dog_id = ?"
+    result = db.query(sql, [dog_id])
+    return result[0] if result else None
+
 def get_show_name(show_id):
     sql = "SELECT name FROM Dog_shows WHERE id = ?"
     result = db.query(sql, [show_id])

@@ -14,7 +14,7 @@
   </P>
   {% else %}
   <p>
-    {{ dog.owner_name }} has not added an image for {{ dog.name }}.
+    <a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a> has not added an image for {{ dog.name }}.
   </P>
   {% endif %}
 

@@ -47,6 +47,8 @@ def check_dog_form(form, edit=False):
         return False
     if not check_dog_optional_fields(form):
         return False
+    if not check_dog_shows(form):
+        return False
     return True
 
 def check_dog_required_fields(form):
@@ -140,7 +142,7 @@ def check_sex(form):
 def check_dog_optional_fields(form):
     if form["image"] and not check_image(form):
         return False
-    if form["date_of_death"] and not check_death_date(form["date_of_death"], form["date_of_birth"]):
+    if form["date_of_death"] and not check_death_date(form):
         return False
     if form["litter_id"] and not check_litter(form):
             return False
@@ -154,6 +156,36 @@ def check_dog_optional_fields(form):
         return False
     return True
 
+def check_dog_shows(form):
+    shows = dog.get_participated_shows(form["dog_id"])
+    if shows:
+        date_of_birth = form["date_of_birth"]
+        year, month, day = date_of_birth.split("-")
+        date_of_birth= date(int(year), int(month), int(day))
+
+        date_of_death = form["date_of_death"]
+        if date_of_death:
+            year, month, day = date_of_death.split("-")
+            date_of_death= date(int(year), int(month), int(day))
+
+        for show_id in shows:
+            show_info = dog_show.get_dog_show(show_id)
+            if not show_info:
+                abort(404, "ERROR: dog show not found")
+
+            show_date = show_info["date"]
+            year, month, day = show_date.split("-")
+            show_date= date(int(year), int(month), int(day))
+
+            if date_of_birth > show_date:
+                flash("ERROR: date of birth is not possible with the participated shows!", "error")
+                return False
+
+            if date_of_death and date_of_death < show_date:
+                flash("ERROR: date of death is not possible with the participated shows!", "error")
+                return False
+    return True
+
 def check_image(form):
     if not form["image"].filename.lower().endswith(('.jpg', '.jpeg')):
         flash("ERROR: only .jpg and .jpeg images are allowed!", "error")
@@ -164,7 +196,9 @@ def check_image(form):
         return False
     return True
 
-def check_death_date(death_date_str, birth_date_str):
+def check_death_date(form):
+    death_date_str = form["date_of_death"]
+    birth_date_str = form["date_of_birth"]
     if not check_date(death_date_str) or not check_date(birth_date_str):
         return False
     death_year, death_month, death_day = map(int, death_date_str.split("-"))
@@ -343,7 +377,7 @@ def get_dog_show_form(request):
 def check_dog_show_form(form, remove=False):
     if not check_dog_show_dog(form):
         return False
-    if not check_show_exists(form["show_id"]):
+    if not check_show_dates(form):
         return False
     if remove:
         if not dog_show.is_participant(form["show_id"], form["dog_id"]):
@@ -351,8 +385,7 @@ def check_dog_show_form(form, remove=False):
             return False
     else:
         if not check_dog_show_championship_title(form) or \
-            not check_dog_aliveness(form) or \
-            not check_dog_is_participant(form):
+            not check_dog_participation(form):
             return False
     return True
 
@@ -371,19 +404,54 @@ def check_dog_show_dog(form):
         return False
     return True
 
-def check_show_exists(show_id):
-    show_info = dog_show.get_dog_show(show_id)
+def check_show_dates(form):
+    show_info = dog_show.get_dog_show(form["show_id"])
     if not show_info:
         abort(404, "ERROR: dog show not found")
-    return True
 
-def check_dog_aliveness(form):
-    if dog.is_dead(form["dog_id"]):
-        flash("ERROR: cannot add dead dog to the show!", "error")
+    dog_info= dog.get_dog(form["dog_id"])
+    if not dog_info:
+        flash("ERROR: dog could not be found!", "error")
+        return False
+
+    if dog_info["date_of_death"]:
+        if not check_dog_death(dog_info, show_info):
+            return False
+    elif not check_dog_birth(dog_info, show_info):
         return False
     return True
 
-def check_dog_is_participant(form):
+def check_dog_death(dog_info, show_info):
+    show_date = show_info["date"]
+    date_of_death = dog_info["date_of_death"]
+
+    year, month, day = show_date.split("-")
+    show_date= date(int(year), int(month), int(day))
+
+    year, month, day = date_of_death.split("-")
+    date_of_death= date(int(year), int(month), int(day))
+
+    if date_of_death < show_date:
+        flash("ERROR: dog died before show!", "error")
+        return False
+    return True
+
+def check_dog_birth(dog_info, show_info):
+    show_date = show_info["date"]
+    date_of_birth = dog_info["date_of_birth"]
+
+    year, month, day = show_date.split("-")
+    show_date= date(int(year), int(month), int(day))
+
+    year, month, day = date_of_birth.split("-")
+    date_of_birth= date(int(year), int(month), int(day))
+
+    if date_of_birth > show_date:
+        flash("ERROR: dog was born after show!", "error")
+        return False
+    return True
+
+def check_dog_participation(form):
     if dog_show.is_participant(form["show_id"], form["dog_id"]):
         flash("ERROR: dog is already registered for this show!", "error")
         return False
