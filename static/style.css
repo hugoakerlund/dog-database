@@ -1,0 +1,231 @@
+body {
+  background: #1b1b1b;
+  color: gold;
+  margin: auto;
+  font-family: "Garamond", Georgia, serif, 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji';
+}
+
+a {
+  color: #33bbff;
+  text-decoration: none;
+}
+
+a:hover {
+  color: goldenrod;
+}
+
+td,th {
+  padding: .5em;
+  max-width: 500px;
+  border: solid gray 1px;
+  border-collapse: collapse;
+}
+
+h2 {
+  color: chocolate;
+}
+
+h3 {
+  color: tomato;
+}
+
+.header {
+  text-align: center;
+  padding-top: 7pt;
+  color: gold;
+}
+
+.nav {
+  text-align: center;
+  padding: 1pt;
+}
+
+.content {
+  text-align: center;
+  padding: 15pt;
+  color: gold;
+}
+
+.rounded {
+  border-radius: 10%;
+}
+
+.error {
+  text-align: center;
+  color: red;
+}
+
+.info {
+  margin-bottom: 40pt;
+}
+
+.litter_dogs {
+  margin: 40pt;
+}
+
+.success {
+  text-align: center;
+  color: green;
+}
+
+.table {
+  margin: auto;
+  border: dashed brown 3px;
+}
+
+.button {
+  color: chocolate;
+  background: #1b1b1b;
+  border: 1px solid chocolate;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:hover {
+  filter: brightness(2);
+}
+
+.form-table {
+  max-width: 860px;
+  margin: 18px auto;
+  padding: 18px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  border-collapse: collapse;
+}
+
+.form-table td {
+  vertical-align: middle;
+  padding: 10px 12px;
+}
+
+.form-table td.label {
+  width: 35%;
+  text-align: right;
+  padding-right: 24px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.form-table td.control {
+  width: 65%;
+  text-align: left;
+}
+
+.form-table .input,
+.form-table .select,
+.form-table .date-input,
+.form-table .number-input,
+.form-table .file-input {
+  width: 100%;
+  max-width: 420px;
+  padding: 8px 10px;
+  border: 1px solid chocolate;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  background: #1b1b1b;
+  color: gold;
+}
+
+.form-table .radio-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.form-table .radio-group input[type="radio"] {
+  accent-color: chocolate;
+}
+
+.form-button {
+  color: chocolate;
+  background: #1b1b1b;
+  border: 1px solid chocolate;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.comments {
+  max-width: 760px;
+  margin: auto;
+  color: gold;
+}
+
+.comment-form {
+  border: 1px solid tomato;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.comment-form h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.15rem;
+}
+
+.comment-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.comment-form textarea {
+  width: 90%;
+  min-height: 120px;
+  padding: 10px;
+  border: 1px solid grey;
+  border-radius: 6px;
+  resize: vertical;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  background: #1b1b1b;
+  color: gold;
+}
+
+.comments-list {
+  margin-top: 18px;
+  display: grid;
+  gap: 12px;
+}
+
+.comment-card {
+  border: 1px solid grey;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.comment-meta {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.comment-content {
+  background: #1b1b1b;
+  white-space: pre-wrap;
+  color: gold;
+  line-height: 1;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.remove-form {
+  display: inline;
+  margin: 0;
+}
+
+.small-muted {
+  font-size: 0.85rem;
+  color: #6b7280;
+}

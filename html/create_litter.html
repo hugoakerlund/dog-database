@@ -7,52 +7,70 @@
 <h2>Add litter</h2>
 
 <form action="/create_litter" method="post">
-    <p>
-        Name:
-        <input type="text" name="name" maxlength=20 required
-            value="{{ filled.name }}"
+
+  <table class="form-table">
+
+    <tr>
+      <td class="label"><label for="name">Name</label></td>
+      <td class="control">
+        <input id="name" class="input" type="text" name="name" maxlength=20 required
+          value="{{ filled.name }}"
         />
-    </p>
-    <p>
-        <label for="father">Father:</label>
-        <select name="father_id" id="father">
-            <option value="">None</option>
-            {% for dog in male_dogs %}
-            {% if filled %}
-            <option value="{{ dog.id }}"
-                {% if dog.id|string == filled.father_id|string %}selected{% endif %}>
-                {{ dog.name }} ({{ dog.registration_number }})
-            </option>
-            {% else %}
-            <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.registration_number }})</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </p>
-    <p>
-        <label for="mother">Mother:</label>
-        <select name="mother_id" id="mother">
-            <option value="">None</option>
-            {% for dog in female_dogs %}
-            {% if filled %}
-            <option value="{{ dog.id }}"
-                {% if dog.id|string == filled.mother_id|string %}selected{% endif %}>
-                {{ dog.name }} ({{ dog.registration_number }})
-            </option>
-            {% else %}
-            <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.registration_number }})</option>
-            {% endif %}
-            {% endfor %}
-        </select>
-    </p>
-    <p>
-        Date of birth:
-        <input type="date" name="date_of_birth" required
-            value="{{ filled.date_of_birth }}"
-        />
-    </p>
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Save" />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="father">Father</label></td>
+      <td class="control">
+      <select id="father" class="select" name="father_id">
+        <option value="">None</option>
+        {% for dog in male_dogs %}
+        {% if filled %}
+        <option value="{{ dog.id }}"
+          {% if dog.id|string == filled.father_id|string %}selected{% endif %}>
+          {{ dog.name }} ({{ dog.registration_number }})
+        </option>
+        {% else %}
+        <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+        {% endif %}
+        {% endfor %}
+      </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="mother">Mother</label></td>
+      <td class="control">
+      <select id="mother" class="select" name="mother_id">
+        <option value="">None</option>
+        {% for dog in female_dogs %}
+        {% if filled %}
+        <option value="{{ dog.id }}"
+          {% if dog.id|string == filled.father_id|string %}selected{% endif %}>
+          {{ dog.name }} ({{ dog.registration_number }})
+        </option>
+        {% else %}
+        <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+        {% endif %}
+        {% endfor %}
+      </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="date_of_birth">Date of birth</label></td>
+      <td class="control">
+      <input id="date_of_birth" class="date-input" type="date" name="date_of_birth" required
+        value="{{ filled.date_of_birth }}"
+      />
+      </td>
+    </tr>
+
+  </table>
+
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" class="button" value="Save" />
+
 </form>
 
 {% endblock %}

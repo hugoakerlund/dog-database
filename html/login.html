@@ -7,15 +7,26 @@
 <h2>Login</h2>
 
 <form action="/login" method="post">
-    <p>
-        Name: <br />
-        <input type="text" name="name" maxlength=20 required />
-    </p>
-    <p>
-        Password: <br />
-        <input type="password" name="password" maxlength=35 required />
-    </p>
-    <input type="submit" value="Login" />
+
+  <table class="form-table">
+
+    <tr>
+      <td class="label"><label for="name">Name</label></td>
+      <td class="control">
+        <input id="name" class="input" type="text" name="name" maxlength=20 required />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="password">Password</label></td>
+      <td class="control">
+        <input id="password" class="input" type="password" name="password" maxlength=35 required />
+      </td>
+    </tr>
+
+  </table>
+
+  <input type="submit" class="button" value="Login" />
 </form>
 
 {% endblock %}

@@ -6,100 +6,126 @@
 
 <h2>{{ show.name }}</h2>
 
-<p>
-    Name: {{ show.name }}
-</P>
-<p>
-    Date: {{ show.date }}
-</P>
-<p>
-    Winner:
-    {% if show.winner_id %}
-    <a href="/dog/{{ show.winner_id }}">{{ show.winner_registration_number }}</a>
-    {% else %}
-    No winner
-    {% endif %}
-</P>
+<div class="info">
 
-<p>
-    Participants:
-</P>
-<table>
+  <table class="table">
+
     <tr>
-        <th>Registration number</th>
-        <th>Name</th>
-        <th>Breed</th>
-        <th>Date of birth</th>
-        <th>Sex</th>
-        <th>Owner</th>
-        <th>Litter</th>
-        <th>Show result</th>
-        {% if session.get('owner_id')%}
-        <th></th>
+      <td>Name</td>
+      <td>{{ show.name }}</td>
+    </tr>
+
+    <tr>
+      <td>Date</td>
+      <td>{{ show.date }}</td>
+    </tr>
+
+    <tr>
+      <td>Winner</td>
+      <td>
+        {% if show.winner_id %}
+        <a href="/dog/{{ show.winner_id }}">{{ show.winner_registration_number }}</a>
+        {% else %}
+        No winner
         {% endif %}
+      </td>
     </tr>
 
-    {% for dog in dogs %}
-    <tr>
-        <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
-        <td>{{ dog.name }}</td>
-        <td>{{ dog.breed }}</td>
-        <td>{{ dog.date_of_birth }}</td>
-        <td>{{ dog.sex }}</td>
-        <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
-        <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{%
-            endif %}</td>
-        <td>{{ dog.show_result}}</td>
-        <td>
-            {% if session.get('owner_id') == dog.owner_id %}
-            <form method="post" action="/dog_show/{{ show.id }}/remove" style="margin:0">
-                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-                <input type="hidden" name="dog_id" value="{{ dog.id }}" />
-                <input type="hidden" name="show_id" value="{{ show.id }}" />
-                <input type="submit" value="Remove" />
-            </form>
-            {% endif %}
-        </td>
-    </tr>
-    {% endfor %}
+  </table>
+
+</div>
+
+<h2>
+  Participants
+</h2>
+
+<table class="table">
+
+  <tr>
+    <th>Registration number</th>
+    <th>Name</th>
+    <th>Breed</th>
+    <th>Date of birth</th>
+    <th>Sex</th>
+    <th>Owner</th>
+    <th>Litter</th>
+    <th>Show result</th>
+  </tr>
+
+  {% for dog in dogs %}
+  <tr>
+    <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
+    <td>{{ dog.name }}</td>
+    <td>{{ dog.breed }}</td>
+    <td>{{ dog.date_of_birth }}</td>
+    <td>{{ dog.sex }}</td>
+    <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
+    <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{%
+      endif %}</td>
+    <td>{{ dog.show_result}}</td>
+    {% if session.get('owner_id') == dog.owner_id %}
+    <td>
+      <form method="post" action="/dog_show/{{ show.id }}/remove" style="margin:0">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+        <input type="hidden" name="dog_id" value="{{ dog.id }}" />
+        <input type="hidden" name="show_id" value="{{ show.id }}" />
+        <input type="submit" class="form-button" value="Remove" />
+      </form>
+    </td>
+    {% endif %}
+  </tr>
+  {% endfor %}
 
 </table>
 
 {% if session.get('owner_id') %}
+
 <h3>Add your dog to this show</h3>
+
 {% if eligible_dogs %}
 <form method="post" action="/dog_show/{{ show.id }}/add">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <p>
-        <label>
-            Select one of your dogs:
-            <select name="dog_id" required>
-                {% for dog in eligible_dogs %}
-                <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.registration_number }})</option>
-                {% endfor %}
-            </select>
-        </label>
-    </p>
-    <p>
-        <label>
-            Select show result:
-            <select name="championship_title_id" id="championship_title">
-                {% for championship_title in championship_titles %}
-                <option value="{{ championship_title.id }}">{{ championship_title.title }}</option>
-                {% endfor %}
-            </select>
-        </label>
-    </p>
-    <p>
-        <input type="hidden" name="show_id" value="{{ show.id }}" />
-        <input type="submit" value="Add to show" />
-    </p>
+
+  <table class="form-table">
+
+    <tr>
+      <td class="label"><label for="dog">Select one of your dogs</label></td>
+      <td class="control">
+        <select id="dog" class="select" name="dog_id" required>
+          {% for dog in eligible_dogs %}
+          <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.registration_number }})</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="championship_title">Select show result</label></td>
+      <td class="control">
+        <select id="championship_title" class="select" name="championship_title_id" required>
+          {% for championship_title in championship_titles %}
+          <option value="{{ championship_title.id }}">{{ championship_title.title }}</option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+
+  </table>
+
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="hidden" name="show_id" value="{{ show.id }}" />
+  <input type="submit" class="button" value="Add to show" />
+
 </form>
+
 {% else %}
+
 <p>You don't have any dogs eligible for this show (either you have no dogs or all your dogs are already registered).</p>
+
 {% endif %}
 {% else %}
+
 <p><a href="/login">Log in</a> to add your dog to this show.</p>
+
 {% endif %}
 
 {% endblock %}

@@ -7,42 +7,55 @@
 <h2>Search</h2>
 
 <form action="/search" method="get">
-    <p>
-        <label for="query">Query</label>:
-        {% if query %}
-        <input type="text" id="query" name="query" value="{{ query }}" />
-        {% else %}
-        <input type="text" id="query" name="query" />
-        {% endif %}
-    </p>
-    <input type="submit" value="Search" />
+
+  <table class="form-table">
+
+    <tr>
+      <td class="label"><label for="query">Query</label></td>
+      <td class="control">
+        <input id="query" class="input" type="text" id="query" name="query"
+          {% if query %}
+          value="{{ query }}"
+          {% else %}
+          value=""
+          {% endif %}
+        />
+      </td>
+    </tr>
+
+  </table>
+
+  <input type="submit" class="button" value="Search" />
 </form>
 
 {% if query %}
 <h3>Results</h3>
-<table>
-    <tr>
-        <th>Registration number</th>
-        <th>Name</th>
-        <th>Breed</th>
-        <th>Date or birth</th>
-        <th>Sex</th>
-        <th>Owner</th>
-        <th>Litter</th>
-    </tr>
-    {% for dog in results %}
-    <tr>
-        <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
-        <td>{{ dog.name }}</td>
-        <td>{{ dog.breed }}</td>
-        <td>{{ dog.date_of_birth }}</td>
-        <td>{{ dog.sex }}</td>
-        <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
-        <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else
-            %}Unknown{%
-            endif %}</td>
-    </tr>
-    {% endfor %}
+<table class="table">
+
+  <tr>
+    <th>Registration number</th>
+    <th>Name</th>
+    <th>Breed</th>
+    <th>Date of birth</th>
+    <th>Sex</th>
+    <th>Owner</th>
+    <th>Litter</th>
+  </tr>
+
+  {% for dog in results %}
+  <tr>
+    <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
+    <td>{{ dog.name }}</td>
+    <td>{{ dog.breed }}</td>
+    <td>{{ dog.date_of_birth }}</td>
+    <td>{{ dog.sex }}</td>
+    <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
+    <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else
+      %}Unknown{%
+      endif %}</td>
+  </tr>
+  {% endfor %}
+
 </table>
 {% endif %}
 

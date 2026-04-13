@@ -7,12 +7,12 @@
 <h2>Remove account</h2>
 
 <form action="/remove_account" method="post">
-    <p>
-        Are you sure you want to remove your account from the database?
-    </p>
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" name="continue" value="Continue" />
-    <input type="submit" name="cancel" value="Cancel" />
+  <p>
+    Are you sure you want to remove your account from the database?
+  </p>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="submit" class="button" name="continue" value="Continue" />
+  <input type="submit" class="button" name="cancel" value="Cancel" />
 </form>
 
 {% endblock %}

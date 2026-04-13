@@ -6,81 +6,113 @@
 
 <h2>{{ litter.name }}</h2>
 
-<p>
-    Name: {{ litter.name }}
-</P>
-{% if litter.father_id %}
-<p>
-    Father: <a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number }}</a>
-</P>
-{% else %}
-Father of {{ litter.name }} has been removed from the database.
-{% endif %}
-{% if litter.mother_id %}
-<p>
-    Mother: <a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number }}</a>
-</P>
-{% else %}
-Mother of {{ litter.name }} has been removed from the database.
-{% endif %}
-<p>
-    Date of birth: {{ litter.date_of_birth }}
-</P>
-<p>
-    Owner: <a href="/owner/{{ litter.owner_id }}">{{ litter.owner_name }}</a>
-</P>
-{% if dogs %}
-<p>
-    There are {{ dogs | count }} dogs(s) in {{ litter.name }}:
-</P>
-<table>
+<div class="info">
+
+  <table class="table">
+
     <tr>
-        <th>Registration number</th>
-        <th>Name</th>
-        <th>Breed</th>
-        <th>Date of birth</th>
-        <th>Sex</th>
-        <th>Father</th>
-        <th>Mother</th>
-        <th>Owner</th>
-        <th>Litter</th>
+      <td>Name</td>
+      <td>{{ litter.name }}</td>
+    </tr>
+
+    <tr>
+      <td>Father</td>
+      <td>
+        {% if litter.father_id %}
+        <a href="/dog/{{ litter.father_id }}">{{ litter.father_registration_number }}</a>
+        {% else %}
+        Unknown
+        {% endif %}
+      </td>
+    </tr>
+
+    <tr>
+      <td>Mother</td>
+      <td>
+        {% if litter.mother_id %}
+        <a href="/dog/{{ litter.mother_id }}">{{ litter.mother_registration_number }}</a>
+        {% else %}
+        Unknown
+        {% endif %}
+      </td>
+    </tr>
+
+    <tr>
+      <td>Date of birth</td>
+      <td>{{ litter.date_of_birth }}</td>
+    </tr>
+
+    <tr>
+      <td>Owner</td>
+      <td>
+        <a href="/owner/{{ litter.owner_id }}">{{ litter.owner_name }}</a>
+      </td>
+    </tr>
+
+  </table>
+
+  {% if litter.owner_id == session.owner_id %}
+  <p>
+    <a href="/edit_litter/{{ litter.id }}">Edit litter</a> |
+    <a href="/remove_litter/{{ litter.id }}">Remove litter</a>
+  </p>
+  {% endif %}
+
+</div>
+
+<div class="litter_dogs">
+
+  {% if dogs %}
+  <p>
+    There are {{ dogs | count }} dogs(s) in {{ litter.name }}:
+  </P>
+
+  <table class="table">
+
+    <tr>
+      <th>Registration number</th>
+      <th>Name</th>
+      <th>Breed</th>
+      <th>Date of birth</th>
+      <th>Sex</th>
+      <th>Father</th>
+      <th>Mother</th>
+      <th>Owner</th>
+      <th>Litter</th>
     </tr>
 
     {% for dog in dogs %}
     <tr>
-        <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
-        <td>{{ dog.name }}</td>
-        <td>{{ dog.breed }}</td>
-        <td>{{ dog.date_of_birth }}</td>
-        <td>{{ dog.sex }}</td>
-        <td>
-            {% if dog.father_id %}
-            <a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number or "Unknown" }}</a>
-            {% else %}
-            Unknown
-            {% endif %}
-        </td>
-        <td>
-            {% if dog.mother_id %}
-            <a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number or "Unknown" }}</a>
-            {% else %}
-            Unknown
-            {% endif %}
-        </td>
-        <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
-        <td>{{ dog.litter_name or "Unknown" }}</td>
+      <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
+      <td>{{ dog.name }}</td>
+      <td>{{ dog.breed }}</td>
+      <td>{{ dog.date_of_birth }}</td>
+      <td>{{ dog.sex }}</td>
+      <td>
+        {% if dog.father_id %}
+        <a href="/dog/{{ dog.father_id }}">{{ dog.father_registration_number or "Unknown" }}</a>
+        {% else %}
+        Unknown
+        {% endif %}
+      </td>
+      <td>
+        {% if dog.mother_id %}
+        <a href="/dog/{{ dog.mother_id }}">{{ dog.mother_registration_number or "Unknown" }}</a>
+        {% else %}
+        Unknown
+        {% endif %}
+      </td>
+      <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
+      <td>{{ dog.litter_name or "Unknown" }}</td>
     </tr>
     {% endfor %}
 
-</table>
-{% else %}
-There are currently no dogs in this litter.
-{% endif %}
-{% if litter.owner_id == session.owner_id %}
-<p>
-    <a href="/edit_litter/{{ litter.id }}">Edit</a> |
-    <a href="/remove_litter/{{ litter.id }}">Remove</a>
-</p>
-{% endif %}
+  </table>
+
+  {% else %}
+  There are currently no dogs in this litter.
+  {% endif %}
+
+</div>
 
 {% endblock %}

@@ -1,3 +1,4 @@
+from flask import session
 import db
 import dog
 import litter
@@ -168,4 +169,4 @@ def update_owner(form):
         "UPDATE Owners SET name = ?, email = ?, password_hash = ? "
         "WHERE id = ?"
     )
-    db.execute(sql, [form["name"], form["email"], form["password_hash"], form["owner_id"]])
+    db.execute(sql, [form["name"], form["email"], form["password_hash"], session["owner_id"]])

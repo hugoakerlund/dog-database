@@ -7,28 +7,47 @@
 <h2>Register</h2>
 
 <form action="/register" method="post">
-    <p>
-        Name: <br />
-        <input type="text" name="name" maxlength=20 required
-            value="{{ filled.name }}"
+
+  <table class="form-table">
+
+    <tr>
+      <td class="label"><label for="name">Name</label></td>
+      <td class="control">
+        <input id="name" class="input" type="text" name="name" maxlength=20 required
+          value="{{ filled.name }}"
         />
-    </p>
-    <p>
-        Email: <br />
-        <input type="text" name="email" maxlength=50 required
-            pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Format: username@example.com"
-            value="{{ filled.email }}"
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="email">Email</label></td>
+      <td class="control">
+        <input id="email" class="input" type="text" name="email" maxlength=50 required
+          pattern="[^@\s]+@[^@\s]+\.[^@\s]+" title="Format: username@example.com"
+          value="{{ filled.email }}"
         />
-    </p>
-    <p>
-        Password: <br />
-        <input type="password" name="password1" maxlength=35 required />
-    </p>
-    <p>
-        Password again: <br />
-        <input type="password" name="password2" maxlength=35 required />
-    </p>
-    <input type="submit" value="Create account" maxlength=35 required />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="password1">Password</label></td>
+      <td class="control">
+        <input id="password1" class="input" type="password" name="password1" maxlength=35 required
+        />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="password2">Password again</label></td>
+      <td class="control">
+        <input id="password2" class="input" type="password" name="password2" maxlength=35 required
+        />
+      </td>
+    </tr>
+
+  </table>
+
+  <input type="submit" class="button" value="Create account" maxlength=35 required />
 </form>
 
 {% endblock %}

@@ -7,97 +7,137 @@
 <h2>Add dog</h2>
 
 <form action="/create_dog" method="post" enctype="multipart/form-data">
-    <p>
-        Registration number:
-        <input type="text" name="registration_number" placeholder="(FI12345/67)" maxlength=10 required
-            pattern="^FI\d{5}/\d{2}$" title="Format: FI12345/12 (FI, five digits, slash, two digits)"
-            value="{{ filled.registration_number}}"
-        />
-    </p>
-    <p>
-        Add image:
-        <input type="file" name="image" accept=".jpg,.jpeg,.JPG,.JPEG" />
-    </p>
-    <p>
-        Name:
-        <input type="text" name="name" maxlength=20 required
-            value="{{ filled.name }}"
-        />
-    </p>
-    <p>
-        <label for="color">Color:</label>
-        <select name="color" id="color">
-            {% set current = filled.color %}
-            {% for color in colors %}
-            <option value="{{ color.name }}" {% if color.name == current %}selected{% endif %}>
-                {{ color.name }}
-            </option>
-            {% endfor %}
-        </select>
-    </p>
-    <p>
-        <label for="breed">Breed:</label>
-        <select name="breed" id="breed">
-            {% set current = filled.breed %}
-            {% for breed in dog_breeds %}
-            <option value="{{ breed.name }}" {% if breed.name == current %}selected{% endif %}>
-                {{ breed.name }}
-                {% endfor %}
-        </select>
-    </p>
-    <p>
-        Date or birth:
-        <input type="date" name="date_of_birth" required
-            value="{{ filled.date_of_birth }}"
-        />
-    </p>
-    <p>
-        Date of death:
-        <input type="date" name="date_of_death"
-            value="{{ filled.date_of_death }}"
-        />
-    </p>
-    <p>
-        Sex:
-        <input type="radio" id="sexChoice1" name="sex" value="Male"
-            {% if filled.sex == 'Male' %}checked{% endif %} />
-        <label for="sexChoice1">Male</label>
+  <table class="form-table">
 
-        <input type="radio" id="sexChoice2" name="sex" value="Female"
-            {% if filled.sex == 'Female' %}checked{% endif %} />
-        <label for="sexChoice2">Female</label>
-    </p>
-    <p>
-        <label for="litter">Litter:</label>
-        <select name="litter_id" id="litter">
-            <option value="">None</option>
-            {% for litter in litters %}
-            <option value="{{ litter.id }}"
-                {% if litter.id|string == filled.litter_id|string %}selected{% endif %}>{{ litter.name }}
-            </option>
+    <tr>
+      <td class="label"><label for="registration_number">Registration number</label></td>
+      <td class="control">
+        <input id="registration_number" class="input" type="text" name="registration_number" placeholder="(FI12345/67)" maxlength=10 required
+          pattern="^FI\d{5}/\d{2}$" title="Format: FI12345/12 (FI, five digits, slash, two digits)"
+          value="{{ filled.registration_number}}"
+        />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="image">Add image</label></td>
+      <td class="control">
+        <input id="image" class="file-input" type="file" name="image" accept=".jpg,.jpeg,.JPG,.JPEG" />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="name">Name</label></td>
+      <td class="control">
+        <input id="name" class="input" type="text" name="name" maxlength="20" required
+          value="{{ filled.name }}"
+        />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="color">Color</label></td>
+      <td class="control">
+        <select id="color" class="select" name="color">
+          {% set current = filled.color %}
+          {% for color in colors %}
+          <option value="{{ color.name }}" {% if color.name == current %}selected{% endif %}>
+            {{ color.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="breed">Breed</label></td>
+      <td class="control">
+        <select id="breed" class="select" name="breed">
+          {% set current = filled.breed %}
+          {% for breed in dog_breeds %}
+          <option value="{{ breed.name }}" {% if breed.name == current %}selected{% endif %}>
+            {{ breed.name }}
             {% endfor %}
         </select>
-    </p>
-    <p>
-        Best test:
-        <input type="number" name="best_test"  min=1 max=5 size=6
-            placeholder="1-5" value="{{ filled.best_test }}"
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="date_of_birth">Date of birth</label></td>
+      <td class="control">
+        <input id="date_of_birth" class="date-input" type="date" name="date_of_birth" required
+          value="{{ filled.date_of_birth }}"
         />
-    </p>
-    <p>
-        Use index:
-        <input type="number" name="use_index" min=1 max=100 size=6
-            placeholder="1-100" value="{{ filled.use_index }}"
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="date_of_death">Date of death</label></td>
+      <td class="control">
+        <input id="date_of_death" class="date-input" type="date" name="date_of_death"
+          value="{{ filled.date_of_death }}"
         />
-    </p>
-    <p>
-        Hip index:
-        <input type="number" name="hip_index" min=1 max=100 size=6
-            placeholder="1-100" value="{{ filled.hip_index }}"
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label">Sex</td>
+      <td class="control">
+        <div class="radio-group" role="radiogroup" aria-label="Sex">
+          <label><input type="radio" id="sexChoice1" name="sex" value="Male"
+            {% if filled.sex == 'Male' %}checked{% endif %} /> Male</label>
+          <label><input type="radio" id="sexChoice2" name="sex" value="Female"
+            {% if filled.sex == 'Female' %}checked{% endif %} /> Female</label>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="litter">Litter</label></td>
+      <td class="control">
+        <select id="litter" class="select" name="litter_id">
+          <option value="">None</option>
+          {% for litter in litters %}
+          <option value="{{ litter.id }}"
+            {% if litter.id|string == filled.litter_id|string %}selected{% endif %}>{{ litter.name }}
+          </option>
+          {% endfor %}
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="best_test">Best test</label></td>
+      <td class="control">
+        <input id="best_test" class="number-input" type="number" name="best_test" min="1" max="5"
+          placeholder="1-5" value="{{ filled.best_test }}"
         />
-    </p>
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-    <input type="submit" value="Save" />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="use_index">Use index</label></td>
+      <td class="control">
+        <input id="use_index" class="number-input" type="number" name="use_index" min="1" max="100"
+          placeholder="1-100" value="{{ filled.use_index }}"
+        />
+      </td>
+    </tr>
+
+    <tr>
+      <td class="label"><label for="hip_index">Hip index</label></td>
+      <td class="control">
+        <input id="hip_index" class="number-input" type="number" name="hip_index" min="1" max="100"
+          placeholder="1-100" value="{{ filled.hip_index }}"
+        />
+      </td>
+    </tr>
+
+  </table>
+
+  <input type="submit" class="button" value="Save" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+
 </form>
 
 {% endblock %}
