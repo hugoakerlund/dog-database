@@ -1,5 +1,11 @@
 import sqlite3
-from flask import g
+import logging
+from flask import g, abort
+
+logging.basicConfig(filename='database.log', level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
+logger=logging.getLogger(__name__)
+
 
 def get_connection():
     con = sqlite3.connect("database.db")
@@ -8,11 +14,16 @@ def get_connection():
     return con
 
 def execute(sql, params=[]):
-    con = get_connection()
-    result = con.execute(sql, params)
-    con.commit()
-    g.last_insert_id = result.lastrowid
-    con.close()
+    try:
+        con = get_connection()
+        result = con.execute(sql, params)
+        con.commit()
+        g.last_insert_id = result.lastrowid
+        con.close()
+
+    except sqlite3.IntegrityError as e:
+        logger.error(e)
+        abort(500, "ERROR: Database error")
 
 def last_insert_id():
     return g.last_insert_id

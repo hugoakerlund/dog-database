@@ -1,4 +1,3 @@
-import sqlite3
 import math
 import os
 import secrets
@@ -52,6 +51,7 @@ def show_dog(dog_id):
     comments = dog.get_comments(dog_id)
     if not dog_info:
         abort(404, "ERROR: dog not found")
+
     return render_template("html/dog.html", dog=dog_info, comments=comments,
                            championship_titles=championship_titles, session=session)
 
@@ -71,10 +71,8 @@ def create_dog_post():
     form = input_validator.get_dog_form(request)
     if not input_validator.check_dog_form(form):
         return create_dog_get(form)
-    try:
-        dog.insert_dog(form)
-    except sqlite3.IntegrityError as e:
-        return f"ERROR: Database error: {e} (possibly duplicate name or invalid foreign key)"
+
+    dog.insert_dog(form)
     flash("Dog created successfully!", "success")
     return redirect("/my_account")
 
@@ -85,10 +83,8 @@ def create_comment():
     form = input_validator.get_comment_form(request)
     if not input_validator.check_comment_form(form):
         return redirect(f"/dog/{form["dog_id"]}")
-    try:
-        dog.insert_comment(form)
-    except sqlite3.IntegrityError as e:
-        return f"ERROR: Database error: {e} (possibly duplicate name or invalid foreign key)"
+
+    dog.insert_comment(form)
     flash("Comment added successfully!", "success")
     return redirect(f"/dog/{form["dog_id"]}")
 
@@ -101,6 +97,7 @@ def remove_comment(comment_id):
         abort(404, "dog does not exist")
     else:
         dog.remove_comment(comment_id)
+
     flash("Comment removed successfully!", "success")
     return redirect(f"/dog/{dog_id}")
 
@@ -110,6 +107,7 @@ def edit_comment_get(comment_id, filled={}):
     comment = dog.get_comment(comment_id)
     if not comment:
         abort(404, "ERROR: comment not found")
+
     return render_template("html/edit_comment.html", filled=filled, comment=comment)
 
 @app.route("/edit_comment/<int:comment_id>", methods=["POST"])
@@ -121,10 +119,8 @@ def edit_comment_post(comment_id):
         form = input_validator.get_comment_form(request, True)
         if not input_validator.check_comment_form(form, edit=True):
             return edit_comment_get(comment_id, form)
-        try:
-            dog.update_comment(form)
-        except sqlite3.IntegrityError as e:
-            return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+
+        dog.update_comment(form)
         flash("Comment updated successfully!", "success")
     return redirect(f"/dog/{form["dog_id"]}")
 
@@ -149,10 +145,8 @@ def edit_dog_post(dog_id):
     form = input_validator.get_dog_form(request)
     if not input_validator.check_dog_form(form, edit=True):
         return edit_dog_get(dog_id, form)
-    try:
-        dog.update_dog(dog_id, form)
-    except sqlite3.IntegrityError as e:
-        return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+
+    dog.update_dog(dog_id, form)
     flash("Dog updated successfully!", "success")
     return redirect("/my_account")
 
@@ -189,10 +183,8 @@ def create_litter_post():
     form = input_validator.get_litter_form(request)
     if not input_validator.check_litter_form(form):
         return create_litter_get(form)
-    try:
-        litter.insert_litter(form)
-    except sqlite3.IntegrityError as e:
-        return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+
+    litter.insert_litter(form)
     flash("Litter created successfully!", "success")
     return redirect("/my_account")
 
@@ -216,10 +208,8 @@ def edit_litter_post(litter_id):
     form = input_validator.get_litter_form(request)
     if not input_validator.check_litter_form(form, edit=True):
         return edit_litter_get(litter_id, form)
-    try:
-        litter.update_litter(litter_id, form)
-    except sqlite3.IntegrityError as e:
-        return f"ERROR: Database error: {e} (possibly invalid foreign key)"
+
+    litter.update_litter(litter_id, form)
     flash("Litter edited successfully!", "success")
     return redirect("/my_account")
 
@@ -271,10 +261,8 @@ def register_post():
     form = input_validator.get_account_form(request)
     if not input_validator.check_account_form(form):
         return register_get(form)
-    try:
-        owner.insert_owner(form)
-    except sqlite3.IntegrityError as e:
-        return f"ERROR: database error {e} (possibly duplicate name or email)"
+
+    owner.insert_owner(form)
     set_session(owner.get_id_with_name(form["name"]), form["name"])
     flash("Account created successfully!", "success")
     return redirect("/")
@@ -356,10 +344,8 @@ def edit_account_post():
     form = input_validator.get_account_form(request)
     if not input_validator.check_account_form(form, True):
         return edit_account_get(form)
-    try:
-        owner.update_owner(form)
-    except sqlite3.IntegrityError as e:
-        return f"ERROR: database error {e} (possibly duplicate name or email)"
+
+    owner.update_owner(form)
     set_session(owner.get_id_with_name(form["name"]), form["name"])
     flash("Account updated successfully!")
     return redirect("/my_account")
@@ -436,11 +422,8 @@ def add_dog_to_show(show_id):
     if not input_validator.check_dog_show_form(form):
         return redirect(f"/dog_show/{show_id}")
 
-    try:
-        dog_show.add_participant(show_id, form["dog_id"]
+    dog_show.add_participant(show_id, form["dog_id"]
                                  , form["championship_title_id"])
-    except sqlite3.IntegrityError as e:
-        flash(f"ERROR: Database error: {e}", "error")
     flash("Dog added to show successfully!", "success")
     return redirect(f"/dog_show/{show_id}")
 
@@ -453,10 +436,7 @@ def remove_dog_from_show(show_id):
     if not input_validator.check_dog_show_form(form, True):
         return redirect(f"/dog_show/{show_id}")
 
-    try:
-        dog_show.remove_participant(form["show_id"], form["dog_id"])
-    except sqlite3.IntegrityError as e:
-        flash(f"ERROR: Database error: {e}", "error")
+    dog_show.remove_participant(form["show_id"], form["dog_id"])
     flash("Dog removed from show successfully!", "success")
     return redirect(f"/dog_show/{show_id}")
 
