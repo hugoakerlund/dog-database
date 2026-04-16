@@ -146,7 +146,7 @@
   <div class="comments-list">
 
     {% for comment in comments %}
-    <div class="comment-card">
+    <div class="comment-card" id="{{ comment.id }}">
       <div class="comment-meta">
         <span class="small-muted">Date: {{ comment.sent_at }}</span>
         <span>•</span>
