@@ -18,7 +18,7 @@ def get_show_participants(show_id):
         "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
         "l.name AS litter_name, "
         "o.name AS owner_name, "
-        "c.title as show_result "
+        "c.title AS show_result "
         "FROM Dog_shows s "
         "JOIN Show_participants pa ON s.id = pa.show_id "
         "JOIN Dogs d ON pa.dog_id = d.id "
@@ -51,9 +51,10 @@ def get_dog_show_count():
 
 def get_dog_participated_shows(dog_id):
     sql = (
-        "SELECT s.id, s.name, s.date "
+        "SELECT s.id, s.name, s.date, c.title AS show_result "
         "FROM Dog_shows s "
         "JOIN Show_participants sp ON s.id = sp.show_id "
+        "LEFT JOIN Championship_titles c on sp.result = c.id "
         "WHERE sp.dog_id = ? ORDER BY s.date DESC"
     )
     return db.query(sql, [dog_id])

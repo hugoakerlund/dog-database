@@ -47,13 +47,13 @@ def search():
 @app.route("/dog/<int:dog_id>")
 def show_dog(dog_id):
     dog_info  = dog.get_dog(dog_id)
-    championship_titles = dog.get_championship_titles(dog_id)
+    participated_shows = dog_show.get_dog_participated_shows(dog_id)
     comments = dog.get_comments(dog_id)
     if not dog_info:
         abort(404, "ERROR: dog not found")
 
     return render_template("html/dog.html", dog=dog_info, comments=comments,
-                           championship_titles=championship_titles, session=session)
+                           participated_shows=participated_shows, session=session)
 
 @app.route("/create_dog", methods=["GET"])
 def create_dog_get(filled={}):

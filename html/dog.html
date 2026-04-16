@@ -73,17 +73,6 @@
     </tr>
 
     <tr>
-      <td>Championship titles</td>
-      <td>
-        {% if championship_titles %}
-        {{ championship_titles | map(attribute='name') | join(', ') }}
-        {% else %}
-        None
-        {% endif %}
-      </td>
-    </tr>
-
-    <tr>
       <td>Best test</td>
       <td>{{ dog.best_test }}</td>
     </tr>
@@ -111,12 +100,34 @@
 
   </table>
 
+</div>
+
+<div class="info">
+
+<h3>Dog shows</h3>
+  <table class="table">
+
+    <tr>
+      <th>Show name</th>
+      <th>Championship title</th>
+    </tr>
+
+    {% for show in participated_shows %}
+    <tr>
+      <th><a href="/dog_show/{{ show.id }}">{{ show.name }}</a></th>
+      <th>{{ show.show_result }}</th>
+    </tr>
+    {% endfor %}
+
+  </table>
+
   {% if dog.owner_id == session.owner_id %}
   <p>
     <a href="/edit_dog/{{ dog.id }}">Edit dog</a> |
     <a href="/remove_dog/{{ dog.id }}">Remove dog</a>
   </p>
   {% endif %}
+
 </div>
 
 <div class="comments">
