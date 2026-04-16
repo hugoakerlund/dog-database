@@ -53,8 +53,8 @@
 
   {% if litter.owner_id == session.owner_id %}
   <p>
-    <a href="/edit_litter/{{ litter.id }}">Edit litter</a> |
-    <a href="/remove_litter/{{ litter.id }}">Remove litter</a>
+    <a href="/litter/{{ litter.id }}/edit">Edit litter</a> |
+    <a href="/litter/{{ litter.id }}/remove">Remove litter</a>
   </p>
   {% endif %}
 

@@ -104,6 +104,8 @@
 
 <div class="info">
 
+{% if participated_shows %}
+
 <h3>Dog shows</h3>
   <table class="table">
 
@@ -121,10 +123,12 @@
 
   </table>
 
+{% endif %}
+
   {% if dog.owner_id == session.owner_id %}
   <p>
-    <a href="/edit_dog/{{ dog.id }}">Edit dog</a> |
-    <a href="/remove_dog/{{ dog.id }}">Remove dog</a>
+    <a href="/dog/{{ dog.id }}/edit">Edit dog</a> |
+    <a href="/dog/{{ dog.id }}/remove">Remove dog</a>
   </p>
   {% endif %}
 
@@ -133,7 +137,7 @@
 <div class="comments">
 
   {% if session.owner_id %}
-  <form class="comment-form" action="/create_comment" method="post">
+  <form class="comment-form" action="/comment/new" method="post">
     <h3>Add a comment</h3>
     <p>
       <label for="content">Comment</label>
@@ -177,9 +181,9 @@
       {% if comment.owner_id == session.owner_id %}
       <div class="comment-actions">
 
-        <a class="button" href="/edit_comment/{{ comment.id }}">Edit</a>
+        <a class="button" href="/comment/{{ comment.id }}/edit">Edit</a>
 
-        <form class="remove-form" method="post" action="/remove_comment/{{ comment.id }}">
+        <form class="remove-form" method="post" action="/comment/{{ comment.id }}/remove">
           <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
           <input type="hidden" name="dog_id" value="{{ dog.id }}" />
           <input class="button" type="submit" value="Remove" />

@@ -21,9 +21,9 @@
           <a href="/owners">Owners</a> |
           <a href="/dog_shows">Dog Shows</a> |
           {% if session.get('name') %}
-          <a href="/create_dog">Add dog</a> |
-          <a href="/create_litter">Add litter</a> |
-          <a href="/my_account">My account</a> |
+          <a href="/dog/new">Add dog</a> |
+          <a href="/litter/new">Add litter</a> |
+          <a href="/owner/{{ session.owner_id }}">My account</a> |
           <a href="/logout">Logout</a>
           {% else %}
           <a href="/login">Login</a> |

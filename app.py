@@ -30,8 +30,10 @@ def index(page=1):
     dogs = dog.get_dogs(page, page_size)
     if not dogs:
         abort(404, "ERROR: no dogs found")
+
     if page < 1:
         return redirect("/1")
+
     if page > page_count:
         return redirect("/" + str(page_count))
 
@@ -47,15 +49,15 @@ def search():
 @app.route("/dog/<int:dog_id>")
 def show_dog(dog_id):
     dog_info  = dog.get_dog(dog_id)
-    participated_shows = dog_show.get_dog_participated_shows(dog_id)
-    comments = dog.get_comments(dog_id)
     if not dog_info:
         abort(404, "ERROR: dog not found")
 
+    participated_shows = dog_show.get_dog_participated_shows(dog_id)
+    comments = dog.get_comments(dog_id)
     return render_template("html/dog.html", dog=dog_info, comments=comments,
                            participated_shows=participated_shows, session=session)
 
-@app.route("/create_dog", methods=["GET"])
+@app.route("/dog/new", methods=["GET"])
 def create_dog_get(filled={}):
     colors = dog.get_colors()
     dog_breeds = dog.get_breeds()
@@ -64,7 +66,7 @@ def create_dog_get(filled={}):
     return render_template("html/create_dog.html", filled=filled, colors=colors,
                            dog_breeds=dog_breeds, litters=my_litters)
 
-@app.route("/create_dog", methods=["POST"])
+@app.route("/dog/new", methods=["POST"])
 def create_dog_post():
     require_login()
     check_csrf()
@@ -74,9 +76,9 @@ def create_dog_post():
 
     dog.insert_dog(form)
     flash("Dog created successfully!", "success")
-    return redirect("/my_account")
+    return redirect(f"/owner/{session["owner_id"]}")
 
-@app.route("/create_comment/", methods=["POST"])
+@app.route("/comment/new", methods=["POST"])
 def create_comment():
     require_login()
     check_csrf()
@@ -88,30 +90,41 @@ def create_comment():
     flash("Comment added successfully!", "success")
     return redirect(f"/dog/{form["dog_id"]}")
 
-@app.route("/remove_comment/<int:comment_id>", methods=["POST"])
+@app.route("/comment/<int:comment_id>/remove", methods=["POST"])
 def remove_comment(comment_id):
     require_login()
+    if session["owner_id"] != owner.get_comment_owner_id(comment_id):
+        abort(401, "ERROR: Unauthorized")
+
     check_csrf()
     dog_id = request.form.get("dog_id", "") or None
     if not dog_id:
         abort(404, "dog does not exist")
+
     else:
         dog.remove_comment(comment_id)
         flash("Comment removed successfully!", "success")
+
     return redirect(f"/dog/{dog_id}")
 
-@app.route("/edit_comment/<int:comment_id>", methods=["GET"])
+@app.route("/comment/<int:comment_id>/edit", methods=["GET"])
 def edit_comment_get(comment_id, filled={}):
     require_login()
+    if session["owner_id"] != owner.get_comment_owner_id(comment_id):
+        abort(401, "ERROR: Unauthorized")
+
     comment = dog.get_comment(comment_id)
     if not comment:
         abort(404, "ERROR: comment not found")
 
     return render_template("html/edit_comment.html", filled=filled, comment=comment)
 
-@app.route("/edit_comment/<int:comment_id>", methods=["POST"])
+@app.route("/comment/<int:comment_id>/edit", methods=["POST"])
 def edit_comment_post(comment_id):
     require_login()
+    if session["owner_id"] != owner.get_comment_owner_id(comment_id):
+        abort(401, "ERROR: Unauthorized")
+
     check_csrf()
     form = input_validator.get_comment_form(request, True)
     if "continue" in request.form:
@@ -121,14 +134,19 @@ def edit_comment_post(comment_id):
 
         dog.update_comment(form)
         flash("Comment updated successfully!", "success")
+
     return redirect(f"/dog/{form["dog_id"]}")
 
-@app.route("/edit_dog/<int:dog_id>", methods=["GET"])
+@app.route("/dog/<int:dog_id>/edit", methods=["GET"])
 def edit_dog_get(dog_id, filled={}):
     require_login()
     dog_info = dog.get_dog(dog_id)
     if not dog_info:
         abort(404, "ERROR: dog not found")
+
+    if session["owner_id"] != dog_info["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
+
     colors = dog.get_colors()
     dog_breeds = dog.get_breeds()
     owner_id = session["owner_id"]
@@ -137,9 +155,16 @@ def edit_dog_get(dog_id, filled={}):
     return render_template("html/edit_dog.html", filled=filled, dog=dog_info, colors=colors,
                            dog_breeds=dog_breeds, litters=my_litters, participated_shows=participated_shows)
 
-@app.route("/edit_dog/<int:dog_id>", methods=["POST"])
+@app.route("/dog/<int:dog_id>/edit", methods=["POST"])
 def edit_dog_post(dog_id):
     require_login()
+    dog_info = dog.get_dog(dog_id)
+    if not dog_info:
+        abort(404, "ERROR: dog not found")
+
+    if session["owner_id"] != dog_info["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
+
     check_csrf()
     form = input_validator.get_dog_form(request)
     if not input_validator.check_dog_form(form, edit=True):
@@ -147,26 +172,34 @@ def edit_dog_post(dog_id):
 
     dog.update_dog(dog_id, form)
     flash("Dog updated successfully!", "success")
-    return redirect("/my_account")
+    return redirect(f"/owner/{session["owner_id"]}")
 
-@app.route("/remove_dog/<int:dog_id>", methods=["GET"])
+@app.route("/dog/<int:dog_id>/remove", methods=["GET"])
 def remove_dog_get(dog_id):
     require_login()
     dog_info = dog.get_dog(dog_id)
-    if not dog_info or dog_info["owner_id"] != session["owner_id"]:
+    if not dog_info:
         abort(404, "ERROR: dog not found")
+
+    if dog_info["owner_id"] != session["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
+
     return render_template("html/remove_dog.html", dog=dog_info)
 
-@app.route("/remove_dog/<int:dog_id>", methods=["POST"])
+@app.route("/dog/<int:dog_id>/remove", methods=["POST"])
 def remove_dog_post(dog_id):
     require_login()
+    if session["owner_id"] != dog.get_owner_id(dog_id):
+        abort(401, "ERROR: Unauthorized")
+
     check_csrf()
     if "continue" in request.form:
         dog.delete_dog(dog_id)
         flash("Dog deleted successfully!", "success")
-    return redirect("/my_account")
 
-@app.route("/create_litter", methods=["GET"])
+    return redirect(f"/owner/{session["owner_id"]}")
+
+@app.route("/litter/new", methods=["GET"])
 def create_litter_get(filled={}):
     require_login()
     owner_id = session["owner_id"]
@@ -175,7 +208,7 @@ def create_litter_get(filled={}):
     return render_template("html/create_litter.html", filled=filled,
                            male_dogs=male_dogs, female_dogs=female_dogs)
 
-@app.route("/create_litter", methods=[ "POST"])
+@app.route("/litter/new", methods=[ "POST"])
 def create_litter_post():
     require_login()
     check_csrf()
@@ -185,24 +218,31 @@ def create_litter_post():
 
     litter.insert_litter(form)
     flash("Litter created successfully!", "success")
-    return redirect("/my_account")
+    return redirect(f"/owner/{session["owner_id"]}")
 
 
-@app.route("/edit_litter/<int:litter_id>", methods=["GET"])
+@app.route("/litter/<int:litter_id>/edit", methods=["GET"])
 def edit_litter_get(litter_id, filled={}):
     require_login()
     litter_info = litter.get_litter(litter_id)
+    if not litter_info:
+        abort(404, "ERROR: litter not found")
+
+    if session["owner_id"] != litter_info["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
+
     owner_id = session["owner_id"]
     male_dogs = owner.get_male_dogs(owner_id)
     female_dogs = owner.get_female_dogs(owner_id)
-    if not litter_info:
-        abort(404, "ERROR: litter not found")
     return render_template("html/edit_litter.html", filled=filled, litter=litter_info,
                            male_dogs=male_dogs, female_dogs=female_dogs)
 
-@app.route("/edit_litter/<int:litter_id>", methods=["POST"])
+@app.route("/litter/<int:litter_id>/edit", methods=["POST"])
 def edit_litter_post(litter_id):
     require_login()
+    if session["owner_id"] != litter.get_litter(litter_id)["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
+
     check_csrf()
     form = input_validator.get_litter_form(request)
     if not input_validator.check_litter_form(form, edit=True):
@@ -210,24 +250,32 @@ def edit_litter_post(litter_id):
 
     litter.update_litter(litter_id, form)
     flash("Litter edited successfully!", "success")
-    return redirect("/my_account")
+    return redirect(f"/owner/{session["owner_id"]}")
 
-@app.route("/remove_litter/<int:litter_id>", methods=["GET"])
+@app.route("/litter/<int:litter_id>/remove", methods=["GET"])
 def remove_litter_get(litter_id):
     require_login()
     litter_info = litter.get_litter(litter_id)
-    if not litter_info or litter_info["owner_id"] != session["owner_id"]:
+    if not litter_info:
         abort(404, "ERROR: litter not found")
+
+    if litter_info["owner_id"] != session["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
+
     return render_template("html/remove_litter.html", litter=litter_info)
 
-@app.route("/remove_litter/<int:litter_id>", methods=["POST"])
+@app.route("/litter/<int:litter_id>/remove", methods=["POST"])
 def remove_litter_post(litter_id):
     require_login()
+    if session["owner_id"] != litter.get_litter(litter_id)["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
+
     check_csrf()
     if "continue" in request.form:
         litter.delete_litter(litter_id)
         flash("Litter deleted successfully!", "success")
-    return redirect("/my_account")
+
+    return redirect(f"/owner/{session["owner_id"]}")
 
 @app.route("/login", methods=["GET"])
 def login_get():
@@ -237,6 +285,7 @@ def login_get():
 def login_post():
     if not input_validator.check_login(request):
         return redirect("/login")
+
     owner_id = owner.get_id_with_name(request.form.get("name", "").strip())
     name = request.form.get("name", "").strip()
     set_session(owner_id, name)
@@ -302,59 +351,67 @@ def show_owner(owner_id):
     owners_litters= owner.get_litters(owner_id)
     if not owner_info:
         abort(404, "ERROR: owner not found")
+
     return render_template("html/owner.html", owner=owner_info,
                            dogs=owners_dogs, litters=owners_litters, session=session)
 
-@app.route("/my_account")
-def show_my_dogs():
+@app.route("/owner/<int:owner_id>/remove", methods=["GET"])
+def remove_account_get(owner_id):
     require_login()
-    owner_id = session["owner_id"]
-    return redirect(f"/owner/{owner_id}")
+    if owner_id != session["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
 
-@app.route("/remove_account", methods=["GET"])
-def remove_account_get():
-    require_login()
     return render_template("html/remove_account.html")
 
-@app.route("/remove_account", methods=["POST"])
-def remove_account_post():
+@app.route("/owner/<int:owner_id>/remove", methods=["POST"])
+def remove_account_post(owner_id):
     require_login()
     check_csrf()
+    if owner_id != session["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
+
     owner_id = session["owner_id"]
     if "continue" in request.form:
         owner.remove_owner(owner_id)
         flash("Account deleted successfully!", "success")
         logout()
 
-    return redirect("/my_account")
+    return redirect("/")
 
-@app.route("/edit_account", methods=["GET"])
-def edit_account_get(filled={}):
+@app.route("/owner/<int:owner_id>/edit", methods=["GET"])
+def edit_account_get(owner_id, filled={}):
     require_login()
+    if owner_id != session["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
+
     owner_id = session["owner_id"]
     owner_info = owner.get_owner(owner_id)
     return render_template("html/edit_account.html", filled=filled,
                            owner=owner_info)
 
-@app.route("/edit_account", methods=["POST"])
-def edit_account_post():
+@app.route("/owner/<int:owner_id>/edit", methods=["POST"])
+def edit_account_post(owner_id):
     require_login()
+    if owner_id != session["owner_id"]:
+        abort(401, "ERROR: Unauthorized")
+
     check_csrf()
     form = input_validator.get_account_form(request)
     if not input_validator.check_account_form(form, True):
-        return edit_account_get(form)
+        return edit_account_get(session["owner_id"], form)
 
     owner.update_owner(form)
     set_session(owner.get_id_with_name(form["name"]), form["name"])
     flash("Account updated successfully!")
-    return redirect("/my_account")
+    return redirect(f"/owner/{session["owner_id"]}")
 
 @app.route("/litter/<int:litter_id>")
 def show_litter(litter_id):
     litter_info = litter.get_litter(litter_id)
-    dogs = litter.get_dogs_in_litter(litter_id)
     if not litter_info:
         abort(404, "ERROR: litter not found")
+
+    dogs = litter.get_dogs_in_litter(litter_id)
     return render_template("html/litter.html", litter=litter_info, dogs=dogs)
 
 @app.route("/litters")
@@ -368,8 +425,10 @@ def show_litters(page=1):
 
     if not litters:
         abort(404, "ERROR: no litters found")
+
     if page < 1:
         return redirect("/litters/1")
+
     if page > page_count:
         return redirect("/litters/" + str(page_count))
 
@@ -387,8 +446,10 @@ def show_owners(page=1):
 
     if not owners:
         abort(404, "ERROR: no owners found")
+
     if page < 1:
         return redirect("/owners/1")
+
     if page > page_count:
         return redirect("/owners/" + str(page_count))
 
@@ -398,10 +459,10 @@ def show_owners(page=1):
 @app.route("/dog_show/<int:show_id>")
 def show_dog_show(show_id):
     show_info = dog_show.get_dog_show(show_id)
-    dogs = dog_show.get_show_participants(show_id)
     if not show_info:
         abort(404, "ERROR: dog show not found")
 
+    dogs = dog_show.get_show_participants(show_id)
     eligible_dogs = []
     championship_titles = []
     if "owner_id" in session:
@@ -451,8 +512,10 @@ def show_dog_shows(page=1):
 
     if not dog_shows:
         abort(404, "ERROR: no dog shows found")
+
     if page < 1:
         return redirect("/dog_shows/1")
+
     if page > page_count:
         return redirect("/dog_shows/" + str(page_count))
 

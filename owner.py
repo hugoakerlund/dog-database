@@ -107,6 +107,13 @@ def get_comment_ids(owner_id):
     result = db.query(sql, [owner_id])
     return [row[0] for row in result] if result else []
 
+def get_comment_owner_id(comment_id):
+    sql = (
+        "SELECT owner_id FROM Comments WHERE id = ?"
+    )
+    owner_id = db.query(sql, [comment_id])
+    return owner_id[0][0]
+
 def get_id_with_name(name):
     sql = "SELECT id FROM Owners WHERE name = ?"
     owner_id = db.query(sql, [name])

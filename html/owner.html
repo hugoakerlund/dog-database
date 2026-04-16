@@ -29,8 +29,8 @@
 
   {% if session.owner_id == owner.id %}
   <p>
-    <a href="/edit_account">Edit account</a> |
-    <a href="/remove_account">Remove account</a>
+    <a href="/owner/{{ session.owner_id }}/edit">Edit account</a> |
+    <a href="/owner/{{ session.owner_id }}/remove">Remove account</a>
   </p>
   {% endif %}
 
@@ -80,7 +80,7 @@
   <p>
     {% if session.owner_id == owner.id %}
     You don't have any dogs yet.
-    Add your first dog <a href="/create_dog">here</a>.
+    Add your first dog <a href="/dog/new">here</a>.
     {% else %}
     {{ owner.name }} doesn't have any dogs yet.
     {% endif %}
@@ -124,7 +124,7 @@
     <p>
       {% if session.owner_id == owner.id %}
       You don't have any litters yet.
-      Add your first litter <a href="/create_litter">here</a>.
+      Add your first litter <a href="/litter/new">here</a>.
       {% else %}
       {{ owner.name }} doesn't have any litters yet.
       {% endif %}
