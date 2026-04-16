@@ -106,7 +106,7 @@ def get_comments(dog_id):
     sql = (
         "SELECT c.id, c.content, c.owner_id, "
         "o.name AS commenter, "
-        "c.dog_id, c.date "
+        "c.dog_id, c.sent_at "
         "FROM Comments c "
         "LEFT JOIN Owners o ON c.owner_id = o.id "
         "WHERE dog_id = ?"
@@ -115,7 +115,7 @@ def get_comments(dog_id):
 
 def get_comment(comment_id):
     sql = (
-        "SELECT c.id, c.content, c.owner_id, c.dog_id, c.date "
+        "SELECT c.id, c.content, c.owner_id, c.dog_id, c.sent_at "
         "FROM Comments c "
         "WHERE id = ?"
     )
@@ -206,7 +206,7 @@ def insert_dog(form):
 
 def insert_comment(form):
     sql = (
-        "INSERT INTO Comments (content, owner_id, dog_id, date) "
+        "INSERT INTO Comments (content, owner_id, dog_id, sent_at) "
         "VALUES (?, ?, ?, datetime('now', 'localtime'))"
     )
     params = [

@@ -120,7 +120,7 @@ def insert_random_comment(n):
     owner_id = n
     dog_id = n
     sql = (
-        "INSERT INTO Comments (content, owner_id, dog_id, date) "
+        "INSERT INTO Comments (content, owner_id, dog_id, sent_at) "
             "VALUES (?, ?, ?, datetime('now', 'localtime'))"
     )
     db.execute(sql, [content, owner_id, dog_id])
@@ -129,7 +129,7 @@ def insert_random_owner(n):
     name = "test_owner" + str(n)
     email = name + "@" + "test_domain" + ".com"
     password_hash = "test_hash"
-    sql = "INSERT INTO Owners (name, email, password_hash) VALUES (?, ?, ?)"
+    sql = "INSERT INTO Owners (name, email, password_hash, created_at) VALUES (?, ?, ?, datetime('now', 'localtime'))"
     db.execute(sql, [name, email, password_hash])
 
 def create_litter(n, father_id, mother_id):

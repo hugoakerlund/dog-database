@@ -10,7 +10,7 @@
 
   {% if dog.image %}
   <p>
-    <img src="/image/{{ dog.id }}" class="rounded" alt="Dog Image" width="200" height="200">
+    <img src="/image/{{ dog.id }}" class="rounded" alt="Image of a dog named {{ dog.name }}" width="200" height="200">
   </P>
   {% else %}
   <p>
@@ -148,7 +148,7 @@
     {% for comment in comments %}
     <div class="comment-card">
       <div class="comment-meta">
-        <span class="small-muted">Date: {{ comment.date }}</span>
+        <span class="small-muted">Date: {{ comment.sent_at }}</span>
         <span>•</span>
         <span>Owner:
           <a href="/owner/{{ comment.owner_id}}">

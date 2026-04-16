@@ -2,7 +2,8 @@ CREATE TABLE Owners (
     id INTEGER PRIMARY KEY,
     name TEXT UNIQUE,
     email TEXT UNIQUE,
-    password_hash TEXT
+    password_hash TEXT,
+    created_at DATE
 );
 
 CREATE TABLE Dogs (
@@ -67,5 +68,5 @@ CREATE TABLE Comments (
     content TEXT,
     owner_id INTEGER REFERENCES Owners(id),
     dog_id INTEGER REFERENCES Dogs(id),
-    date DATE
+    sent_at DATE
 );

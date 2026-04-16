@@ -5,7 +5,7 @@ import litter
 
 def get_owner(owner_id):
     sql = (
-          "SELECT id, name, email, password_hash "
+          "SELECT id, name, email, password_hash, created_at "
           "FROM Owners WHERE id = ?"
     )
     result = db.query(sql, [owner_id])
@@ -127,7 +127,7 @@ def get_password_hash(name):
     return result[0][0]
 
 def insert_owner(form):
-    sql = "INSERT INTO Owners (name, email, password_hash) VALUES (?, ?, ?)"
+    sql = "INSERT INTO Owners (name, email, password_hash, created_at) VALUES (?, ?, ?, datetime('now', 'localtime'))"
     db.execute(sql, [form["name"], form["email"], form["password_hash"]])
 
 def name_exists(name):
