@@ -81,12 +81,12 @@
     </tr>
 
     <tr>
-      <td class="label">Sex</td>
+      <td class="label"><label for="sex">Sex</label></td>
       <td class="control">
         <div class="radio-group" role="radiogroup" aria-label="Sex">
-          <label><input type="radio" id="sexChoice1" name="sex" value="Male"
+          <label><input type="radio" id="sex" name="sex" value="Male"
             {% if filled.sex == 'Male' %}checked{% endif %} /> Male</label>
-          <label><input type="radio" id="sexChoice2" name="sex" value="Female"
+          <label><input type="radio" id="sex" name="sex" value="Female"
             {% if filled.sex == 'Female' %}checked{% endif %} /> Female</label>
         </div>
       </td>
