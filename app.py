@@ -97,8 +97,7 @@ def remove_comment(comment_id):
         abort(404, "dog does not exist")
     else:
         dog.remove_comment(comment_id)
-
-    flash("Comment removed successfully!", "success")
+        flash("Comment removed successfully!", "success")
     return redirect(f"/dog/{dog_id}")
 
 @app.route("/edit_comment/<int:comment_id>", methods=["GET"])
@@ -164,7 +163,7 @@ def remove_dog_post(dog_id):
     check_csrf()
     if "continue" in request.form:
         dog.delete_dog(dog_id)
-    flash("Dog deleted successfully!", "success")
+        flash("Dog deleted successfully!", "success")
     return redirect("/my_account")
 
 @app.route("/create_litter", methods=["GET"])
@@ -227,7 +226,7 @@ def remove_litter_post(litter_id):
     check_csrf()
     if "continue" in request.form:
         litter.delete_litter(litter_id)
-    flash("Litter deleted successfully!", "success")
+        flash("Litter deleted successfully!", "success")
     return redirect("/my_account")
 
 @app.route("/login", methods=["GET"])
@@ -327,7 +326,7 @@ def remove_account_post():
         flash("Account deleted successfully!", "success")
         logout()
 
-    return redirect("/")
+    return redirect("/my_account")
 
 @app.route("/edit_account", methods=["GET"])
 def edit_account_get(filled={}):
