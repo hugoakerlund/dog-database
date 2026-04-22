@@ -70,3 +70,22 @@ CREATE TABLE Comments (
     dog_id INTEGER REFERENCES Dogs(id),
     sent_at DATE
 );
+
+CREATE INDEX idx_dogs_owner_id ON Dogs(owner_id);
+CREATE INDEX idx_dogs_litter_id ON Dogs(litter_id);
+CREATE INDEX idx_dogs_best_show_id ON Dogs(best_show_id);
+CREATE INDEX idx_dogs_color ON Dogs(color);
+CREATE INDEX idx_dogs_breed ON Dogs(breed);
+
+CREATE INDEX idx_litters_father_id ON Litters(father_id);
+CREATE INDEX idx_litters_mother_id ON Litters(mother_id);
+CREATE INDEX idx_litters_owner_id ON Litters(owner_id);
+
+CREATE INDEX idx_dog_shows_winner_id ON Dog_shows(winner_id);
+
+CREATE INDEX idx_show_participants_show_id ON Show_participants(show_id);
+CREATE INDEX idx_show_participants_dog_id ON Show_participants(dog_id);
+CREATE INDEX idx_show_participants_result ON Show_participants(result);
+
+CREATE INDEX idx_comments_dog_id ON Comments(dog_id);
+CREATE INDEX idx_comments_owner_id ON Comments(owner_id);
