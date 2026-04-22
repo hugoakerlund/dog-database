@@ -72,6 +72,6 @@ def delete_litter(litter_id):
     db.execute(sql, [litter_id])
 
 def litter_name_exists(name):
-    sql = "SELECT id FROM Litters WHERE name = ?"
+    sql = "SELECT 1 FROM Litters WHERE name = ?"
     result = db.query(sql, [name])
     return bool(result)

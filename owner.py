@@ -104,17 +104,17 @@ def insert_owner(form):
     db.execute(sql, [form["name"], form["email"], form["password_hash"]])
 
 def name_exists(name):
-    sql = "SELECT id FROM Owners WHERE name = ?"
+    sql = "SELECT 1 FROM Owners WHERE name = ?"
     result = db.query(sql, [name])
     return bool(result)
 
 def email_exists(email):
-    sql = "SELECT id FROM Owners WHERE email = ?"
+    sql = "SELECT 1 FROM Owners WHERE email = ?"
     result = db.query(sql, [email])
     return bool(result)
 
 def is_owner_of_dog(owner_id, dog_id):
-    sql = "SELECT id FROM Dogs d WHERE d.owner_id = ? AND d.id = ?"
+    sql = "SELECT 1 FROM Dogs d WHERE d.owner_id = ? AND d.id = ?"
     result = db.query(sql, [owner_id, dog_id])
     return bool(result)
 

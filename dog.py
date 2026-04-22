@@ -177,7 +177,7 @@ def update_dog(dog_id, form):
     db.execute(sql, params)
 
 def registration_number_exists(registration_number):
-    sql = "SELECT id FROM Dogs WHERE registration_number = ?"
+    sql = "SELECT 1 FROM Dogs WHERE registration_number = ?"
     result = db.query(sql, [registration_number])
     return bool(result)
 
