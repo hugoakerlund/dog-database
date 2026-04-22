@@ -326,7 +326,7 @@ def show_image(dog_id):
     if not image:
         abort(404, "ERROR: image not found")
 
-    if isinstance(image, (bytes, bytearray, memoryview)):
+    if isinstance(image, (bytes)):
         data = bytes(image)
         response = make_response(data)
         response.headers.set("Content-Type", "image/jpeg")
