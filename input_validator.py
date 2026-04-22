@@ -47,6 +47,8 @@ def check_dog_form(form, edit=False):
         return False
     if not check_dog_optional_fields(form):
         return False
+    if not check_dog_litters(form):
+        return False
     if not check_dog_shows(form):
         return False
     return True
@@ -65,7 +67,7 @@ def check_dog_required_fields(form):
         flash("ERROR: color is required!", "error")
         return False
     if not form["date_of_birth"]:
-        flash("ERROR: date_of_birth is required!", "error")
+        flash("ERROR: date of birth is required!", "error")
         return False
     if not form["sex"]:
         flash("ERROR: sex is required!", "error")
@@ -99,15 +101,15 @@ def check_registration_date(form):
         return False
 
     registration_date = dog_data["registration_date"].split(' ')[0]
-    date_of_birth  = form["date_of_birth"]
+    dog_date_of_birth  = form["date_of_birth"]
 
     year, month, day = registration_date.split("-")
     registration_date = date(int(year), int(month), int(day))
 
-    year, month, day = date_of_birth.split("-")
-    date_of_birth= date(int(year), int(month), int(day))
+    year, month, day = dog_date_of_birth.split("-")
+    dog_date_of_birth= date(int(year), int(month), int(day))
 
-    if registration_date < date_of_birth:
+    if registration_date < dog_date_of_birth:
         flash(f"ERROR: dog must be born before its registration date: {registration_date}!", "error")
         return False
     return True
@@ -156,12 +158,32 @@ def check_dog_optional_fields(form):
         return False
     return True
 
+def check_dog_litters(form):
+    litters = dog.get_litter_birth_dates(form["dog_id"])
+    if not litters:
+        return True
+
+    dog_date_of_birth  = form["date_of_birth"]
+    year, month, day = dog_date_of_birth.split("-")
+    dog_date_of_birth= date(int(year), int(month), int(day))
+
+    for litter in litters:
+        litter_date_of_birth = litter["date_of_birth"]
+        year, month, day = litter_date_of_birth.split("-")
+        litter_date_of_birth= date(int(year), int(month), int(day))
+
+        if dog_date_of_birth > litter_date_of_birth:
+            flash("ERROR: the dog has a litter whose date of birth is not \
+                           possible with the dog's date of birth!", "error")
+            return False
+    return True
+
 def check_dog_shows(form):
     shows = dog.get_participated_shows(form["dog_id"])
     if shows:
-        date_of_birth = form["date_of_birth"]
-        year, month, day = date_of_birth.split("-")
-        date_of_birth= date(int(year), int(month), int(day))
+        dog_date_of_birth = form["date_of_birth"]
+        year, month, day = dog_date_of_birth.split("-")
+        dog_date_of_birth= date(int(year), int(month), int(day))
 
         date_of_death = form["date_of_death"]
         if date_of_death:
@@ -177,7 +199,7 @@ def check_dog_shows(form):
             year, month, day = show_date.split("-")
             show_date= date(int(year), int(month), int(day))
 
-            if date_of_birth > show_date:
+            if dog_date_of_birth > show_date:
                 flash("ERROR: date of birth is not possible with the participated shows!", "error")
                 return False
 
@@ -220,11 +242,11 @@ def check_litter(form):
     litter_mother_id = litter_data["mother_id"]
 
     if not litter_father_id or not litter_mother_id:
-        flash("ERROR: litters both parents could not be found (one of them may have been deleted)!", "error")
+        flash("ERROR: litter's both parents could not be found (one of them may have been deleted)!", "error")
         return False
 
     if form["dog_id"] == litter_father_id or form["dog_id"] == litter_mother_id:
-        flash("ERROR: a dog cannot be its litters father!", "error")
+        flash("ERROR: a dog cannot be its litter's parent!", "error")
         return False
 
     father_owner_id = dog.get_owner_id(litter_father_id)
@@ -238,8 +260,8 @@ def check_litter(form):
     litter_date_of_birth = litter_data["date_of_birth"]
     dog_date_of_birth = form["date_of_birth"]
     if litter_date_of_birth != dog_date_of_birth:
-        flash(f"ERROR: dogs date of birth ({dog_date_of_birth}) \
-                      does not match the litters date of birth ({litter_date_of_birth})!", "error")
+        flash(f"ERROR: dog's date of birth ({dog_date_of_birth}) \
+                      does not match the litter's date of birth ({litter_date_of_birth})!", "error")
         return False
     return True
 
@@ -293,6 +315,8 @@ def check_litter_form(form, edit=False):
     if not check_date(form["date_of_birth"]):
         return False
     if not check_father_and_mother(form):
+        return False
+    if not check_litter_dogs(form):
         return False
     if edit:
         if not check_litter_edit_fields(form):
@@ -367,6 +391,26 @@ def check_ownership(parent_dog):
         return False
     return True
 
+def check_litter_dogs(form):
+    dogs = litter.get_dogs_in_litter(form["litter_id"])
+    if not dogs:
+        return True
+
+    litter_date_of_birth  = form["date_of_birth"]
+    year, month, day = litter_date_of_birth.split("-")
+    litter_date_of_birth= date(int(year), int(month), int(day))
+
+    for dog in dogs:
+        dog_date_of_birth = dog["date_of_birth"]
+        year, month, day = dog_date_of_birth.split("-")
+        dog_date_of_birth= date(int(year), int(month), int(day))
+
+        if dog_date_of_birth != litter_date_of_birth:
+            flash("ERROR: the litter has a dog whose date of birth is not \
+                           possible with the litter's date of birth!", "error")
+            return False
+    return True
+
 def get_dog_show_form(request):
     form = {}
     form["dog_id"] = request.form.get("dog_id", "").strip()
@@ -438,15 +482,15 @@ def check_dog_death(dog_info, show_info):
 
 def check_dog_birth(dog_info, show_info):
     show_date = show_info["date"]
-    date_of_birth = dog_info["date_of_birth"]
+    dog_date_of_birth = dog_info["date_of_birth"]
 
     year, month, day = show_date.split("-")
     show_date= date(int(year), int(month), int(day))
 
-    year, month, day = date_of_birth.split("-")
-    date_of_birth= date(int(year), int(month), int(day))
+    year, month, day = dog_date_of_birth.split("-")
+    dog_date_of_birth= date(int(year), int(month), int(day))
 
-    if date_of_birth > show_date:
+    if dog_date_of_birth > show_date:
         flash("ERROR: dog was born after show!", "error")
         return False
     return True

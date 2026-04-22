@@ -37,6 +37,13 @@ def get_dog(dog_id):
     result = db.query(sql, [dog_id])
     return result[0] if result else None
 
+def get_litter_birth_dates(dog_id):
+    sql = """SELECT l.date_of_birth
+             FROM Litters l 
+             WHERE l.father_id = ? OR l.mother_id = ?"""
+    result = db.query(sql, [dog_id, dog_id])
+    return result if result else None
+
 def get_owner_id(dog_id):
     sql = "SELECT owner_id FROM Dogs WHERE id = ?"
     result = db.query(sql, [dog_id])
