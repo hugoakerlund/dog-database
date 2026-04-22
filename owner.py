@@ -4,7 +4,7 @@ import dog
 import litter
 
 def get_owner(owner_id):
-    sql = """SELECT id, name, email, password_hash, created_at 
+    sql = """SELECT id, name, email, password_hash, created_at
              FROM Owners WHERE id = ?"""
     result = db.query(sql, [owner_id])
     return result[0] if result else None
@@ -15,61 +15,61 @@ def get_owner_count():
     return result[0][0] if result else 0
 
 def get_owners(page, page_size):
-    sql = """SELECT id, name, email, password_hash 
+    sql = """SELECT id, name, email, password_hash
              FROM Owners ORDER BY name LIMIT ? OFFSET ?"""
     limit = page_size
     offset = page_size * (page - 1)
     return db.query(sql, [limit, offset])
 
 def get_dogs(owner_id):
-    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, 
-             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id, 
-             d.best_test, d.best_show_id, d.hip_index, d.use_index, 
-             l.name AS litter_name, 
-             o.name AS owner_name 
-             FROM Dogs d 
-             LEFT JOIN Litters l ON d.litter_id = l.id 
-             LEFT JOIN Owners o ON d.owner_id = o.id 
+    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
+             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
+             d.best_test, d.best_show_id, d.hip_index, d.use_index,
+             l.name AS litter_name,
+             o.name AS owner_name
+             FROM Dogs d
+             LEFT JOIN Litters l ON d.litter_id = l.id
+             LEFT JOIN Owners o ON d.owner_id = o.id
              WHERE d.owner_id = ?"""
     result = db.query(sql, [owner_id])
     return result
 
 def get_male_dogs(owner_id):
-    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, 
-             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id, 
-             d.best_test, d.best_show_id, d.hip_index, d.use_index, 
-             l.name AS litter_name, 
-             o.name AS owner_name 
-             FROM Dogs d 
-             LEFT JOIN Litters l ON d.litter_id = l.id 
-             LEFT JOIN Owners o ON d.owner_id = o.id 
+    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
+             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
+             d.best_test, d.best_show_id, d.hip_index, d.use_index,
+             l.name AS litter_name,
+             o.name AS owner_name
+             FROM Dogs d
+             LEFT JOIN Litters l ON d.litter_id = l.id
+             LEFT JOIN Owners o ON d.owner_id = o.id
              WHERE d.owner_id = ? AND d.sex = 'Male'"""
     result = db.query(sql, [owner_id])
     return result
 
 def get_female_dogs(owner_id):
-    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, 
-             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id, 
-             d.best_test, d.best_show_id, d.hip_index, d.use_index, 
-             l.name AS litter_name, 
-             o.name AS owner_name 
-             FROM Dogs d 
-             LEFT JOIN Litters l ON d.litter_id = l.id 
-             LEFT JOIN Owners o ON d.owner_id = o.id 
+    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
+             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
+             d.best_test, d.best_show_id, d.hip_index, d.use_index,
+             l.name AS litter_name,
+             o.name AS owner_name
+             FROM Dogs d
+             LEFT JOIN Litters l ON d.litter_id = l.id
+             LEFT JOIN Owners o ON d.owner_id = o.id
              WHERE d.owner_id = ? AND d.sex = 'Female'"""
     result = db.query(sql, [owner_id])
     return result
 
 def get_litters(owner_id):
-    sql = """SELECT l.id, l.name, l.father_id, l.mother_id, 
-             l.date_of_birth, l.owner_id, 
-             f.registration_number AS father_registration_number, 
-             m.registration_number AS mother_registration_number, 
-             o.name AS owner_name 
-             FROM Litters l 
-             LEFT JOIN Dogs f ON l.father_id = f.id 
-             LEFT JOIN Dogs m ON l.mother_id = m.id 
-             LEFT JOIN Owners o ON l.owner_id = o.id 
+    sql = """SELECT l.id, l.name, l.father_id, l.mother_id,
+             l.date_of_birth, l.owner_id,
+             f.registration_number AS father_registration_number,
+             m.registration_number AS mother_registration_number,
+             o.name AS owner_name
+             FROM Litters l
+             LEFT JOIN Dogs f ON l.father_id = f.id
+             LEFT JOIN Dogs m ON l.mother_id = m.id
+             LEFT JOIN Owners o ON l.owner_id = o.id
              WHERE l.owner_id = ?"""
     result = db.query(sql, [owner_id])
     return result
@@ -99,7 +99,7 @@ def get_password_hash(name):
     return result[0][0]
 
 def insert_owner(form):
-    sql = """INSERT INTO Owners (name, email, password_hash, created_at) 
+    sql = """INSERT INTO Owners (name, email, password_hash, created_at)
              VALUES (?, ?, ?, datetime('now', 'localtime'))"""
     db.execute(sql, [form["name"], form["email"], form["password_hash"]])
 
@@ -153,6 +153,6 @@ def get_litter_ids(owner_id):
     return [row[0] for row in result] if result else []
 
 def update_owner(form):
-    sql = """UPDATE Owners SET name = ?, email = ?, password_hash = ? 
+    sql = """UPDATE Owners SET name = ?, email = ?, password_hash = ?
              WHERE id = ?"""
     db.execute(sql, [form["name"], form["email"], form["password_hash"], session["owner_id"]])

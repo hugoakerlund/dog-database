@@ -115,7 +115,7 @@ def insert_random_comment(n):
     content = "This is a comment."
     commenter_id = n
     dog_id = n
-    sql = """INSERT INTO Comments (content, owner_id, dog_id, sent_at) 
+    sql = """INSERT INTO Comments (content, owner_id, dog_id, sent_at)
              VALUES (?, ?, ?, datetime('now', 'localtime'))"""
     db.execute(sql, [content, commenter_id, dog_id])
 
@@ -123,7 +123,7 @@ def insert_random_owner(n):
     name = "test_owner" + str(n)
     email = name + "@" + "test_domain" + ".com"
     password_hash = "test_hash"
-    sql = """INSERT INTO Owners (name, email, password_hash, created_at) 
+    sql = """INSERT INTO Owners (name, email, password_hash, created_at)
              VALUES (?, ?, ?, datetime('now', 'localtime'))"""
     db.execute(sql, [name, email, password_hash])
 
@@ -132,8 +132,8 @@ def create_litter(n, father_id, mother_id):
     litter_owner_id = n
     name = "test_litter" + str(litter_id)
     date_of_birth = create_random_date()
-    sql = """INSERT INTO Litters 
-             (id, name, father_id, mother_id, date_of_birth, owner_id) 
+    sql = """INSERT INTO Litters
+             (id, name, father_id, mother_id, date_of_birth, owner_id)
              VALUES (?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [litter_id, name, father_id, mother_id, date_of_birth, litter_owner_id])
 
@@ -154,9 +154,9 @@ def insert_random_dog(n):
 
     litter_id = insert_random_litter(n)
 
-    sql = """INSERT INTO Dogs (registration_number, registration_date, name, 
-             image, color, breed, date_of_birth, sex, owner_id, litter_id, 
-             best_test, best_show_id, hip_index, use_index) 
+    sql = """INSERT INTO Dogs (registration_number, registration_date, name,
+             image, color, breed, date_of_birth, sex, owner_id, litter_id,
+             best_test, best_show_id, hip_index, use_index)
              VALUES (?, datetime('now', 'localtime'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [registration_number, name, image, color, breed,
                      date_of_birth,sex, dog_owner_id, litter_id, best_test,
