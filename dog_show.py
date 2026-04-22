@@ -51,7 +51,6 @@ def get_dog_participated_shows(dog_id):
              WHERE sp.dog_id = ? ORDER BY s.date DESC"""
     return db.query(sql, [dog_id])
 
-
 def is_participant(show_id, dog_id):
     sql = "SELECT 1 FROM Show_participants WHERE show_id = ? AND dog_id = ?"
     result = db.query(sql, [show_id, dog_id])

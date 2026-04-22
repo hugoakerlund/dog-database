@@ -1,6 +1,5 @@
 import os
 import random
-import string
 import db
 from app import app
 
@@ -114,11 +113,11 @@ def create_random_date():
 
 def insert_random_comment(n):
     content = "This is a comment."
-    owner_id = n
+    commenter_id = n
     dog_id = n
     sql = """INSERT INTO Comments (content, owner_id, dog_id, sent_at) 
              VALUES (?, ?, ?, datetime('now', 'localtime'))"""
-    db.execute(sql, [content, owner_id, dog_id])
+    db.execute(sql, [content, commenter_id, dog_id])
 
 def insert_random_owner(n):
     name = "test_owner" + str(n)
@@ -140,27 +139,20 @@ def create_litter(n, father_id, mother_id):
 
 
 def insert_random_dog(n):
-    year = f"{n:04}"
-    registration_number = "FI" + f"{n:05}" + "/" + year[2:]
+    registration_number = "FI" + f"{n:05}" + "/" + f"{n:04}"[2:]
     name = random.choice(dog_names)
     image = random.choice(pictures)
     color = random.choice(colors)
     breed = random.choice(dog_breeds)
     date_of_birth = create_random_date()
     sex = random.choice(["Male", "Female"])
-
-    father_id = random.randint(1, n- 1) if n > 2 else None
-    mother_id = random.randint(1, n- 1) if n > 2 else None
-    litter_id = None
-    if father_id and mother_id:
-        create_litter(n, father_id, mother_id)
-        litter_id = n
-
     dog_owner_id = n
     best_test = random.randint(1,5)
     best_show_id = random.randint(1, len(dog_shows) - 1)
     hip_index = random.randint(0,100)
     use_index = random.randint(0,100)
+
+    litter_id = insert_random_litter(n)
 
     sql = """INSERT INTO Dogs (registration_number, registration_date, name, 
              image, color, breed, date_of_birth, sex, owner_id, litter_id, 
@@ -169,6 +161,15 @@ def insert_random_dog(n):
     db.execute(sql, [registration_number, name, image, color, breed,
                      date_of_birth,sex, dog_owner_id, litter_id, best_test,
                      best_show_id, hip_index, use_index])
+
+def insert_random_litter(n):
+    father_id = random.randint(1, n- 1) if n > 2 else None
+    mother_id = random.randint(1, n- 1) if n > 2 else None
+    litter_id = None
+    if father_id and mother_id:
+        create_litter(n, father_id, mother_id)
+        litter_id = n
+    return litter_id
 
 def seed_table_colors():
     sql = "INSERT INTO Colors (name) VALUES (?)"

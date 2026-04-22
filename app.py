@@ -58,7 +58,7 @@ def show_dog(dog_id):
                            participated_shows=participated_shows, session=session)
 
 @app.route("/dog/new", methods=["GET"])
-def create_dog_get(filled={}):
+def create_dog_get(filled=None):
     colors = dog.get_colors()
     dog_breeds = dog.get_breeds()
     owner_id = session["owner_id"]
@@ -108,7 +108,7 @@ def remove_comment(comment_id):
     return redirect(f"/dog/{dog_id}")
 
 @app.route("/comment/<int:comment_id>/edit", methods=["GET"])
-def edit_comment_get(comment_id, filled={}):
+def edit_comment_get(comment_id, filled=None):
     require_login()
     if session["owner_id"] != owner.get_comment_owner_id(comment_id):
         abort(401, "ERROR: Unauthorized")
@@ -138,7 +138,7 @@ def edit_comment_post(comment_id):
     return redirect(f"/dog/{form["dog_id"]}")
 
 @app.route("/dog/<int:dog_id>/edit", methods=["GET"])
-def edit_dog_get(dog_id, filled={}):
+def edit_dog_get(dog_id, filled=None):
     require_login()
     dog_info = dog.get_dog(dog_id)
     if not dog_info:
@@ -152,8 +152,9 @@ def edit_dog_get(dog_id, filled={}):
     owner_id = session["owner_id"]
     my_litters = owner.get_litters(owner_id)
     participated_shows = dog_show.get_dog_participated_shows(dog_id)
-    return render_template("html/edit_dog.html", filled=filled, dog=dog_info, colors=colors,
-                           dog_breeds=dog_breeds, litters=my_litters, participated_shows=participated_shows)
+    return render_template("html/edit_dog.html", filled=filled, dog=dog_info,
+                           colors=colors,dog_breeds=dog_breeds, litters=my_litters,
+                           participated_shows=participated_shows)
 
 @app.route("/dog/<int:dog_id>/edit", methods=["POST"])
 def edit_dog_post(dog_id):
@@ -200,7 +201,7 @@ def remove_dog_post(dog_id):
     return redirect(f"/dog/{dog_id}")
 
 @app.route("/litter/new", methods=["GET"])
-def create_litter_get(filled={}):
+def create_litter_get(filled=None):
     require_login()
     owner_id = session["owner_id"]
     male_dogs = owner.get_male_dogs(owner_id)
@@ -222,7 +223,7 @@ def create_litter_post():
 
 
 @app.route("/litter/<int:litter_id>/edit", methods=["GET"])
-def edit_litter_get(litter_id, filled={}):
+def edit_litter_get(litter_id, filled=None):
     require_login()
     litter_info = litter.get_litter(litter_id)
     if not litter_info:
@@ -301,7 +302,7 @@ def logout():
     return redirect("/")
 
 @app.route("/register", methods=["GET"])
-def register_get(filled={}):
+def register_get(filled=None):
     return render_template("html/register.html", filled=filled)
 
 @app.route("/register", methods=["POST"])
@@ -341,7 +342,7 @@ def show_image(dog_id):
         response = make_response(data)
         response.headers.set("Content-Type", "image/jpeg")
         return response
-    except Exception:
+    except (TypeError, UnicodeEncodeError, ValueError):
         abort(404, "ERROR: unable to display image")
 
 @app.route("/owner/<int:owner_id>")
@@ -379,7 +380,7 @@ def remove_account_post(owner_id):
     return redirect(f"/owner/{owner_id}")
 
 @app.route("/owner/<int:owner_id>/edit", methods=["GET"])
-def edit_account_get(owner_id, filled={}):
+def edit_account_get(owner_id, filled=None):
     require_login()
     if owner_id != session["owner_id"]:
         abort(401, "ERROR: Unauthorized")

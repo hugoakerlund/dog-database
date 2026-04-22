@@ -1,6 +1,6 @@
+from datetime import date
 from flask import session, flash, abort
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import date
 import dog
 import litter
 import owner
@@ -28,51 +28,46 @@ def get_dog_form(request):
 def check_dog_form(form, edit=False):
     if not check_dog_required_fields(form):
         return False
-    if not check_registration_number(form["registration_number"]):
-        return False
     if edit:
-        if not check_dog_edit_fields(form):
-            return False
-        if not check_registration_date(form):
+        if not check_dog_edit_fields(form) or \
+           not check_registration_date(form):
             return False
     else:
         if dog.registration_number_exists(form["registration_number"]):
             flash("ERROR: registration number already exists!", "error")
             return False
-    if not check_name(form["name"]):
+    if not check_registration_number(form["registration_number"]) or \
+       not check_name(form["name"]) or \
+       not check_date(form["date_of_birth"]) or \
+       not check_sex(form):
         return False
-    if not check_date(form["date_of_birth"]):
-        return False
-    if not check_sex(form):
-        return False
-    if not check_dog_optional_fields(form):
-        return False
-    if not check_dog_litters(form):
-        return False
-    if not check_dog_shows(form):
+    if not check_dog_optional_fields(form) or \
+       not check_dog_litters(form) or \
+       not check_dog_shows(form):
         return False
     return True
 
 def check_dog_required_fields(form):
+    result = True
     if not form["registration_number"]:
         flash("ERROR: registration number is required!", "error")
-        return False
+        result = False
     if not form["name"]:
         flash("ERROR: name is required!", "error")
-        return False
+        result = False
     if not form["breed"]:
         flash("ERROR: breed is required!", "error")
-        return False
+        result = False
     if not form["color"]:
         flash("ERROR: color is required!", "error")
-        return False
+        result = False
     if not form["date_of_birth"]:
         flash("ERROR: date of birth is required!", "error")
-        return False
+        result = False
     if not form["sex"]:
         flash("ERROR: sex is required!", "error")
         return False
-    return True
+    return result
 
 def check_registration_number(registration_number):
     if not len(registration_number) == 10 or \
@@ -110,7 +105,8 @@ def check_registration_date(form):
     dog_date_of_birth= date(int(year), int(month), int(day))
 
     if registration_date < dog_date_of_birth:
-        flash(f"ERROR: dog must be born before its registration date: {registration_date}!", "error")
+        flash(f"ERROR: dog must be born before its registration date: \
+                       {registration_date}!", "error")
         return False
     return True
 
@@ -124,8 +120,10 @@ def check_name(name):
 
 def check_date(date_str):
     year, month, day = date_str.split("-")
-    if not year.isdigit() or not month.isdigit() or not day.isdigit() or \
-        not len(date_str) == 10 or not date_str[4] == "-" or not date_str[7] == "-":
+    if not year.isdigit() or not month.isdigit() or not day.isdigit():
+        flash("ERROR: invalid date!", "error")
+        return False
+    if not len(date_str) == 10 or not date_str[4] == "-" or not date_str[7] == "-":
         flash("ERROR: invalid date format (must be YYYY-MM-DD)!", "error")
         return False
     today = date.today()
@@ -142,19 +140,14 @@ def check_sex(form):
     return True
 
 def check_dog_optional_fields(form):
-    if form["image"] and not check_image(form):
+    if not check_image(form) or \
+       not check_death_date(form) or \
+       not check_litter(form) or \
+       not check_best_show(form):
         return False
-    if form["date_of_death"] and not check_death_date(form):
-        return False
-    if form["litter_id"] and not check_litter(form):
-            return False
-    if form["best_show_id"] and not check_best_show(form["best_show_id"]):
-            return False
-    if form["best_test"] and not check_test(form["best_test"]):
-        return False
-    if form["hip_index"] and not check_hip_index(form["hip_index"]):
-        return False
-    if form["use_index"] and not check_use_index(form["use_index"]):
+    if not check_test(form) or \
+       not check_hip_index(form) or \
+       not check_use_index(form):
         return False
     return True
 
@@ -167,8 +160,8 @@ def check_dog_litters(form):
     year, month, day = dog_date_of_birth.split("-")
     dog_date_of_birth= date(int(year), int(month), int(day))
 
-    for litter in litters:
-        litter_date_of_birth = litter["date_of_birth"]
+    for cur_litter in litters:
+        litter_date_of_birth = cur_litter["date_of_birth"]
         year, month, day = litter_date_of_birth.split("-")
         litter_date_of_birth= date(int(year), int(month), int(day))
 
@@ -209,6 +202,8 @@ def check_dog_shows(form):
     return True
 
 def check_image(form):
+    if not form["image"]:
+        return True
     if not form["image"].filename.lower().endswith(('.jpg', '.jpeg')):
         flash("ERROR: only .jpg and .jpeg images are allowed!", "error")
         return False
@@ -219,6 +214,8 @@ def check_image(form):
     return True
 
 def check_death_date(form):
+    if not form["date_of_death"]:
+        return True
     death_date_str = form["date_of_death"]
     birth_date_str = form["date_of_birth"]
     if not check_date(death_date_str) or not check_date(birth_date_str):
@@ -230,19 +227,24 @@ def check_death_date(form):
         return False
     return True
 
-def check_best_show(best_show_id):
-    if not dog_show.get_dog_show(best_show_id):
+def check_best_show(form):
+    if not form["best_show_id"]:
+        return True
+    if not dog_show.get_dog_show(form["best_show_id"]):
         flash("ERROR: best show not found!", "error")
         return False
     return True
 
 def check_litter(form):
+    if not form["litter_id"]:
+        return True
     litter_data = litter.get_litter(form["litter_id"])
     litter_father_id = litter_data["father_id"]
     litter_mother_id = litter_data["mother_id"]
 
     if not litter_father_id or not litter_mother_id:
-        flash("ERROR: litter's both parents could not be found (one of them may have been deleted)!", "error")
+        flash("ERROR: litter's both parents could not be found \
+                       (one of them may have been deleted)!", "error")
         return False
 
     if form["dog_id"] == litter_father_id or form["dog_id"] == litter_mother_id:
@@ -265,7 +267,10 @@ def check_litter(form):
         return False
     return True
 
-def check_test(score):
+def check_test(form):
+    if not form["best_test"]:
+        return True
+    score = form["best_test"]
     try:
         val = int(score)
         if not 1 <= val <= 5:
@@ -276,7 +281,10 @@ def check_test(score):
         return False
     return True
 
-def check_hip_index(index):
+def check_hip_index(form):
+    if not form["hip_index"]:
+        return True
+    index = form["hip_index"]
     try:
         val = int(index)
         if not 1 <= val <= 100:
@@ -287,7 +295,10 @@ def check_hip_index(index):
         return False
     return True
 
-def check_use_index(index):
+def check_use_index(form):
+    if not form["use_index"]:
+        return True
+    index = form["use_index"]
     try:
         val = int(index)
         if not 1 <= val <= 100:
@@ -308,15 +319,11 @@ def get_litter_form(request):
     return form
 
 def check_litter_form(form, edit=False):
-    if not check_litter_required_fields(form):
-        return False
-    if not check_name(form["name"]):
-        return False
-    if not check_date(form["date_of_birth"]):
-        return False
-    if not check_father_and_mother(form):
-        return False
-    if not check_litter_dogs(form):
+    if not check_litter_required_fields(form) or \
+       not check_name(form["name"]) or \
+       not check_date(form["date_of_birth"]) or \
+       not check_father_and_mother(form) or \
+       not check_litter_dogs(form):
         return False
     if edit:
         if not check_litter_edit_fields(form):
@@ -356,8 +363,9 @@ def check_father_and_mother(form):
         return False
     if not check_father_and_mother_sex(father_dog, mother_dog):
         return False
-    if not check_father_and_mother_date_of_birth(form["date_of_birth"],
-                                                 mother_dog["date_of_birth"], father_dog["date_of_birth"]):
+    if not check_parents_date_of_birth(form["date_of_birth"],
+                                                 mother_dog["date_of_birth"],
+                                                 father_dog["date_of_birth"]):
         return False
     if not check_ownership(form["father_id"]) or not check_ownership(form["mother_id"]):
         return False
@@ -369,7 +377,7 @@ def check_father_and_mother_sex(father_dog, mother_dog):
         return False
     return True
 
-def check_father_and_mother_date_of_birth(litter_date_of_birth, father_date_of_birth, mother_date_of_birth):
+def check_parents_date_of_birth(litter_date_of_birth, father_date_of_birth, mother_date_of_birth):
     year, month, day = litter_date_of_birth.split("-")
     litter_date_of_birth = date(int(year), int(month), int(day))
 
@@ -400,8 +408,8 @@ def check_litter_dogs(form):
     year, month, day = litter_date_of_birth.split("-")
     litter_date_of_birth= date(int(year), int(month), int(day))
 
-    for dog in dogs:
-        dog_date_of_birth = dog["date_of_birth"]
+    for cur_dog in dogs:
+        dog_date_of_birth = cur_dog["date_of_birth"]
         year, month, day = dog_date_of_birth.split("-")
         dog_date_of_birth= date(int(year), int(month), int(day))
 
@@ -520,13 +528,10 @@ def get_account_form(request):
     return form
 
 def check_account_form(form, edit=False):
-    if not check_account_required_fields(form):
-        return False
-    if not check_name(form["name"]):
-        return False
-    if not check_email(form["email"]):
-        return False
-    if not check_account_passwords(form):
+    if not check_account_required_fields(form) or \
+       not check_name(form["name"]) or \
+       not check_email(form["email"]) or \
+       not check_account_passwords(form):
         return False
     if edit:
         if not check_account_edit_fields(form):
@@ -535,7 +540,6 @@ def check_account_form(form, edit=False):
         if owner.name_exists(form["name"]):
             flash("ERROR: name already taken!", "error")
             return False
-
         if owner.email_exists(form["email"]):
             flash("ERROR: email already taken!", "error")
             return False
