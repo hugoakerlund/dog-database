@@ -41,41 +41,14 @@ def get_dog(dog_id):
     result = db.query(sql, [dog_id])
     return result[0] if result else None
 
-def get_dog_by_registration_number(registration_number):
-    sql = (
-        "SELECT d.id, d.registration_number, d.registration_date, d.name, d.image, "
-        "d.color, d.breed, d.date_of_birth, d.date_of_death, d.sex, d.owner_id, "
-        "d.litter_id, d.best_test, d.best_show_id, d.hip_index, d.use_index, "
-        "l.name AS litter_name, "
-        "o.name AS owner_name, "
-        "s.name AS best_show_name "
-        "FROM Dogs d "
-        "LEFT JOIN Litters l ON d.litter_id = l.id "
-        "LEFT JOIN Dog_shows s ON d.best_show_id = s.id "
-        "LEFT JOIN Owners o ON d.owner_id = o.id "
-        "WHERE d.registration_number = ?"
-    )
-    result = db.query(sql, [registration_number])
-    return result[0] if result else None
-
 def get_owner_id(dog_id):
     sql = "SELECT owner_id FROM Dogs WHERE id = ?"
     result = db.query(sql, [dog_id])
     return int(result[0][0]) if result else None
 
-def get_championship_title_id(title):
-    sql = "SELECT id FROM Championship_titles WHERE title = ?"
-    result = db.query(sql, [title])
-    return result[0][0] if result else None
-
 def get_registration_number(dog_id):
     sql = "SELECT registration_number FROM Dogs WHERE id = ?"
     result = db.query(sql, [dog_id])
-    return result[0][0] if result else None
-
-def get_dog_id_by_registration_number(registration_number):
-    sql = "SELECT id FROM Dogs WHERE registration_number = ?"
-    result = db.query(sql, [registration_number])
     return result[0][0] if result else None
 
 def get_dog_id_by_comment(comment_id):
@@ -87,11 +60,6 @@ def get_participated_shows(dog_id):
     sql = "SELECT show_id FROM Show_participants WHERE dog_id = ?"
     result = db.query(sql, [dog_id])
     return result[0] if result else None
-
-def get_show_name(show_id):
-    sql = "SELECT name FROM Dog_shows WHERE id = ?"
-    result = db.query(sql, [show_id])
-    return result[0][0] if result else None
 
 def get_comments(dog_id):
     sql = (
@@ -121,34 +89,10 @@ def get_breeds():
     sql = "SELECT id, name FROM Dog_breeds"
     return db.query(sql)
 
-def get_owners_dogs(owner_id):
-    sql = (
-        "SELECT d.id, d.registration_number, d.name, d.image, d.color, "
-        "d.breed, d.date_of_birth, d.date_of_death, d.sex, d.owner_id, "
-        "d.litter_id, "
-        "d.best_test, d.best_show_id, d.hip_index, d.use_index, "
-        "FROM Dogs d "
-        "WHERE d.owner_id = ?"
-    )
-    dogs = db.query(sql, [owner_id])
-    return dogs
-
 def get_image(dog_id):
     sql = "SELECT image FROM Dogs WHERE id = ?"
     image = db.query(sql, [dog_id])
     return image[0][0] if image else None
-
-def has_image(dog_id):
-    sql = "SELECT image FROM Dogs WHERE id = ?"
-    image = db.query(sql, [dog_id])
-    return bool(image and image[0][0])
-
-def is_dead(dog_id):
-    sql = "SELECT date_of_death FROM Dogs WHERE id = ?"
-    result = db.query(sql, [dog_id])
-    if result[0][0] is None:
-        return False
-    return True
 
 def delete_dog(dog_id):
 

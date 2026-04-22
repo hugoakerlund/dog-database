@@ -197,7 +197,7 @@ def remove_dog_post(dog_id):
         dog.delete_dog(dog_id)
         flash("Dog deleted successfully!", "success")
 
-    return redirect(f"/owner/{session["owner_id"]}")
+    return redirect(f"/dog/{dog_id}")
 
 @app.route("/litter/new", methods=["GET"])
 def create_litter_get(filled={}):
@@ -375,8 +375,8 @@ def remove_account_post(owner_id):
         owner.remove_owner(owner_id)
         flash("Account deleted successfully!", "success")
         logout()
-
-    return redirect("/")
+        return redirect("/")
+    return redirect(f"/owner/{owner_id}")
 
 @app.route("/owner/<int:owner_id>/edit", methods=["GET"])
 def edit_account_get(owner_id, filled={}):

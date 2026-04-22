@@ -40,13 +40,6 @@ def get_dogs(owner_id):
     result = db.query(sql, [owner_id])
     return result
 
-def get_dog_ids(owner_id):
-    sql = (
-        "SELECT d.id FROM Dogs d WHERE d.owner_id = ?"
-    )
-    result = db.query(sql, [owner_id])
-    return [row[0] for row in result] if result else []
-
 def get_male_dogs(owner_id):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
@@ -92,20 +85,6 @@ def get_litters(owner_id):
     )
     result = db.query(sql, [owner_id])
     return result
-
-def get_litter_ids(owner_id):
-    sql = (
-        "SELECT l.id FROM Litters l WHERE l.owner_id = ?"
-    )
-    result = db.query(sql, [owner_id])
-    return [row[0] for row in result] if result else []
-
-def get_comment_ids(owner_id):
-    sql = (
-        "SELECT c.id FROM Comments c WHERE c.owner_id = ?"
-    )
-    result = db.query(sql, [owner_id])
-    return [row[0] for row in result] if result else []
 
 def get_comment_owner_id(comment_id):
     sql = (
@@ -170,6 +149,27 @@ def remove_owner(owner_id):
 
     sql = "DELETE FROM Owners WHERE id = ?"
     db.execute(sql, [owner_id])
+
+def get_comment_ids(owner_id):
+    sql = (
+        "SELECT c.id FROM Comments c WHERE c.owner_id = ?"
+    )
+    result = db.query(sql, [owner_id])
+    return [row[0] for row in result] if result else []
+
+def get_dog_ids(owner_id):
+    sql = (
+        "SELECT d.id FROM Dogs d WHERE d.owner_id = ?"
+    )
+    result = db.query(sql, [owner_id])
+    return [row[0] for row in result] if result else []
+
+def get_litter_ids(owner_id):
+    sql = (
+        "SELECT l.id FROM Litters l WHERE l.owner_id = ?"
+    )
+    result = db.query(sql, [owner_id])
+    return [row[0] for row in result] if result else []
 
 def update_owner(form):
     sql = (

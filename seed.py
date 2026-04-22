@@ -106,9 +106,6 @@ championship_titles = [
 
 pictures = os.listdir('static/pictures')
 
-def create_random_string(n):
-    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(n))
-
 def create_random_date():
     year = random.randint(2000, 2024)
     month = random.randint(1, 12)

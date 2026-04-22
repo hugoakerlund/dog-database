@@ -42,11 +42,6 @@ def get_litters(page, page_size):
     result = db.query(sql, [limit, offset])
     return result
 
-def get_litter_id_by_name(litter_name):
-    sql = "SELECT id FROM Litters WHERE name = ?"
-    result = db.query(sql, [litter_name])
-    return result[0]["id"] if result else None
-
 def get_dogs_in_litter(litter_id):
     sql = (
         "SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed, "
@@ -61,16 +56,6 @@ def get_dogs_in_litter(litter_id):
     )
     result = db.query(sql, [litter_id])
     return result
-
-def get_father_id(litter_id):
-    sql = "SELECT father_id FROM Litters WHERE id = ?"
-    result = db.query(sql, [litter_id])
-    return result[0][0] if result else None
-
-def get_mother_id(litter_id):
-    sql = "SELECT mother_id FROM Litters WHERE id = ?"
-    result = db.query(sql, [litter_id])
-    return result[0][0] if result else None
 
 def insert_litter(form):
     sql = (
