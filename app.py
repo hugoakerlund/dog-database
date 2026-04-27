@@ -1,6 +1,7 @@
 import math
 import os
 import secrets
+from urllib.parse import urlencode
 import markupsafe
 from flask import Flask, make_response, session, redirect, render_template, \
     request, send_from_directory, abort, flash
@@ -39,10 +40,26 @@ def index(page=1):
                            dogs=dogs, session=session)
 
 @app.route("/search")
-def search():
+@app.route("/search/<int:page>")
+def search(page=1):
     query = request.args.get("query")
-    results = dog.search(query) if query else []
-    return render_template("html/search.html", query=query, results=results)
+
+    page_size = 10
+    result_count = dog.get_search_count(query)
+    page_count = math.ceil(result_count / page_size)
+    page_count = max(page_count, 1)
+    results = dog.search(query, page, page_size) if query else []
+
+    if page < 1:
+        qs = urlencode({"query": query})
+        return redirect(f"/search/1/?{qs}")
+
+    if page > page_count:
+        qs = urlencode({"query": query})
+        return redirect(f"/search/{page_count}/?{qs}")
+
+    return render_template("html/search.html", page=page, page_count=page_count,
+                           result_count=result_count, query=query, results=results)
 
 @app.route("/dog/<int:dog_id>")
 def show_dog(dog_id):

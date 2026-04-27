@@ -188,7 +188,15 @@ def registration_number_exists(registration_number):
     result = db.query(sql, [registration_number])
     return bool(result)
 
-def search(query):
+def get_search_count(query):
+    sql = """SELECT COUNT(*)
+             FROM Dogs d
+             WHERE d.name LIKE ? OR d.registration_number LIKE ? OR d.breed LIKE ?"""
+    like_query = f"%{query}%"
+    result = db.query(sql, [like_query, like_query, like_query])
+    return result[0][0] if result else 0
+
+def search(query,page, page_size):
     sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
              d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
              d.best_test, d.best_show_id, d.hip_index, d.use_index,
@@ -197,6 +205,9 @@ def search(query):
              FROM Dogs d
              LEFT JOIN Litters l ON d.litter_id = l.id
              LEFT JOIN Owners o ON d.owner_id = o.id
-             WHERE d.name LIKE ? OR d.registration_number LIKE ? OR d.breed LIKE ?"""
+             WHERE d.name LIKE ? OR d.registration_number LIKE ? OR d.breed LIKE ?
+             LIMIT ? OFFSET ?"""
+    limit = page_size
+    offset = page_size * (page - 1)
     like_query = f"%{query}%"
-    return db.query(sql, [like_query, like_query, like_query])
+    return db.query(sql, [like_query, like_query, like_query, limit, offset])

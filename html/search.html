@@ -34,7 +34,7 @@
 
 {% if results %}
 
-<p>{{ results | count }} hit(s) for query "{{ query }}"</p>
+<p>{{ result_count }} hit(s) for query "{{ query }}"</p>
 
 <table class="table">
 
@@ -63,6 +63,16 @@
   {% endfor %}
 
 </table>
+
+<p>
+  {% if page > 1 %}
+    <a href="{{ url_for('search', page=page-1, query=query) }}">&lt;&lt;</a>
+  {% endif %}
+  Page {{ page }}/{{ page_count }}
+  {% if page < page_count %}
+    <a href="{{ url_for('search', page=page+1, query=query) }}">&gt;&gt;</a>
+  {% endif %}
+</p>
 
 {% else %}
 No results for query "{{ query }}"
