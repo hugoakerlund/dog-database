@@ -467,23 +467,40 @@ def show_owners(page=1):
     return render_template("html/owners.html", page=page, page_count=page_count,
                            owners=owners)
 
+@app.route("/dog_show/<int:show_id>/<int:page>")
 @app.route("/dog_show/<int:show_id>")
-def show_dog_show(show_id):
+def show_dog_show(show_id, page=1):
     show_info = dog_show.get_dog_show(show_id)
     if not show_info:
         abort(404, "ERROR: dog show not found")
 
-    dogs = dog_show.get_show_participants(show_id)
+
+    page_size = 10
+    dog_count = dog_show.get_dog_count(show_id)
+    page_count = math.ceil(dog_count / page_size)
+    page_count = max(page_count, 1)
+    dogs = dog_show.get_show_participants(show_id, page, page_size)
+
+    if page < 1:
+        return redirect(f"/dog_show/{show_id}/1")
+
+    if page > page_count:
+        return redirect(f"/dog_shows/{show_id}/" + str(page_count))
+
+
+    added_dogs = []
     eligible_dogs = []
     championship_titles = []
     if "owner_id" in session:
         owner_dogs = owner.get_dogs(session["owner_id"])
-        participant_ids = {d["id"] for d in dogs}
-        eligible_dogs = [d for d in owner_dogs if d["id"] not in participant_ids]
+        added_dogs= dog_show.get_added_dogs(show_id, session["owner_id"])
+        added_dog_ids = {d['id'] for d in added_dogs}
+        eligible_dogs = [d for d in owner_dogs if d["id"] not in added_dog_ids]
         championship_titles = dog_show.get_championship_titles()
 
     return render_template("html/dog_show.html", show=show_info, dogs=dogs,
-                           eligible_dogs=eligible_dogs, championship_titles=championship_titles)
+                           page=page, page_count=page_count, eligible_dogs=eligible_dogs,
+                           added_dogs=added_dogs, championship_titles=championship_titles)
 
 @app.route("/dog_show/<int:show_id>/add", methods=["POST"])
 def add_dog_to_show(show_id):

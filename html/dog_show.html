@@ -63,7 +63,49 @@
     <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{%
       endif %}</td>
     <td>{{ dog.show_result}}</td>
-    {% if session.get('owner_id') == dog.owner_id %}
+  </tr>
+  {% endfor %}
+
+</table>
+
+<p>
+  {% if page > 1 %}
+  <a href="/dog_show/{{ show.id }}/{{ page - 1 }}">&lt;&lt;</a>
+  {% endif %}
+  Page {{ page }}/{{ page_count }}
+  {% if page < page_count %}
+  <a href="/dog_show/{{ show.id }}/{{ page + 1 }}">&gt;&gt;</a>
+  {% endif %}
+</p>
+
+{% if added_dogs %}
+<h3>My added dogs</h3>
+
+<table class="table">
+
+  <tr>
+    <th>Registration number</th>
+    <th>Name</th>
+    <th>Breed</th>
+    <th>Date of birth</th>
+    <th>Sex</th>
+    <th>Owner</th>
+    <th>Litter</th>
+    <th>Show result</th>
+    <th>Action</th>
+  </tr>
+
+  {% for dog in added_dogs %}
+  <tr>
+    <td><a href="/dog/{{ dog.id}}">{{ dog.registration_number }}</a></td>
+    <td>{{ dog.name }}</td>
+    <td>{{ dog.breed }}</td>
+    <td>{{ dog.date_of_birth }}</td>
+    <td>{{ dog.sex }}</td>
+    <td><a href="/owner/{{ dog.owner_id }}">{{ dog.owner_name }}</a></td>
+    <td>{% if dog.litter_name %}<a href="/litter/{{ dog.litter_id }}">{{ dog.litter_name }}</a>{% else %}Unknown{%
+      endif %}</td>
+    <td>{{ dog.show_result}}</td>
     <td>
       <form method="post" action="/dog_show/{{ show.id }}/remove" style="margin:0">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
@@ -72,11 +114,12 @@
         <input type="submit" class="form-button" value="Remove" />
       </form>
     </td>
-    {% endif %}
   </tr>
+
   {% endfor %}
 
 </table>
+{% endif %}
 
 {% if session.get('owner_id') %}
 
