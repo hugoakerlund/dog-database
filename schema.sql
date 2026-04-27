@@ -80,6 +80,7 @@ CREATE INDEX idx_dogs_breed ON Dogs(breed);
 CREATE INDEX idx_litters_father_id ON Litters(father_id);
 CREATE INDEX idx_litters_mother_id ON Litters(mother_id);
 CREATE INDEX idx_litters_owner_id ON Litters(owner_id);
+CREATE INDEX idx_litters_date_of_birth ON Litters(date_of_birth DESC);
 
 CREATE INDEX idx_dog_shows_winner_id ON Dog_shows(winner_id);
 

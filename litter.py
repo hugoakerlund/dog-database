@@ -30,7 +30,6 @@ def get_litters(page, page_size):
              LEFT JOIN Dogs f ON l.father_id = f.id
              LEFT JOIN Dogs m ON l.mother_id = m.id
              LEFT JOIN Owners o ON l.owner_id = o.id
-             GROUP BY l.id
              ORDER BY l.date_of_birth DESC
              LIMIT ? OFFSET ?"""
     limit = page_size
