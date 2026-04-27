@@ -1,7 +1,9 @@
 import os
 import random
-import db
+import sqlite3
 from app import app
+
+db = sqlite3.connect("database.db")
 
 colors = [
     'Brown',
@@ -205,7 +207,7 @@ def set_show_winner(show, dog_id):
     db.execute(sql, [dog_id, show])
 
 with app.app_context():
-    DOG_COUNT = 100
+    DOG_COUNT = 10**4
     seed_table_colors()
     seed_table_dog_breeds()
     seed_table_dog_shows()
@@ -220,3 +222,6 @@ with app.app_context():
     for show_id in range(1, len(dog_shows) + 1):
         winner_id = random.randint(1, DOG_COUNT - 1)
         set_show_winner(show_id, winner_id)
+
+db.commit()
+db.close()
