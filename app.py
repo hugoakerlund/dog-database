@@ -76,7 +76,7 @@ def create_dog_post():
 
     dog.insert_dog(form)
     flash("Dog created successfully!", "success")
-    return redirect(f"/owner/{session["owner_id"]}")
+    return redirect(f"/owner/{session['owner_id']}")
 
 @app.route("/comment/new", methods=["POST"])
 def create_comment():
@@ -173,7 +173,7 @@ def edit_dog_post(dog_id):
 
     dog.update_dog(dog_id, form)
     flash("Dog updated successfully!", "success")
-    return redirect(f"/owner/{session["owner_id"]}")
+    return redirect(f"/owner/{session['owner_id']}")
 
 @app.route("/dog/<int:dog_id>/remove", methods=["GET"])
 def remove_dog_get(dog_id):
@@ -219,7 +219,7 @@ def create_litter_post():
 
     litter.insert_litter(form)
     flash("Litter created successfully!", "success")
-    return redirect(f"/owner/{session["owner_id"]}")
+    return redirect(f"/owner/{session['owner_id']}")
 
 
 @app.route("/litter/<int:litter_id>/edit", methods=["GET"])
@@ -251,7 +251,7 @@ def edit_litter_post(litter_id):
 
     litter.update_litter(litter_id, form)
     flash("Litter edited successfully!", "success")
-    return redirect(f"/owner/{session["owner_id"]}")
+    return redirect(f"/owner/{session['owner_id']}")
 
 @app.route("/litter/<int:litter_id>/remove", methods=["GET"])
 def remove_litter_get(litter_id):
@@ -276,7 +276,7 @@ def remove_litter_post(litter_id):
         litter.delete_litter(litter_id)
         flash("Litter deleted successfully!", "success")
 
-    return redirect(f"/owner/{session["owner_id"]}")
+    return redirect(f"/owner/{session['owner_id']}")
 
 @app.route("/login", methods=["GET"])
 def login_get():
