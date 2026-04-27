@@ -28,8 +28,6 @@ def index(page=1):
     page_count = math.ceil(dog_count / page_size)
     page_count = max(page_count, 1)
     dogs = dog.get_dogs(page, page_size)
-    if not dogs:
-        abort(404, "ERROR: no dogs found")
 
     if page < 1:
         return redirect("/1")
@@ -424,9 +422,6 @@ def show_litters(page=1):
     page_count = max(page_count, 1)
     litters = litter.get_litters(page, page_size)
 
-    if not litters:
-        abort(404, "ERROR: no litters found")
-
     if page < 1:
         return redirect("/litters/1")
 
@@ -444,9 +439,6 @@ def show_owners(page=1):
     page_count = math.ceil(owner_count / page_size)
     page_count = max(page_count, 1)
     owners = owner.get_owners(page, page_size)
-
-    if not owners:
-        abort(404, "ERROR: no owners found")
 
     if page < 1:
         return redirect("/owners/1")
@@ -510,9 +502,6 @@ def show_dog_shows(page=1):
     page_count = math.ceil(dog_show_count / page_size)
     page_count = max(page_count, 1)
     dog_shows = dog_show.get_dog_shows(page, page_size)
-
-    if not dog_shows:
-        abort(404, "ERROR: no dog shows found")
 
     if page < 1:
         return redirect("/dog_shows/1")
