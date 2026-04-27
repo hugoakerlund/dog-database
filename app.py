@@ -212,6 +212,7 @@ def remove_dog_post(dog_id):
     if "continue" in request.form:
         dog.delete_dog(dog_id)
         flash("Dog deleted successfully!", "success")
+        return redirect(f"/owner/{session['owner_id']}")
 
     return redirect(f"/dog/{dog_id}")
 
