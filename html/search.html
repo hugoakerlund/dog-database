@@ -26,10 +26,16 @@
   </table>
 
   <input type="submit" class="button" value="Search" />
+
 </form>
 
 {% if query %}
 <h3>Results</h3>
+
+{% if results %}
+
+<p>{{ results | count }} hit(s) for query "{{ query }}"</p>
+
 <table class="table">
 
   <tr>
@@ -57,6 +63,11 @@
   {% endfor %}
 
 </table>
+
+{% else %}
+No results for query "{{ query }}"
+{% endif %}
+
 {% endif %}
 
 {% endblock %}

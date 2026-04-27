@@ -6,6 +6,8 @@
 
 <h2>Owners</h2>
 
+{% if owners %}
+
 <table class="table">
 
   <tr>
@@ -30,5 +32,9 @@
   {% if page < page_count %} <a href="/owners/{{ page + 1 }}">&gt;&gt;</a>
   {% endif %}
 </p>
+
+{% else %}
+There are currently no owners in the database.
+{% endif %}
 
 {% endblock %}

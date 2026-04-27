@@ -6,6 +6,8 @@
 
 <h2>Litters</h2>
 
+{% if litters %}
+
 <table class="table">
 
   <tr>
@@ -36,5 +38,9 @@
   {% if page < page_count %} <a href="/litters/{{ page + 1 }}">&gt;&gt;</a>
   {% endif %}
 </p>
+
+{% else %}
+There are currently no litters in the database.
+{% endif %}
 
 {% endblock %}

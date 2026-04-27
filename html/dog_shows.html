@@ -6,6 +6,8 @@
 
 <h2>Dog Shows</h2>
 
+{% if dog_shows %}
+
 <table class="table">
 
   <tr>
@@ -30,5 +32,9 @@
   {% if page < page_count %} <a href="/dog_shows/{{ page + 1 }}">&gt;&gt;</a>
   {% endif %}
 </p>
+
+{% else %}
+There are currently no dog shows in the database.
+{% endif %}
 
 {% endblock %}
