@@ -109,9 +109,7 @@ def create_comment():
 @app.route("/comment/<int:comment_id>/remove", methods=["POST"])
 def remove_comment(comment_id):
     require_login()
-    if session["owner_id"] != owner.get_comment_owner_id(comment_id):
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(owner.get_comment_owner_id(comment_id))
     check_csrf()
     dog_id = request.form.get("dog_id", "") or None
     if not dog_id:
@@ -126,9 +124,7 @@ def remove_comment(comment_id):
 @app.route("/comment/<int:comment_id>/edit", methods=["GET"])
 def edit_comment_get(comment_id, filled=None):
     require_login()
-    if session["owner_id"] != owner.get_comment_owner_id(comment_id):
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(owner.get_comment_owner_id(comment_id))
     comment = dog.get_comment(comment_id)
     if not comment:
         abort(404, "ERROR: comment not found")
@@ -138,9 +134,7 @@ def edit_comment_get(comment_id, filled=None):
 @app.route("/comment/<int:comment_id>/edit", methods=["POST"])
 def edit_comment_post(comment_id):
     require_login()
-    if session["owner_id"] != owner.get_comment_owner_id(comment_id):
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(owner.get_comment_owner_id(comment_id))
     check_csrf()
     form = input_validator.get_comment_form(request, True)
     if "continue" in request.form:
@@ -160,9 +154,7 @@ def edit_dog_get(dog_id, filled=None):
     if not dog_info:
         abort(404, "ERROR: dog not found")
 
-    if session["owner_id"] != dog_info["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(dog_info["owner_id"])
     colors = dog.get_colors()
     dog_breeds = dog.get_breeds()
     owner_id = session["owner_id"]
@@ -178,10 +170,7 @@ def edit_dog_post(dog_id):
     dog_info = dog.get_dog(dog_id)
     if not dog_info:
         abort(404, "ERROR: dog not found")
-
-    if session["owner_id"] != dog_info["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(dog_info["owner_id"])
     check_csrf()
     form = input_validator.get_dog_form(request)
     if not input_validator.check_dog_form(form, edit=True):
@@ -198,17 +187,13 @@ def remove_dog_get(dog_id):
     if not dog_info:
         abort(404, "ERROR: dog not found")
 
-    if dog_info["owner_id"] != session["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(session["owner_id"])
     return render_template("html/remove_dog.html", dog=dog_info)
 
 @app.route("/dog/<int:dog_id>/remove", methods=["POST"])
 def remove_dog_post(dog_id):
     require_login()
-    if session["owner_id"] != dog.get_owner_id(dog_id):
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(dog.get_owner_id(dog_id))
     check_csrf()
     if "continue" in request.form:
         dog.delete_dog(dog_id)
@@ -246,9 +231,7 @@ def edit_litter_get(litter_id, filled=None):
     if not litter_info:
         abort(404, "ERROR: litter not found")
 
-    if session["owner_id"] != litter_info["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(litter_info["owner_id"])
     owner_id = session["owner_id"]
     male_dogs = owner.get_male_dogs(owner_id)
     female_dogs = owner.get_female_dogs(owner_id)
@@ -258,9 +241,7 @@ def edit_litter_get(litter_id, filled=None):
 @app.route("/litter/<int:litter_id>/edit", methods=["POST"])
 def edit_litter_post(litter_id):
     require_login()
-    if session["owner_id"] != litter.get_litter(litter_id)["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(litter.get_litter(litter_id)["owner_id"])
     check_csrf()
     form = input_validator.get_litter_form(request)
     if not input_validator.check_litter_form(form, edit=True):
@@ -277,17 +258,13 @@ def remove_litter_get(litter_id):
     if not litter_info:
         abort(404, "ERROR: litter not found")
 
-    if litter_info["owner_id"] != session["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(session["owner_id"])
     return render_template("html/remove_litter.html", litter=litter_info)
 
 @app.route("/litter/<int:litter_id>/remove", methods=["POST"])
 def remove_litter_post(litter_id):
     require_login()
-    if session["owner_id"] != litter.get_litter(litter_id)["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(litter.get_litter(litter_id)["owner_id"])
     check_csrf()
     if "continue" in request.form:
         litter.delete_litter(litter_id)
@@ -376,32 +353,27 @@ def show_owner(owner_id):
 @app.route("/owner/<int:owner_id>/remove", methods=["GET"])
 def remove_account_get(owner_id):
     require_login()
-    if owner_id != session["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(owner_id)
     return render_template("html/remove_account.html")
 
 @app.route("/owner/<int:owner_id>/remove", methods=["POST"])
 def remove_account_post(owner_id):
     require_login()
     check_csrf()
-    if owner_id != session["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(owner_id)
     owner_id = session["owner_id"]
     if "continue" in request.form:
         owner.remove_owner(owner_id)
         flash("Account deleted successfully!", "success")
         logout()
         return redirect("/")
+
     return redirect(f"/owner/{owner_id}")
 
 @app.route("/owner/<int:owner_id>/edit", methods=["GET"])
 def edit_account_get(owner_id, filled=None):
     require_login()
-    if owner_id != session["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(owner_id)
     owner_id = session["owner_id"]
     owner_info = owner.get_owner(owner_id)
     return render_template("html/edit_account.html", filled=filled,
@@ -410,9 +382,7 @@ def edit_account_get(owner_id, filled=None):
 @app.route("/owner/<int:owner_id>/edit", methods=["POST"])
 def edit_account_post(owner_id):
     require_login()
-    if owner_id != session["owner_id"]:
-        abort(401, "ERROR: Unauthorized")
-
+    require_owner(owner_id)
     check_csrf()
     form = input_validator.get_account_form(request)
     if not input_validator.check_account_form(form, True):
@@ -551,6 +521,10 @@ def show_dog_shows(page=1):
 def require_login():
     if "owner_id" not in session:
         abort(403, "ERROR: login required")
+
+def require_owner(resource_owner_id):
+    if session.get("owner_id") != resource_owner_id:
+        abort(403, "ERROR: Not allowed")
 
 def check_csrf():
     if request.form.get("csrf_token") != session.get("csrf_token"):
