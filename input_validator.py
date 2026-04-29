@@ -95,7 +95,7 @@ def check_registration_date(form):
         flash("ERROR: dog not found!", "error")
         return False
 
-    registration_date = dog_data["registration_date"].split(' ')[0]
+    registration_date = dog_data["registration_date"].split(" ")[0]
     dog_date_of_birth  = form["date_of_birth"]
 
     year, month, day = registration_date.split("-")
@@ -204,7 +204,7 @@ def check_dog_shows(form):
 def check_image(form):
     if not form["image"]:
         return True
-    if not form["image"].filename.lower().endswith(('.jpg', '.jpeg')):
+    if not form["image"].filename.lower().endswith((".jpg", ".jpeg")):
         flash("ERROR: only .jpg and .jpeg images are allowed!", "error")
         return False
     form["image_data"] = form["image"].read()

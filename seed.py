@@ -6,78 +6,78 @@ from app import app
 db = sqlite3.connect("database.db")
 
 colors = [
-    'Brown',
-    'Chocolate',
-    'Liver',
-    'Red',
-    'Gold',
-    'Yellow',
-    'Cream',
-    'Fawn',
-    'Black',
-    'Blue',
-    'Gray',
-    'Silver',
-    'White'
+    "Brown",
+    "Chocolate",
+    "Liver",
+    "Red",
+    "Gold",
+    "Yellow",
+    "Cream",
+    "Fawn",
+    "Black",
+    "Blue",
+    "Gray",
+    "Silver",
+    "White"
 ]
 
 dog_breeds = [
-    'Affenpinscher',
-    'Afghan Hound',
-    'Africanis',
-    'Aidi',
-    'Airedale Terrier',
-    'Akbash',
-    'Akita',
-    'Aksaray Malaklisi',
-    'Alano Español',
-    'Alapaha Blue Blood Bulldog',
-    'Alaskan Husky',
-    'Alaskan Klee Kai',
-    'Alaskan Malamute',
-    'Alopekis',
-    'Alpine Dachsbracke',
-    'American Bulldog',
-    'American Bully',
-    'American Cocker Spaniel',
-    'American English Coonhound',
-    'American Eskimo Dog',
-    'Finnish Spitz'
+    "Affenpinscher",
+    "Afghan Hound",
+    "Africanis",
+    "Aidi",
+    "Airedale Terrier",
+    "Akbash",
+    "Akita",
+    "Aksaray Malaklisi",
+    "Alano Español",
+    "Alapaha Blue Blood Bulldog",
+    "Alaskan Husky",
+    "Alaskan Klee Kai",
+    "Alaskan Malamute",
+    "Alopekis",
+    "Alpine Dachsbracke",
+    "American Bulldog",
+    "American Bully",
+    "American Cocker Spaniel",
+    "American English Coonhound",
+    "American Eskimo Dog",
+    "Finnish Spitz"
 ]
 
 dog_names = [
-    'Max',
-    'Charlie',
-    'Bella',
-    'Poppy',
-    'Daisy',
-    'Buster',
-    'Alfie',
-    'Millie',
-    'Molly',
-    'Rosie',
-    'Buddy',
-    'Barney',
-    'Lola',
-    'Roxy',
-    'Ruby',
-    'Tilly',
-    'Bailey',
-    'Marley',
-    'Tia',
-    'Bonnie',
-    'Toby',
-    'Milo',
-    'Archie',
-    'Holly',
-    'Lucy'
+    "Max",
+    "Charlie",
+    "Bella",
+    "Poppy",
+    "Daisy",
+    "Buster",
+    "Alfie",
+    "Millie",
+    "Molly",
+    "Rosie",
+    "Buddy",
+    "Barney",
+    "Lola",
+    "Roxy",
+    "Ruby",
+    "Tilly",
+    "Bailey",
+    "Marley",
+    "Tia",
+    "Bonnie",
+    "Toby",
+    "Milo",
+    "Archie",
+    "Holly",
+    "Lucy"
 ]
 
 dog_shows = [
-    ('Spring Dog Show', '2024-03-15'),
-    ('Summer Dog Show', '2024-06-20'),
-    ('Autumn Dog Show', '2024-09-10'),
-    ('Winter Dog Show', '2024-12-05')
+    ("Spring Dog Show", "2024-03-15"),
+    ("Summer Dog Show", "2024-06-20"),
+    ("Autumn Dog Show", "2024-09-10"),
+    ("Winter Dog Show", "2024-12-05")
 ]
 
 championship_titles = [
@@ -105,7 +105,7 @@ championship_titles = [
     "BIS" # Best in Show
 ]
 
-pictures = os.listdir('static/pictures')
+pictures = os.listdir("static/pictures")
 
 def create_random_date():
     year = random.randint(2000, 2024)

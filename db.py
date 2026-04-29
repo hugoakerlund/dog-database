@@ -2,8 +2,8 @@ import sqlite3
 import logging
 from flask import g, abort
 
-logging.basicConfig(filename='database.log', level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(name)s %(message)s')
+logging.basicConfig(filename="database.log", level=logging.DEBUG,
+                    format="%(asctime)s %(levelname)s %(name)s %(message)s")
 logger=logging.getLogger(__name__)
 
 

@@ -332,10 +332,10 @@ def register_post():
     flash("Account created successfully!", "success")
     return redirect("/")
 
-@app.route('/favicon.ico')
+@app.route("/favicon.ico")
 def favicon():
-    return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    return send_from_directory(os.path.join(app.root_path, "static"),
+                               "favicon.ico", mimetype="mage/vnd.microsoft.icon")
 
 @app.route("/image/<int:dog_id>")
 def show_image(dog_id):
@@ -494,7 +494,7 @@ def show_dog_show(show_id, page=1):
     if "owner_id" in session:
         owner_dogs = owner.get_dogs(session["owner_id"])
         added_dogs= dog_show.get_added_dogs(show_id, session["owner_id"])
-        added_dog_ids = {d['id'] for d in added_dogs}
+        added_dog_ids = {d["id"] for d in added_dogs}
         eligible_dogs = [d for d in owner_dogs if d["id"] not in added_dog_ids]
         championship_titles = dog_show.get_championship_titles()
 

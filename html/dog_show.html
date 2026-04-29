@@ -107,7 +107,7 @@
       endif %}</td>
     <td>{{ dog.show_result}}</td>
     <td>
-      <form method="post" action="/dog_show/{{ show.id }}/remove" style="margin:0">
+      <form method="post" action="/dog_show/{{ show.id }}/remove">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
         <input type="hidden" name="dog_id" value="{{ dog.id }}" />
         <input type="hidden" name="show_id" value="{{ show.id }}" />
@@ -121,7 +121,7 @@
 </table>
 {% endif %}
 
-{% if session.get('owner_id') %}
+{% if session.get("owner_id") %}
 
 <h3>Add your dog to this show</h3>
 

@@ -3,7 +3,7 @@
 
   <head>
     <title>{% block title %}{% endblock %}</title>
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url_for("static", filename="favicon.ico") }}">
     <link rel="stylesheet" href="/static/style.css">
   </head>
 
@@ -20,7 +20,7 @@
           <a href="/litters">Litters</a> |
           <a href="/owners">Owners</a> |
           <a href="/dog_shows">Dog Shows</a> |
-          {% if session.get('name') %}
+          {% if session.get("owner_id") %}
           <a href="/dog/new">Add dog</a> |
           <a href="/litter/new">Add litter</a> |
           <a href="/owner/{{ session.owner_id }}">My account</a> |
