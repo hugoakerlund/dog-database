@@ -74,6 +74,7 @@ def show_dog(dog_id):
 
 @app.route("/dog/new", methods=["GET"])
 def create_dog_get(filled=None):
+    require_login()
     colors = dog.get_colors()
     dog_breeds = dog.get_breeds()
     owner_id = session["owner_id"]
