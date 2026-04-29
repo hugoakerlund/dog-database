@@ -99,11 +99,11 @@ def create_comment():
     check_csrf()
     form = input_validator.get_comment_form(request)
     if not input_validator.check_comment_form(form):
-        return redirect(f"/dog/{form["dog_id"]}")
+        return redirect(f"/dog/{form['dog_id']}")
 
     dog.insert_comment(form)
     flash("Comment added successfully!", "success")
-    return redirect(f"/dog/{form["dog_id"]}")
+    return redirect(f"/dog/{form['dog_id']}")
 
 @app.route("/comment/<int:comment_id>/remove", methods=["POST"])
 def remove_comment(comment_id):
@@ -150,7 +150,7 @@ def edit_comment_post(comment_id):
         dog.update_comment(form)
         flash("Comment updated successfully!", "success")
 
-    return redirect(f"/dog/{form["dog_id"]}")
+    return redirect(f"/dog/{form['dog_id']}")
 
 @app.route("/dog/<int:dog_id>/edit", methods=["GET"])
 def edit_dog_get(dog_id, filled=None):
@@ -420,7 +420,7 @@ def edit_account_post(owner_id):
     owner.update_owner(form)
     set_session(owner.get_id_with_name(form["name"]), form["name"])
     flash("Account updated successfully!")
-    return redirect(f"/owner/{session["owner_id"]}")
+    return redirect(f"/owner/{session['owner_id']}")
 
 @app.route("/litter/<int:litter_id>")
 def show_litter(litter_id):
