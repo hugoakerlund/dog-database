@@ -110,24 +110,24 @@
     </tr>
 
     <tr>
-      <td class="label"><label for="litter">Litter</label></td>
-      <td class="control">
-        <select id="litter" class="select" name="litter_id">
-          <option value="">None</option>
-          {% for litter in litters %}
-          {% if filled %}
-          <option value="{{ litter.id }}"
-            {% if litter.id|string == filled.litter_id|string %}selected{% endif %}>{{ litter.name }}
-          </option>
-          {% else %}
-          <option value="{{ litter.id }}"
-            {% if litter.id|string == dog.litter_id|string %}selected{% endif %}>{{ litter.name }}
-          </option>
-          {% endif %}
-          {% endfor %}
-        </select>
-      </td>
-    </tr>
+    <td class="label"><label for="litter">Litter</label></td>
+    <td class="control">
+      <select id="litter" class="select" name="litter_id">
+        <option value="">None</option>
+        {% for litter in litters %}
+        {% if filled %}
+        <option value="{{ litter.id }}"
+          {% if litter.id|string == filled.litter_id|string %}selected{% endif %}>{{ litter.name }}
+        </option>
+        {% else %}
+        <option value="{{ litter.id }}"
+          {% if litter.id|string == dog.litter_id|string %}selected{% endif %}>{{ litter.name }}
+        </option>
+        {% endif %}
+        {% endfor %}
+      </select>
+    </td>
+  </tr>
 
     <tr>
       <td class="label"><label for="best_show">Best show</label></td>

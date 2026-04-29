@@ -100,13 +100,21 @@
 
   </table>
 
+  {% if dog.owner_id == session.owner_id %}
+  <p>
+    <a href="/dog/{{ dog.id }}/edit">Edit dog</a> |
+    <a href="/dog/{{ dog.id }}/remove">Remove dog</a>
+  </p>
+  {% endif %}
+
 </div>
+
 
 <div class="info">
 
-{% if participated_shows %}
+  {% if participated_shows %}
 
-<h3>Dog shows</h3>
+  <h3>Dog shows</h3>
   <table class="table">
 
     <tr>
@@ -123,14 +131,8 @@
 
   </table>
 
-{% endif %}
-
-  {% if dog.owner_id == session.owner_id %}
-  <p>
-    <a href="/dog/{{ dog.id }}/edit">Edit dog</a> |
-    <a href="/dog/{{ dog.id }}/remove">Remove dog</a>
-  </p>
   {% endif %}
+
 
 </div>
 

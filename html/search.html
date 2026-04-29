@@ -66,12 +66,12 @@
 
 <p>
   {% if page > 1 %}
-    <a href="{{ url_for("search", page=page-1, query=query) }}">&lt;&lt;</a>
-  {% endif %}
-  Page {{ page }}/{{ page_count }}
-  {% if page < page_count %}
+  <a href="{{ url_for("search", page=page-1, query=query) }}">&lt;&lt;</a>
+    {% endif %}
+    Page {{ page }}/{{ page_count }}
+    {% if page < page_count %}
     <a href="{{ url_for("search", page=page+1, query=query) }}">&gt;&gt;</a>
-  {% endif %}
+    {% endif %}
 </p>
 
 {% else %}
