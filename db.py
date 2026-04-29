@@ -25,7 +25,7 @@ def execute(sql, params=None):
 
     except sqlite3.IntegrityError as e:
         logger.error(e)
-        abort(500, "ERROR: Database error")
+        abort(500, "ERROR: database error")
 
 def last_insert_id():
     return g.last_insert_id

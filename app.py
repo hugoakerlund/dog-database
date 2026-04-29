@@ -113,7 +113,7 @@ def remove_comment(comment_id):
     check_csrf()
     dog_id = request.form.get("dog_id", "") or None
     if not dog_id:
-        abort(404, "dog does not exist")
+        abort(404, "ERROR: dog not found")
 
     else:
         dog.remove_comment(comment_id)
@@ -524,7 +524,7 @@ def require_login():
 
 def require_owner(resource_owner_id):
     if session.get("owner_id") != resource_owner_id:
-        abort(403, "ERROR: Not allowed")
+        abort(403, "ERROR: not allowed")
 
 def check_csrf():
     if request.form.get("csrf_token") != session.get("csrf_token"):
