@@ -390,7 +390,7 @@ def edit_account_post(owner_id):
 
     owner.update_owner(form)
     set_session(owner.get_id_with_name(form["name"]), form["name"])
-    flash("Account updated successfully!")
+    flash("Account updated successfully!", "success")
     return redirect(f"/owner/{session['owner_id']}")
 
 @app.route("/litter/<int:litter_id>")
