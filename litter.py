@@ -34,8 +34,7 @@ def get_litters(page, page_size):
              LIMIT ? OFFSET ?"""
     limit = page_size
     offset = page_size * (page - 1)
-    result = db.query(sql, [limit, offset])
-    return result
+    return db.query(sql, [limit, offset])
 
 def get_dogs_in_litter(litter_id):
     sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
@@ -47,8 +46,7 @@ def get_dogs_in_litter(litter_id):
              LEFT JOIN Litters l ON d.litter_id = l.id
              LEFT JOIN Owners o ON d.owner_id = o.id
              WHERE d.litter_id = ?"""
-    result = db.query(sql, [litter_id])
-    return result
+    return db.query(sql, [litter_id])
 
 def insert_litter(form):
     sql = """INSERT INTO Litters (name, father_id, mother_id, date_of_birth, owner_id)

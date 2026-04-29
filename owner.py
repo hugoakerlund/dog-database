@@ -31,8 +31,7 @@ def get_dogs(owner_id):
              LEFT JOIN Litters l ON d.litter_id = l.id
              LEFT JOIN Owners o ON d.owner_id = o.id
              WHERE d.owner_id = ?"""
-    result = db.query(sql, [owner_id])
-    return result
+    return db.query(sql, [owner_id])
 
 def get_male_dogs(owner_id):
     sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
@@ -44,8 +43,7 @@ def get_male_dogs(owner_id):
              LEFT JOIN Litters l ON d.litter_id = l.id
              LEFT JOIN Owners o ON d.owner_id = o.id
              WHERE d.owner_id = ? AND d.sex = 'Male'"""
-    result = db.query(sql, [owner_id])
-    return result
+    return db.query(sql, [owner_id])
 
 def get_female_dogs(owner_id):
     sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
@@ -57,8 +55,7 @@ def get_female_dogs(owner_id):
              LEFT JOIN Litters l ON d.litter_id = l.id
              LEFT JOIN Owners o ON d.owner_id = o.id
              WHERE d.owner_id = ? AND d.sex = 'Female'"""
-    result = db.query(sql, [owner_id])
-    return result
+    return db.query(sql, [owner_id])
 
 def get_litters(owner_id):
     sql = """SELECT l.id, l.name, l.father_id, l.mother_id,
@@ -71,8 +68,7 @@ def get_litters(owner_id):
              LEFT JOIN Dogs m ON l.mother_id = m.id
              LEFT JOIN Owners o ON l.owner_id = o.id
              WHERE l.owner_id = ?"""
-    result = db.query(sql, [owner_id])
-    return result
+    return db.query(sql, [owner_id])
 
 def get_comment_owner_id(comment_id):
     sql = "SELECT owner_id FROM Comments WHERE id = ?"
