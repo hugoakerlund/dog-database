@@ -566,6 +566,9 @@ def check_account_passwords(form):
     if len(form["password1"]) < 8:
         flash("ERROR: password must be at least 8 characters long!", "error")
         return False
+    if len(form["password1"]) > 35:
+        flash("ERROR: password cannot be longer than 35 characters!", "error")
+        return False
     form["password_hash"] = generate_password_hash(form["password1"])
     return True
 
