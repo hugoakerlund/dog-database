@@ -1,4 +1,5 @@
 import db
+from dog import DOG_FIELDS
 
 def get_dog_show(show_id):
     sql = """SELECT s.id, s.name, s.winner_id, s.date,
@@ -16,9 +17,7 @@ def get_dog_count(show_id):
     return result[0][0] if result else 0
 
 def get_show_participants(show_id, page, page_size):
-    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
-             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
-             d.best_test, d.best_show_id, d.hip_index, d.use_index,
+    sql = f"""SELECT {DOG_FIELDS},
              l.name AS litter_name,
              o.name AS owner_name,
              c.title AS show_result
@@ -29,14 +28,14 @@ def get_show_participants(show_id, page, page_size):
              LEFT JOIN owners o ON d.owner_id = o.id
              LEFT JOIN championship_titles c ON pa.result = c.id
              WHERE s.id = ?
+             ORDER BY d.id DESC
              LIMIT ? OFFSET ?"""
     limit = page_size
     offset = page_size * (page - 1)
     return db.query(sql, [show_id, limit, offset])
 
 def get_added_dogs(show_id, owner_id):
-    sql = """SELECT d.id, d.registration_number, d.name, d.breed,
-             d.date_of_birth, d.sex, d.owner_id, d.litter_id,
+    sql = f"""SELECT {DOG_FIELDS},
              l.name AS litter_name,
              o.name AS owner_name,
              c.title AS show_result

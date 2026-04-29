@@ -1,17 +1,22 @@
-from flask import session
 import db
+from dog import DOG_FIELDS
+
+LITTER_FIELDS = """
+    l.id, l.name, l.father_id, l.mother_id,
+    l.date_of_birth, l.owner_id"""
+
+BASE_LITTER_QUERY = f"""
+    SELECT {LITTER_FIELDS},
+    f.registration_number AS father_registration_number,
+    m.registration_number AS mother_registration_number,
+    o.name AS owner_name
+    FROM litters l
+    LEFT JOIN dogs f ON l.father_id = f.id
+    LEFT JOIN dogs m ON l.mother_id = m.id
+    LEFT JOIN owners o ON l.owner_id = o.id"""
 
 def get_litter(litter_id):
-    sql = """SELECT l.id, l.name, l.father_id, l.mother_id,
-             l.date_of_birth, l.owner_id,
-             f.registration_number AS father_registration_number,
-             m.registration_number AS mother_registration_number,
-             o.name AS owner_name
-             FROM litters l
-             LEFT JOIN dogs f ON l.father_id = f.id
-             LEFT JOIN dogs m ON l.mother_id = m.id
-             LEFT JOIN owners o ON l.owner_id = o.id
-             WHERE l.id = ?"""
+    sql = BASE_LITTER_QUERY + " WHERE l.id = ?"
     result = db.query(sql, [litter_id])
     return result[0]
 
@@ -21,25 +26,15 @@ def get_litter_count():
     return result[0][0] if result else 0
 
 def get_litters(page, page_size):
-    sql = """SELECT l.id, l.name, l.father_id, l.mother_id,
-             l.date_of_birth, l.owner_id,
-             f.registration_number AS father_registration_number,
-             m.registration_number AS mother_registration_number,
-             o.name AS owner_name
-             FROM litters l
-             LEFT JOIN dogs f ON l.father_id = f.id
-             LEFT JOIN dogs m ON l.mother_id = m.id
-             LEFT JOIN owners o ON l.owner_id = o.id
-             ORDER BY l.date_of_birth DESC
-             LIMIT ? OFFSET ?"""
+    sql = BASE_LITTER_QUERY + """
+        ORDER BY l.date_of_birth DESC
+        LIMIT ? OFFSET ?"""
     limit = page_size
     offset = page_size * (page - 1)
     return db.query(sql, [limit, offset])
 
 def get_dogs_in_litter(litter_id):
-    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
-             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
-             d.best_test, d.best_show_id, d.hip_index, d.use_index,
+    sql = f"""SELECT {DOG_FIELDS},
              l.name AS litter_name,
              o.name AS owner_name
              FROM dogs d
@@ -52,7 +47,7 @@ def insert_litter(form):
     sql = """INSERT INTO litters (name, father_id, mother_id, date_of_birth, owner_id)
              VALUES (?, ?, ?, ?, ?)"""
     db.execute(sql, [form["name"], form["father_id"], form["mother_id"], form["date_of_birth"],
-                     session["owner_id"]])
+                     form["owner_id"]])
 
 def update_litter(litter_id, form):
     sql = """UPDATE litters
@@ -62,9 +57,6 @@ def update_litter(litter_id, form):
                      litter_id])
 
 def delete_litter(litter_id):
-    sql = "UPDATE dogs SET litter_id = NULL WHERE litter_id = ?"
-    db.execute(sql, [litter_id])
-
     sql = "DELETE FROM litters WHERE id = ?"
     db.execute(sql, [litter_id])
 

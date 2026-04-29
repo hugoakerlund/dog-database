@@ -1,4 +1,6 @@
 from flask import session
+from dog import DOG_FIELDS
+from litter import BASE_LITTER_QUERY
 import db
 
 def get_owner(owner_id):
@@ -19,53 +21,25 @@ def get_owners(page, page_size):
     offset = page_size * (page - 1)
     return db.query(sql, [limit, offset])
 
-def get_dogs(owner_id):
-    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
-             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
-             d.best_test, d.best_show_id, d.hip_index, d.use_index,
+def get_dogs(owner_id, sex=None):
+    sql = f"""SELECT {DOG_FIELDS},
              l.name AS litter_name,
              o.name AS owner_name
              FROM dogs d
              LEFT JOIN litters l ON d.litter_id = l.id
              LEFT JOIN owners o ON d.owner_id = o.id
              WHERE d.owner_id = ?"""
-    return db.query(sql, [owner_id])
+    if sex == "Male":
+        sql += " AND d.sex = 'Male'"
 
-def get_male_dogs(owner_id):
-    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
-             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
-             d.best_test, d.best_show_id, d.hip_index, d.use_index,
-             l.name AS litter_name,
-             o.name AS owner_name
-             FROM dogs d
-             LEFT JOIN litters l ON d.litter_id = l.id
-             LEFT JOIN owners o ON d.owner_id = o.id
-             WHERE d.owner_id = ? AND d.sex = 'Male'"""
-    return db.query(sql, [owner_id])
+    elif sex == "Female":
+        sql += " AND d.sex = 'Female'"
 
-def get_female_dogs(owner_id):
-    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
-             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
-             d.best_test, d.best_show_id, d.hip_index, d.use_index,
-             l.name AS litter_name,
-             o.name AS owner_name
-             FROM dogs d
-             LEFT JOIN litters l ON d.litter_id = l.id
-             LEFT JOIN owners o ON d.owner_id = o.id
-             WHERE d.owner_id = ? AND d.sex = 'Female'"""
     return db.query(sql, [owner_id])
 
 def get_litters(owner_id):
-    sql = """SELECT l.id, l.name, l.father_id, l.mother_id,
-             l.date_of_birth, l.owner_id,
-             f.registration_number AS father_registration_number,
-             m.registration_number AS mother_registration_number,
-             o.name AS owner_name
-             FROM litters l
-             LEFT JOIN dogs f ON l.father_id = f.id
-             LEFT JOIN dogs m ON l.mother_id = m.id
-             LEFT JOIN owners o ON l.owner_id = o.id
-             WHERE l.owner_id = ?"""
+    sql =  f"""{BASE_LITTER_QUERY}
+              WHERE l.owner_id = ?"""
     return db.query(sql, [owner_id])
 
 def get_comment_owner_id(comment_id):
@@ -115,21 +89,6 @@ def is_owner_of_dog(owner_id, dog_id):
 def remove_owner(owner_id):
     sql = "DELETE FROM owners WHERE id = ?"
     db.execute(sql, [owner_id])
-
-def get_comment_ids(owner_id):
-    sql = "SELECT c.id FROM comments c WHERE c.owner_id = ?"
-    result = db.query(sql, [owner_id])
-    return [row[0] for row in result] if result else []
-
-def get_dog_ids(owner_id):
-    sql = "SELECT d.id FROM dogs d WHERE d.owner_id = ?"
-    result = db.query(sql, [owner_id])
-    return [row[0] for row in result] if result else []
-
-def get_litter_ids(owner_id):
-    sql = "SELECT l.id FROM litters l WHERE l.owner_id = ?"
-    result = db.query(sql, [owner_id])
-    return [row[0] for row in result] if result else []
 
 def update_owner(form):
     sql = """UPDATE owners SET name = ?, email = ?, password_hash = ?

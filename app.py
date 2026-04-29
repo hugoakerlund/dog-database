@@ -66,8 +66,8 @@ def create_dog_get(filled=None):
 def create_dog_post():
     require_login()
     check_csrf()
-    form = input_validator.get_dog_form(request)
-    if not input_validator.check_dog_form(form):
+    form = input_validator.get_dog(request)
+    if not input_validator.validate_dog(form):
         return create_dog_get(form)
 
     dog.insert_dog(form)
@@ -78,8 +78,8 @@ def create_dog_post():
 def create_comment():
     require_login()
     check_csrf()
-    form = input_validator.get_comment_form(request)
-    if not input_validator.check_comment_form(form):
+    form = input_validator.get_comment(request)
+    if not input_validator.validate_comment(form):
         return redirect(f"/dog/{form['dog_id']}")
 
     dog.insert_comment(form)
@@ -116,10 +116,10 @@ def edit_comment_post(comment_id):
     require_login()
     require_owner(owner.get_comment_owner_id(comment_id))
     check_csrf()
-    form = input_validator.get_comment_form(request, True)
+    form = input_validator.get_comment(request, True)
     if "continue" in request.form:
-        form = input_validator.get_comment_form(request, True)
-        if not input_validator.check_comment_form(form, edit=True):
+        form = input_validator.get_comment(request, True)
+        if not input_validator.validate_comment(form, edit=True):
             return edit_comment_get(comment_id, form)
 
         dog.update_comment(form)
@@ -152,8 +152,8 @@ def edit_dog_post(dog_id):
         abort(404, "ERROR: dog not found")
     require_owner(dog_info["owner_id"])
     check_csrf()
-    form = input_validator.get_dog_form(request)
-    if not input_validator.check_dog_form(form, edit=True):
+    form = input_validator.get_dog(request)
+    if not input_validator.validate_dog(form, edit=True):
         return edit_dog_get(dog_id, form)
 
     dog.update_dog(form)
@@ -186,8 +186,8 @@ def remove_dog_post(dog_id):
 def create_litter_get(filled=None):
     require_login()
     owner_id = session["owner_id"]
-    male_dogs = owner.get_male_dogs(owner_id)
-    female_dogs = owner.get_female_dogs(owner_id)
+    male_dogs = owner.get_dogs(owner_id, "Male")
+    female_dogs = owner.get_dogs(owner_id, "Female")
     return render_template("html/create_litter.html", filled=filled,
                            male_dogs=male_dogs, female_dogs=female_dogs)
 
@@ -195,8 +195,8 @@ def create_litter_get(filled=None):
 def create_litter_post():
     require_login()
     check_csrf()
-    form = input_validator.get_litter_form(request)
-    if not input_validator.check_litter_form(form):
+    form = input_validator.get_litter(request)
+    if not input_validator.validate_litter(form):
         return create_litter_get(form)
 
     litter.insert_litter(form)
@@ -213,8 +213,8 @@ def edit_litter_get(litter_id, filled=None):
 
     require_owner(litter_info["owner_id"])
     owner_id = session["owner_id"]
-    male_dogs = owner.get_male_dogs(owner_id)
-    female_dogs = owner.get_female_dogs(owner_id)
+    male_dogs = owner.get_dogs(owner_id, "Male")
+    female_dogs = owner.get_dogs(owner_id, "Female")
     return render_template("html/edit_litter.html", filled=filled, litter=litter_info,
                            male_dogs=male_dogs, female_dogs=female_dogs)
 
@@ -223,8 +223,8 @@ def edit_litter_post(litter_id):
     require_login()
     require_owner(litter.get_litter(litter_id)["owner_id"])
     check_csrf()
-    form = input_validator.get_litter_form(request)
-    if not input_validator.check_litter_form(form, edit=True):
+    form = input_validator.get_litter(request)
+    if not input_validator.validate_litter(form, edit=True):
         return edit_litter_get(litter_id, form)
 
     litter.update_litter(litter_id, form)
@@ -279,8 +279,8 @@ def register_get(filled=None):
 
 @app.route("/register", methods=["POST"])
 def register_post():
-    form = input_validator.get_account_form(request)
-    if not input_validator.check_account_form(form):
+    form = input_validator.get_account(request)
+    if not input_validator.validate_account(form):
         return register_get(form)
 
     owner.insert_owner(form)
@@ -363,8 +363,8 @@ def edit_account_post(owner_id):
     require_login()
     require_owner(owner_id)
     check_csrf()
-    form = input_validator.get_account_form(request)
-    if not input_validator.check_account_form(form, True):
+    form = input_validator.get_account(request)
+    if not input_validator.validate_account(form, True):
         return edit_account_get(session["owner_id"], form)
 
     owner.update_owner(form)
@@ -430,12 +430,12 @@ def show_dog_show(show_id, page=1):
 def add_dog_to_show(show_id):
     require_login()
     check_csrf()
-    form = input_validator.get_dog_show_form(request)
-    if not input_validator.check_dog_show_form(form):
+    form = input_validator.get_dog_show(request)
+    if not input_validator.validate_dog_show(form):
         return redirect(f"/dog_show/{show_id}")
 
     dog_show.add_participant(show_id, form["dog_id"]
-                                 , form["championship_title_id"])
+                             , form["championship_title_id"])
     flash("Dog added to show successfully!", "success")
     return redirect(f"/dog_show/{show_id}")
 
@@ -444,8 +444,8 @@ def add_dog_to_show(show_id):
 def remove_dog_from_show(show_id):
     require_login()
     check_csrf()
-    form = input_validator.get_dog_show_form(request)
-    if not input_validator.check_dog_show_form(form, True):
+    form = input_validator.get_dog_show(request)
+    if not input_validator.validate_dog_show(form, True):
         return redirect(f"/dog_show/{show_id}")
 
     dog_show.remove_participant(form["show_id"], form["dog_id"])
