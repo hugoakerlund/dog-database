@@ -155,7 +155,7 @@
   </p>
   {% endif %}
 
-  <h3 style="margin-top:18px;">Comments</h3>
+  <h3>Comments</h3>
 
   {% if comments %}
   <div class="comments-list">
@@ -181,12 +181,12 @@
       {% if comment.owner_id == session.owner_id %}
       <div class="comment-actions">
 
-        <a class="button" href="/comment/{{ comment.id }}/edit">Edit</a>
+        <a class="comment-action-btn" href="/comment/{{ comment.id }}/edit">Edit</a>
 
-        <form class="remove-form" method="post" action="/comment/{{ comment.id }}/remove">
+        <form method="post" action="/comment/{{ comment.id }}/remove">
           <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
           <input type="hidden" name="dog_id" value="{{ dog.id }}" />
-          <input class="button" type="submit" value="Remove" />
+          <input class="comment-action-btn" type="submit" value="Remove" />
         </form>
 
       </div>

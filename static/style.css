@@ -3,6 +3,7 @@ body {
   color: gold;
   margin: auto;
   font-family: "serif", "Georgia", "Garamond";
+  line-height: 1.6;
 }
 
 a {
@@ -85,11 +86,11 @@ h3 {
 }
 
 .button:hover {
-  filter: brightness(2);
+  filter: brightness(1.15);
 }
 
 .form-table {
-  max-width: 860px;
+  max-width: 760;
   margin: 18px auto;
   padding: 18px;
   border-radius: 10px;
@@ -195,6 +196,7 @@ h3 {
   border: 1px solid grey;
   border-radius: 8px;
   padding: 12px 14px;
+  max-width: 760px;
 }
 
 .comment-meta {
@@ -208,11 +210,15 @@ h3 {
 
 .comment-content {
   background: #1b1b1b;
-  white-space: pre-wrap;
   color: gold;
   line-height: 1;
   margin-bottom: 10px;
   text-align: left;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  min-width: 0;
 }
 
 .comment-actions {
@@ -221,9 +227,30 @@ h3 {
   align-items: center;
 }
 
-.remove-form {
-  display: inline;
-  margin: 0;
+.comment-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 44px;
+  height: 36px;
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: chocolate;
+  background: var(--bg, #1b1b1b);
+  border: 1px solid chocolate;
+  border-radius: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.comment-action-btn:hover {
+  filter: brightness(1.15);
+}
+
+.comment-action-btn[disabled] {
+  opacity: 0.6; cursor: not-allowed;
 }
 
 .small-muted {
