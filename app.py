@@ -282,8 +282,7 @@ def login_post():
         return redirect("/login")
 
     owner_id = owner.get_id_with_name(request.form.get("name", "").strip())
-    name = request.form.get("name", "").strip()
-    set_session(owner_id, name)
+    set_session(owner_id)
     flash("Login successfull!", "success")
     return redirect("/")
 
@@ -291,7 +290,6 @@ def login_post():
 def logout():
     require_login()
     del session["owner_id"]
-    del session["name"]
     flash("Logout successfull!", "success")
     return redirect("/")
 
@@ -306,7 +304,8 @@ def register_post():
         return register_get(form)
 
     owner.insert_owner(form)
-    set_session(owner.get_id_with_name(form["name"]), form["name"])
+    owner_id = owner.get_id_with_name(form["name"])
+    set_session(owner_id)
     flash("Account created successfully!", "success")
     return redirect("/")
 
@@ -389,7 +388,7 @@ def edit_account_post(owner_id):
         return edit_account_get(session["owner_id"], form)
 
     owner.update_owner(form)
-    set_session(owner.get_id_with_name(form["name"]), form["name"])
+    set_session(owner_id)
     flash("Account updated successfully!", "success")
     return redirect(f"/owner/{session['owner_id']}")
 
@@ -530,7 +529,7 @@ def check_csrf():
     if request.form.get("csrf_token") != session.get("csrf_token"):
         abort(403, "ERROR: invalid CSRF token")
 
-def set_session(owner_id, name):
+def set_session(owner_id):
+    session.clear()
     session["owner_id"] = owner_id
-    session["name"] = name
     session["csrf_token"] = secrets.token_hex(16)
