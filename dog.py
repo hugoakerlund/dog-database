@@ -1,16 +1,17 @@
-from flask import session
 import db
 
+DOG_FIELDS = """
+    d.id, d.registration_number, d.registration_date, d.name, d.image,
+    d.color, d.breed, d.date_of_birth, d.date_of_death, d.sex, d.owner_id,
+    d.litter_id, d.best_test, d.best_show_id, d.hip_index, d.use_index"""
+
 def get_dogs(page, page_size):
-    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
-             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
-             d.best_test, d.best_show_id, d.hip_index, d.use_index,
+    sql = f"""SELECT {DOG_FIELDS},
              l.name AS litter_name,
              o.name AS owner_name
-             FROM Dogs d
-             LEFT JOIN Litters l ON d.litter_id = l.id
-             LEFT JOIN Owners o ON d.owner_id = o.id
-             GROUP BY d.id
+             FROM dogs d
+             LEFT JOIN litters l ON d.litter_id = l.id
+             LEFT JOIN owners o ON d.owner_id = o.id
              ORDER BY d.id DESC
              LIMIT ? OFFSET ?"""
     limit = page_size
@@ -18,49 +19,47 @@ def get_dogs(page, page_size):
     return db.query(sql, [limit, offset])
 
 def get_dog_count():
-    sql = "SELECT COUNT(*) FROM Dogs"
+    sql = "SELECT COUNT(*) FROM dogs"
     result = db.query(sql)
     return result[0][0] if result else 0
 
 def get_dog(dog_id):
-    sql = """SELECT d.id, d.registration_number, d.registration_date, d.name, d.image,
-             d.color, d.breed, d.date_of_birth, d.date_of_death, d.sex, d.owner_id,
-             d.litter_id, d.best_test, d.best_show_id, d.hip_index, d.use_index,
+    sql = f"""SELECT {DOG_FIELDS},
              l.name AS litter_name,
              o.name AS owner_name,
              s.name AS best_show_name
-             FROM Dogs d
-             LEFT JOIN Litters l ON d.litter_id = l.id
-             LEFT JOIN Dog_shows s ON d.best_show_id = s.id
-             LEFT JOIN Owners o ON d.owner_id = o.id
+             FROM dogs d
+             LEFT JOIN litters l ON d.litter_id = l.id
+             LEFT JOIN dog_shows s ON d.best_show_id = s.id
+             LEFT JOIN owners o ON d.owner_id = o.id
              WHERE d.id = ?"""
     result = db.query(sql, [dog_id])
     return result[0] if result else None
 
 def get_litter_birth_dates(dog_id):
     sql = """SELECT l.date_of_birth
-             FROM Litters l
+             FROM litters l
              WHERE l.father_id = ? OR l.mother_id = ?"""
     result = db.query(sql, [dog_id, dog_id])
     return result if result else None
 
 def get_owner_id(dog_id):
-    sql = "SELECT owner_id FROM Dogs WHERE id = ?"
+    sql = "SELECT owner_id FROM dogs WHERE id = ?"
     result = db.query(sql, [dog_id])
     return int(result[0][0]) if result else None
 
 def get_registration_number(dog_id):
-    sql = "SELECT registration_number FROM Dogs WHERE id = ?"
+    sql = "SELECT registration_number FROM dogs WHERE id = ?"
     result = db.query(sql, [dog_id])
     return result[0][0] if result else None
 
 def get_dog_id_by_comment(comment_id):
-    sql = "SELECT dog_id FROM Comments WHERE id = ?"
+    sql = "SELECT dog_id FROM comments WHERE id = ?"
     result = db.query(sql, [comment_id])
     return result[0][0] if result else None
 
-def get_participated_shows(dog_id):
-    sql = "SELECT show_id FROM Show_participants WHERE dog_id = ?"
+def get_participated_show_ids(dog_id):
+    sql = "SELECT show_id FROM show_participants WHERE dog_id = ?"
     result = db.query(sql, [dog_id])
     return result[0] if result else None
 
@@ -68,53 +67,37 @@ def get_comments(dog_id):
     sql = """SELECT c.id, c.content, c.owner_id,
              o.name AS commenter,
              c.dog_id, c.sent_at
-             FROM Comments c
-             LEFT JOIN Owners o ON c.owner_id = o.id
+             FROM comments c
+             LEFT JOIN owners o ON c.owner_id = o.id
              WHERE dog_id = ?"""
     return db.query(sql, [dog_id])
 
 def get_comment(comment_id):
     sql = """SELECT c.id, c.content, c.owner_id, c.dog_id, c.sent_at
-             FROM Comments c
+             FROM comments c
              WHERE id = ?"""
     result = db.query(sql, [comment_id])
     return result[0] if result else None
 
 def get_colors():
-    sql = "SELECT id, name FROM Colors"
+    sql = "SELECT id, name FROM colors"
     return db.query(sql)
 
 def get_breeds():
-    sql = "SELECT id, name FROM Dog_breeds"
+    sql = "SELECT id, name FROM dog_breeds"
     return db.query(sql)
 
 def get_image(dog_id):
-    sql = "SELECT image FROM Dogs WHERE id = ?"
+    sql = "SELECT image FROM dogs WHERE id = ?"
     image = db.query(sql, [dog_id])
     return image[0][0] if image else None
 
 def delete_dog(dog_id):
-
-    sql = "UPDATE Litters SET father_id = NULL WHERE father_id = ?"
-    db.execute(sql, [dog_id])
-
-    sql = "UPDATE Litters SET mother_id = NULL WHERE mother_id = ?"
-    db.execute(sql, [dog_id])
-
-    sql = "UPDATE Dog_shows SET winner_id = NULL WHERE winner_id = ?"
-    db.execute(sql, [dog_id])
-
-    sql = "DELETE FROM Comments where dog_id = ?"
-    db.execute(sql, [dog_id])
-
-    sql = "DELETE FROM Show_participants where dog_id = ?"
-    db.execute(sql, [dog_id])
-
-    sql = "DELETE FROM Dogs WHERE id = ?"
+    sql = "DELETE FROM dogs WHERE id = ?"
     db.execute(sql, [dog_id])
 
 def insert_dog(form):
-    sql = """INSERT INTO Dogs (registration_number, registration_date, name, image,
+    sql = """INSERT INTO dogs (registration_number, registration_date, name, image,
              color, breed, date_of_birth, date_of_death, sex, litter_id, owner_id,
              best_show_id, best_test, hip_index, use_index)
              VALUES (?, datetime('now', 'localtime'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
@@ -128,7 +111,7 @@ def insert_dog(form):
         form["date_of_death"],
         form["sex"],
         form["litter_id"],
-        session["owner_id"],
+        form["owner_id"],
         form["best_show_id"],
         form["best_test"],
         form["hip_index"],
@@ -137,21 +120,21 @@ def insert_dog(form):
     db.execute(sql, params)
 
 def insert_comment(form):
-    sql = """INSERT INTO Comments (content, owner_id, dog_id, sent_at)
+    sql = """INSERT INTO comments (content, owner_id, dog_id, sent_at)
              VALUES (?, ?, ?, datetime('now', 'localtime'))"""
     params = [
         form["content"],
-        session["owner_id"],
+        form["owner_id"],
         form["dog_id"],
     ]
     db.execute(sql, params)
 
 def remove_comment(comment_id):
-    sql = "DELETE FROM Comments WHERE id = ?"
+    sql = "DELETE FROM comments WHERE id = ?"
     db.execute(sql, [comment_id])
 
 def update_comment(form):
-    sql = """UPDATE Comments SET content = ?
+    sql = """UPDATE comments SET content = ?
              WHERE id = ?"""
     params = [
         form["content"],
@@ -159,8 +142,8 @@ def update_comment(form):
     ]
     db.execute(sql, params)
 
-def update_dog(dog_id, form):
-    sql = """UPDATE Dogs SET registration_number = ?, name = ?, image = ?, color = ?,
+def update_dog(form):
+    sql = """UPDATE dogs SET registration_number = ?, name = ?, image = ?, color = ?,
              breed = ?, date_of_birth = ?, date_of_death = ?, sex = ?, litter_id = ?,
              owner_id = ?, best_show_id = ?, best_test = ?,  hip_index = ?, use_index = ?
              WHERE id = ?"""
@@ -174,37 +157,35 @@ def update_dog(dog_id, form):
         form["date_of_death"],
         form["sex"],
         form["litter_id"],
-        session["owner_id"],
+        form["owner_id"],
         form["best_show_id"],
         form["best_test"],
         form["hip_index"],
         form["use_index"],
-        dog_id
+        form["dog_id"],
     ]
     db.execute(sql, params)
 
 def registration_number_exists(registration_number):
-    sql = "SELECT 1 FROM Dogs WHERE registration_number = ?"
+    sql = "SELECT 1 FROM dogs WHERE registration_number = ?"
     result = db.query(sql, [registration_number])
     return bool(result)
 
 def get_search_count(query):
     sql = """SELECT COUNT(*)
-             FROM Dogs d
+             FROM dogs d
              WHERE d.name LIKE ? OR d.registration_number LIKE ? OR d.breed LIKE ?"""
     like_query = f"%{query}%"
     result = db.query(sql, [like_query, like_query, like_query])
     return result[0][0] if result else 0
 
 def search(query,page, page_size):
-    sql = """SELECT d.id, d.registration_number, d.name, d.image, d.color, d.breed,
-             d.date_of_birth, d.date_of_death, d.sex, d.owner_id, d.litter_id,
-             d.best_test, d.best_show_id, d.hip_index, d.use_index,
+    sql = f"""SELECT {DOG_FIELDS},
              l.name AS litter_name,
              o.name AS owner_name
-             FROM Dogs d
-             LEFT JOIN Litters l ON d.litter_id = l.id
-             LEFT JOIN Owners o ON d.owner_id = o.id
+             FROM dogs d
+             LEFT JOIN litters l ON d.litter_id = l.id
+             LEFT JOIN owners o ON d.owner_id = o.id
              WHERE d.name LIKE ? OR d.registration_number LIKE ? OR d.breed LIKE ?
              LIMIT ? OFFSET ?"""
     limit = page_size

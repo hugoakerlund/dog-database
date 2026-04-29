@@ -156,7 +156,7 @@ def edit_dog_post(dog_id):
     if not input_validator.check_dog_form(form, edit=True):
         return edit_dog_get(dog_id, form)
 
-    dog.update_dog(dog_id, form)
+    dog.update_dog(form)
     flash("Dog updated successfully!", "success")
     return redirect(f"/owner/{session['owner_id']}")
 

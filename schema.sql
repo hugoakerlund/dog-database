@@ -1,4 +1,6 @@
-CREATE TABLE Owners (
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE owners (
     id INTEGER PRIMARY KEY,
     name TEXT UNIQUE,
     email TEXT UNIQUE,
@@ -6,87 +8,87 @@ CREATE TABLE Owners (
     created_at DATE
 );
 
-CREATE TABLE Dogs (
+CREATE TABLE dogs (
     id INTEGER PRIMARY KEY,
     registration_number TEXT UNIQUE,
     registration_date DATE,
     name TEXT,
     image BLOB,
-    color TEXT REFERENCES Colors(name),
-    breed TEXT REFERENCES Dog_breeds(name),
+    color TEXT REFERENCES colors(name) ON DELETE RESTRICT,
+    breed TEXT REFERENCES dog_breeds(name) ON DELETE RESTRICT,
     date_of_birth DATE,
     date_of_death DATE,
     sex TEXT CHECK (sex IN ('Male', 'Female')),
-    owner_id INTEGER REFERENCES Owners(id),
-    litter_id INTEGER REFERENCES Litters(id),
+    owner_id INTEGER REFERENCES owners(id) ON DELETE CASCADE,
+    litter_id INTEGER REFERENCES Litters(id) ON DELETE SET NULL,
     best_test INTEGER CHECK (best_test IN (1, 2, 3, 4, 5)),
-    best_show_id INTEGER REFERENCES Dog_shows(id),
+    best_show_id INTEGER REFERENCES dog_shows(id) ON DELETE SET NULL,
     hip_index INTEGER,
     use_index INTEGER
 );
 
-CREATE TABLE Colors (
+CREATE TABLE colors (
     id INTEGER PRIMARY KEY,
     name TEXT UNIQUE
 );
 
-CREATE TABLE Championship_titles (
+CREATE TABLE championship_titles (
     id INTEGER PRIMARY KEY,
     title TEXT UNIQUE
 );
 
-CREATE TABLE Dog_breeds (
+CREATE TABLE dog_breeds (
     id INTEGER PRIMARY KEY,
     name TEXT UNIQUE
 );
 
-CREATE TABLE Dog_shows (
+CREATE TABLE dog_shows (
     id INTEGER PRIMARY KEY,
     name TEXT UNIQUE,
-    winner_id INTEGER REFERENCES Dogs(id),
+    winner_id INTEGER REFERENCES dogs(id),
     date DATE
 );
 
-CREATE TABLE Show_participants (
+CREATE TABLE show_participants (
     id INTEGER PRIMARY KEY,
-    dog_id INTEGER REFERENCES Dogs(id),
-    show_id INTEGER REFERENCES Dog_shows(id),
-    result INTEGER REFERENCES Championship_titles(id)
+    dog_id INTEGER REFERENCES dogs(id) ON DELETE CASCADE,
+    show_id INTEGER REFERENCES dog_shows(id) ON DELETE CASCADE,
+    result INTEGER REFERENCES championship_titles(id)
 );
 
-CREATE TABLE Litters (
+CREATE TABLE litters (
     id INTEGER PRIMARY KEY,
     name TEXT UNIQUE,
-    father_id TEXT REFERENCES Dogs(id),
-    mother_id TEXT REFERENCES Dogs(id),
+    father_id INTEGER REFERENCES dogs(id) ON DELETE SET NULL,
+    mother_id INTEGER REFERENCES dogs(id) ON DELETE SET NULL,
     date_of_birth DATE,
-    owner_id INTEGER REFERENCES Owners(id)
+    owner_id INTEGER REFERENCES owners(id) ON DELETE CASCADE
 );
 
-CREATE TABLE Comments (
+CREATE TABLE comments (
     id INTEGER PRIMARY KEY,
     content TEXT,
-    owner_id INTEGER REFERENCES Owners(id),
-    dog_id INTEGER REFERENCES Dogs(id),
+    owner_id INTEGER REFERENCES owners(id) ON DELETE CASCADE,
+    dog_id INTEGER REFERENCES dogs(id) ON DELETE CASCADE,
     sent_at DATE
 );
 
-CREATE INDEX idx_dogs_owner_id ON Dogs(owner_id);
-CREATE INDEX idx_dogs_litter_id ON Dogs(litter_id);
-CREATE INDEX idx_dogs_best_show_id ON Dogs(best_show_id);
-CREATE INDEX idx_dogs_color ON Dogs(color);
-CREATE INDEX idx_dogs_breed ON Dogs(breed);
+CREATE INDEX idx_dogs_owner_id ON dogs(owner_id);
+CREATE INDEX idx_dogs_litter_id ON dogs(litter_id);
+CREATE INDEX idx_dogs_best_show_id ON dogs(best_show_id);
+CREATE INDEX idx_dogs_color ON dogs(color);
+CREATE INDEX idx_dogs_breed ON dogs(breed);
 
-CREATE INDEX idx_litters_father_id ON Litters(father_id);
-CREATE INDEX idx_litters_mother_id ON Litters(mother_id);
-CREATE INDEX idx_litters_owner_id ON Litters(owner_id);
-CREATE INDEX idx_litters_date_of_birth ON Litters(date_of_birth DESC);
+CREATE INDEX idx_litters_father_id ON litters(father_id);
+CREATE INDEX idx_litters_mother_id ON litters(mother_id);
+CREATE INDEX idx_litters_owner_id ON litters(owner_id);
+CREATE INDEX idx_litters_date_of_birth ON litters(date_of_birth DESC);
 
-CREATE INDEX idx_dog_shows_winner_id ON Dog_shows(winner_id);
+CREATE INDEX idx_dog_shows_winner_id ON dog_shows(winner_id);
 
-CREATE INDEX idx_show_participants_show_id ON Show_participants(show_id);
-CREATE INDEX idx_show_participants_dog_id ON Show_participants(dog_id);
-CREATE INDEX idx_show_participants_result ON Show_participants(result);
+CREATE INDEX idx_show_participants_show_id ON show_participants(show_id);
+CREATE INDEX idx_show_participants_dog_id ON show_participants(dog_id);
+CREATE INDEX idx_show_participants_result ON show_participants(result);
 
-CREATE INDEX idx_comments_dog_id ON Comments(dog_id);
-CREATE INDEX idx_comments_owner_id ON Comments(owner_id);
+CREATE INDEX idx_comments_dog_id ON comments(dog_id);
+CREATE INDEX idx_comments_owner_id ON comments(owner_id);
