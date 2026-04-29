@@ -485,7 +485,7 @@ def show_dog_show(show_id, page=1):
         return redirect(f"/dog_show/{show_id}/1")
 
     if page > page_count:
-        return redirect(f"/dog_shows/{show_id}/" + str(page_count))
+        return redirect(f"/dog_show/{show_id}/" + str(page_count))
 
 
     added_dogs = []
