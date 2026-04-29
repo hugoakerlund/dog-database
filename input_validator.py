@@ -18,6 +18,7 @@ def get_dog_form(request):
     form["date_of_birth"] = request.form.get("date_of_birth", "").strip()
     form["date_of_death"] = request.form.get("date_of_death", "").strip() or None
     form["sex"] = request.form.get("sex", "").strip()
+    form["owner_id"] = session["owner_id"]
     form["litter_id"] = request.form.get("litter_id", "").strip() or None
     form["best_show_id"] = request.form.get("best_show_id", "").strip() or None
     form["best_test"] = request.form.get("best_test", "").strip() or None
@@ -172,7 +173,7 @@ def check_dog_litters(form):
     return True
 
 def check_dog_shows(form):
-    shows = dog.get_participated_shows(form["dog_id"])
+    shows = dog.get_participated_show_ids(form["dog_id"])
     if shows:
         dog_date_of_birth = form["date_of_birth"]
         year, month, day = dog_date_of_birth.split("-")
@@ -591,6 +592,7 @@ def get_comment_form(request, edit=False):
     else:
         form["dog_id"] = request.form.get("dog_id", "").strip()
     form["content"] = request.form.get("content", "").strip()
+    form["owner_id"] = session["owner_id"]
     return form
 
 def check_comment_form(form, edit=False ):
