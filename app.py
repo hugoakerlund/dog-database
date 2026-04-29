@@ -1,7 +1,6 @@
 import math
 import os
 import secrets
-from urllib.parse import urlencode
 import markupsafe
 from flask import Flask, make_response, session, redirect, render_template, \
     request, send_from_directory, abort, flash
@@ -26,16 +25,8 @@ def show_lines(content):
 def index(page=1):
     page_size = 10
     dog_count = dog.get_dog_count()
-    page_count = math.ceil(dog_count / page_size)
-    page_count = max(page_count, 1)
+    page_count = max(math.ceil(dog_count / page_size), 1)
     dogs = dog.get_dogs(page, page_size)
-
-    if page < 1:
-        return redirect("/1")
-
-    if page > page_count:
-        return redirect("/" + str(page_count))
-
     return render_template("html/index.html", page=page, page_count=page_count,
                            dogs=dogs, session=session)
 
@@ -43,21 +34,10 @@ def index(page=1):
 @app.route("/search/<int:page>")
 def search(page=1):
     query = request.args.get("query")
-
     page_size = 10
     result_count = dog.get_search_count(query)
-    page_count = math.ceil(result_count / page_size)
-    page_count = max(page_count, 1)
+    page_count = max(math.ceil(result_count / page_size), 1)
     results = dog.search(query, page, page_size) if query else []
-
-    if page < 1:
-        qs = urlencode({"query": query})
-        return redirect(f"/search/1/?{qs}")
-
-    if page > page_count:
-        qs = urlencode({"query": query})
-        return redirect(f"/search/{page_count}/?{qs}")
-
     return render_template("html/search.html", page=page, page_count=page_count,
                            result_count=result_count, query=query, results=results)
 
@@ -406,16 +386,8 @@ def show_litter(litter_id):
 def show_litters(page=1):
     page_size = 10
     litter_count = litter.get_litter_count()
-    page_count = math.ceil(litter_count / page_size)
-    page_count = max(page_count, 1)
+    page_count = max(math.ceil(litter_count / page_size), 1)
     litters = litter.get_litters(page, page_size)
-
-    if page < 1:
-        return redirect("/litters/1")
-
-    if page > page_count:
-        return redirect("/litters/" + str(page_count))
-
     return render_template("html/litters.html", page=page, page_count=page_count,
                            litters=litters)
 
@@ -424,16 +396,8 @@ def show_litters(page=1):
 def show_owners(page=1):
     page_size = 10
     owner_count = owner.get_owner_count()
-    page_count = math.ceil(owner_count / page_size)
-    page_count = max(page_count, 1)
+    page_count = max(math.ceil(owner_count / page_size), 1)
     owners = owner.get_owners(page, page_size)
-
-    if page < 1:
-        return redirect("/owners/1")
-
-    if page > page_count:
-        return redirect("/owners/" + str(page_count))
-
     return render_template("html/owners.html", page=page, page_count=page_count,
                            owners=owners)
 
@@ -444,20 +408,10 @@ def show_dog_show(show_id, page=1):
     if not show_info:
         abort(404, "ERROR: dog show not found")
 
-
     page_size = 10
     dog_count = dog_show.get_dog_count(show_id)
-    page_count = math.ceil(dog_count / page_size)
-    page_count = max(page_count, 1)
+    page_count = max(math.ceil(dog_count / page_size), 1)
     dogs = dog_show.get_show_participants(show_id, page, page_size)
-
-    if page < 1:
-        return redirect(f"/dog_show/{show_id}/1")
-
-    if page > page_count:
-        return redirect(f"/dog_show/{show_id}/" + str(page_count))
-
-
     added_dogs = []
     eligible_dogs = []
     championship_titles = []
@@ -504,16 +458,8 @@ def remove_dog_from_show(show_id):
 def show_dog_shows(page=1):
     page_size = 10
     dog_show_count = dog_show.get_dog_show_count()
-    page_count = math.ceil(dog_show_count / page_size)
-    page_count = max(page_count, 1)
+    page_count = max(math.ceil(dog_show_count / page_size), 1)
     dog_shows = dog_show.get_dog_shows(page, page_size)
-
-    if page < 1:
-        return redirect("/dog_shows/1")
-
-    if page > page_count:
-        return redirect("/dog_shows/" + str(page_count))
-
     return render_template("html/dog_shows.html", page=page, page_count=page_count,
                            dog_shows=dog_shows)
 
