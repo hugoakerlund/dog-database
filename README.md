@@ -43,7 +43,6 @@ Test data was created with `seed.py`.
 
 `DOG_COUNT` was set to `10**6`.
 
-
 Code was added for printing request times:
 
 ```
@@ -225,7 +224,6 @@ elapsed time: 0.0 s
 elapsed time: 0.0 s
 127.0.0.1 - - [27/Apr/2026 19:59:15] "GET /image/1000000 HTTP/1.1" 200 -
 ```
-
 
 ### Adding a litter
 ```

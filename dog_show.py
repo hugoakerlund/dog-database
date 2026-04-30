@@ -79,11 +79,9 @@ def is_participant(show_id, dog_id):
     result = db.query(sql, [show_id, dog_id])
     return bool(result)
 
-
 def add_participant(show_id, dog_id, championship_title_id):
     sql = "INSERT INTO show_participants (show_id, dog_id, result) VALUES (?, ?, ?)"
     db.execute(sql, [show_id, dog_id, championship_title_id])
-
 
 def remove_participant(show_id, dog_id):
     sql = "DELETE FROM show_participants WHERE show_id = ? AND dog_id = ?"

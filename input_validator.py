@@ -55,16 +55,22 @@ def check_dog_required_fields(form):
     errors = []
     if not form["registration_number"]:
         errors += ["ERROR: registration number is required!"]
+
     if not form["name"]:
         errors += ["ERROR: name is required!"]
+
     if not form["breed"]:
         errors += ["ERROR: breed is required!"]
+
     if not form["color"]:
         errors += ["ERROR: color is required!"]
+
     if not form["date_of_birth"]:
         errors += ["ERROR: date of birth is required!"]
+
     if not form["sex"]:
         errors += ["ERROR: sex is required!"]
+
     return errors
 
 def check_registration_number(registration_number):
@@ -75,6 +81,7 @@ def check_registration_number(registration_number):
         not registration_number[7] == "/" or \
         not registration_number[8:].isdigit():
         errors += ["ERROR: invalid registration number format (must be 'FI12345/67')!"]
+
     return errors
 
 def check_dog_edit_fields(form):
@@ -98,13 +105,14 @@ def check_registration_date(form):
 
     registration_date = dog_data["registration_date"].split(" ")[0]
     registration_date = parse_date(registration_date)
-    dog_date_of_birth= parse_date(form["date_of_birth"])
+    dog_date_of_birth = parse_date(form["date_of_birth"])
     if not registration_date or not dog_date_of_birth:
         return errors
 
     if registration_date < dog_date_of_birth:
         errors += [f"ERROR: dog must be born before its registration date: \
                        {registration_date}!"]
+
     return errors
 
 def check_name(name):
@@ -132,6 +140,7 @@ def check_sex(form):
     errors = []
     if form["sex"] not in ["Male", "Female"]:
         errors += ["ERROR: invalid sex!"]
+
     return errors
 
 def check_dog_optional_fields(form):
@@ -151,13 +160,13 @@ def check_dog_litters(form):
     if not litters:
         return errors
 
-    dog_date_of_birth= parse_date(form["date_of_birth"])
+    dog_date_of_birth = parse_date(form["date_of_birth"])
     if not dog_date_of_birth:
         errors += ["ERROR: invalid dog date of birth!"]
         return errors
 
     for cur_litter in litters:
-        litter_date_of_birth= parse_date(cur_litter["date_of_birth"])
+        litter_date_of_birth = parse_date(cur_litter["date_of_birth"])
         if not litter_date_of_birth:
             errors += ["ERROR: invalid litter date of birth!"]
             return errors
@@ -172,21 +181,21 @@ def check_dog_shows(form):
     errors = []
     shows = dog.get_participated_show_ids(form["dog_id"])
     if shows:
-        dog_date_of_birth= parse_date(form["date_of_birth"])
+        dog_date_of_birth = parse_date(form["date_of_birth"])
         if not dog_date_of_birth:
             errors += ["ERROR: invalid dog date of birth!"]
             return errors
 
         date_of_death = form["date_of_death"]
         if date_of_death:
-            date_of_death= parse_date(date_of_death)
+            date_of_death = parse_date(date_of_death)
 
         for show_id in shows:
             show_info = dog_show.get_dog_show(show_id)
             if not show_info:
                 abort(404, "ERROR: dog show not found")
 
-            show_date= parse_date(show_info["date"])
+            show_date = parse_date(show_info["date"])
             if not show_date:
                 errors += ["ERROR: invalid show date!"]
                 return errors
@@ -203,6 +212,7 @@ def process_image(form):
     errors = []
     if not form["image"]:
         return errors
+
     if not form["image"].filename.lower().endswith((".jpg", ".jpeg")):
         errors += ["ERROR: only .jpg and .jpeg images are allowed!"]
 
@@ -299,6 +309,7 @@ def check_hip_index(form):
 
     except ValueError:
         errors += ["ERROR: hip index must be a number!"]
+
     return errors
 
 def check_use_index(form):
@@ -389,6 +400,7 @@ def check_father_and_mother_sex(father_dog, mother_dog):
     errors = []
     if father_dog["sex"] == mother_dog["sex"]:
         errors += ["ERROR: father and mother cannot be same sex!"]
+
     return errors
 
 def check_parents_date_of_birth(litter_date_of_birth, father_date_of_birth, mother_date_of_birth):
@@ -427,9 +439,9 @@ def check_litter_dogs(form):
     if not dogs:
         return errors
 
-    litter_date_of_birth= parse_date(form["date_of_birth"])
+    litter_date_of_birth = parse_date(form["date_of_birth"])
     for cur_dog in dogs:
-        dog_date_of_birth= parse_date(cur_dog["date_of_birth"])
+        dog_date_of_birth = parse_date(cur_dog["date_of_birth"])
 
         if dog_date_of_birth != litter_date_of_birth:
             errors += ["ERROR: the litter has a dog whose date of birth is not \
@@ -446,10 +458,8 @@ def get_dog_show(request):
 
 def validate_dog_show(form, remove=False):
     errors = []
-
     errors += check_dog_show_dog(form)
     errors += check_show_dates(form)
-
     if remove:
         if not dog_show.is_participant(form["show_id"], form["dog_id"]):
             errors += ["ERROR: dog is not registered for this show!"]
@@ -486,7 +496,7 @@ def check_show_dates(form):
     if not show_info:
         abort(404, "ERROR: dog show not found")
 
-    dog_info= dog.get_dog(form["dog_id"])
+    dog_info = dog.get_dog(form["dog_id"])
     if not dog_info:
         errors += ["ERROR: dog could not be found!"]
         return errors
@@ -499,8 +509,8 @@ def check_show_dates(form):
 
 def check_dog_death(dog_info, show_info):
     errors = []
-    show_date= parse_date(show_info["date"])
-    date_of_death= parse_date(dog_info["date_of_death"])
+    show_date = parse_date(show_info["date"])
+    date_of_death = parse_date(dog_info["date_of_death"])
     if not show_date or not date_of_death:
         errors += ["ERROR: invalid date!"]
         return errors
@@ -512,8 +522,8 @@ def check_dog_death(dog_info, show_info):
 
 def check_dog_birth(dog_info, show_info):
     errors = []
-    show_date= parse_date(show_info["date"])
-    dog_date_of_birth= parse_date(dog_info["date_of_birth"])
+    show_date = parse_date(show_info["date"])
+    dog_date_of_birth = parse_date(dog_info["date_of_birth"])
     if not show_date or not dog_date_of_birth:
         errors += ["ERROR: invalid date!"]
         return errors
@@ -535,10 +545,12 @@ def check_dog_show_championship_title(form):
     if not form["championship_title_id"]:
         errors += ["ERROR: show result must be selected!"]
         return errors
+
     try:
         form["championship_title_id"]= int(form["championship_title_id"])
     except ValueError:
         abort(400, "ERROR: invalid championship title id")
+
     return errors
 
 def get_account(request):
@@ -618,13 +630,15 @@ def get_comment(request, edit=False):
     if edit:
         form["comment_id"] = request.form.get("comment_id", "").strip()
         form["dog_id"] = dog.get_dog_id_by_comment(form["comment_id"])
+
     else:
         form["dog_id"] = request.form.get("dog_id", "").strip()
+
     form["content"] = request.form.get("content", "").strip()
     form["owner_id"] = session["owner_id"]
     return form
 
-def validate_comment(form, edit=False ):
+def validate_comment(form, edit=False):
     errors = []
     if edit:
         errors += check_comment_exists(form)
@@ -661,6 +675,7 @@ def check_comment_exists(form):
     errors = []
     if not form["comment_id"]:
         errors += ["ERROR: comment id is required!"]
+
     return errors
 
 def check_login(request):
@@ -670,12 +685,14 @@ def check_login(request):
     if not owner_id or not check_password(password, name):
         flash("ERROR: invalid name or password!", "error")
         return False
+
     return True
 
 def check_password(password, name):
     result = owner.get_password_hash(name)
     if not result or not check_password_hash(result, password):
         return False
+
     return True
 
 def parse_date(date_str):

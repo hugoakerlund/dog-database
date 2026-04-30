@@ -141,7 +141,7 @@ def edit_dog_get(dog_id, filled=None):
     my_litters = owner.get_litters(owner_id)
     participated_shows = dog_show.get_dog_participated_shows(dog_id)
     return render_template("html/edit_dog.html", filled=filled, dog=dog_info,
-                           colors=colors,dog_breeds=dog_breeds, litters=my_litters,
+                           colors=colors, dog_breeds=dog_breeds, litters=my_litters,
                            participated_shows=participated_shows)
 
 @app.route("/dog/<int:dog_id>/edit", methods=["POST"])
@@ -202,7 +202,6 @@ def create_litter_post():
     litter.insert_litter(form)
     flash("Litter created successfully!", "success")
     return redirect(f"/owner/{session['owner_id']}")
-
 
 @app.route("/litter/<int:litter_id>/edit", methods=["GET"])
 def edit_litter_get(litter_id, filled=None):
@@ -322,7 +321,7 @@ def show_image(dog_id):
 def show_owner(owner_id):
     owner_info = owner.get_owner(owner_id)
     owners_dogs = owner.get_dogs(owner_id)
-    owners_litters= owner.get_litters(owner_id)
+    owners_litters = owner.get_litters(owner_id)
     if not owner_info:
         abort(404, "ERROR: owner not found")
 
@@ -417,7 +416,7 @@ def show_dog_show(show_id, page=1):
     championship_titles = []
     if "owner_id" in session:
         owner_dogs = owner.get_dogs(session["owner_id"])
-        added_dogs= dog_show.get_added_dogs(show_id, session["owner_id"])
+        added_dogs = dog_show.get_added_dogs(show_id, session["owner_id"])
         added_dog_ids = {d["id"] for d in added_dogs}
         eligible_dogs = [d for d in owner_dogs if d["id"] not in added_dog_ids]
         championship_titles = dog_show.get_championship_titles()
@@ -434,11 +433,10 @@ def add_dog_to_show(show_id):
     if not input_validator.validate_dog_show(form):
         return redirect(f"/dog_show/{show_id}")
 
-    dog_show.add_participant(show_id, form["dog_id"]
-                             , form["championship_title_id"])
+    dog_show.add_participant(show_id, form["dog_id"],
+                             form["championship_title_id"])
     flash("Dog added to show successfully!", "success")
     return redirect(f"/dog_show/{show_id}")
-
 
 @app.route("/dog_show/<int:show_id>/remove", methods=["POST"])
 def remove_dog_from_show(show_id):
@@ -451,7 +449,6 @@ def remove_dog_from_show(show_id):
     dog_show.remove_participant(form["show_id"], form["dog_id"])
     flash("Dog removed from show successfully!", "success")
     return redirect(f"/dog_show/{show_id}")
-
 
 @app.route("/dog_shows")
 @app.route("/dog_shows/<int:page>")

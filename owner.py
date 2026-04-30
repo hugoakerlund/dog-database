@@ -52,6 +52,7 @@ def get_id_with_name(name):
     owner_id = db.query(sql, [name])
     if not owner_id:
         return None
+
     return owner_id[0][0]
 
 def get_account_info(owner_id):
@@ -64,6 +65,7 @@ def get_password_hash(name):
     result = db.query(sql, [name])
     if not result:
         return None
+
     return result[0][0]
 
 def insert_owner(form):

@@ -139,7 +139,6 @@ def create_litter(n, father_id, mother_id):
              VALUES (?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [litter_id, name, father_id, mother_id, date_of_birth, litter_owner_id])
 
-
 def insert_random_dog(n):
     registration_number = "FI" + f"{n:05}" + "/" + f"{n:04}"[2:]
     name = random.choice(dog_names)
@@ -161,7 +160,7 @@ def insert_random_dog(n):
              best_test, best_show_id, hip_index, use_index)
              VALUES (?, datetime('now', 'localtime'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [registration_number, name, image, color, breed,
-                     date_of_birth,sex, dog_owner_id, litter_id, best_test,
+                     date_of_birth, sex, dog_owner_id, litter_id, best_test,
                      best_show_id, hip_index, use_index])
 
 def insert_random_litter(n):
@@ -171,6 +170,7 @@ def insert_random_litter(n):
     if father_id and mother_id:
         create_litter(n, father_id, mother_id)
         litter_id = n
+
     return litter_id
 
 def seed_table_colors():
@@ -212,7 +212,6 @@ with app.app_context():
     seed_table_dog_breeds()
     seed_table_dog_shows()
     seed_table_championship_titles()
-
     for owner_id in range(1, DOG_COUNT):
         insert_random_owner(owner_id)
         insert_random_dog(owner_id)

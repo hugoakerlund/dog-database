@@ -179,7 +179,7 @@ def get_search_count(query):
     result = db.query(sql, [like_query, like_query, like_query])
     return result[0][0] if result else 0
 
-def search(query,page, page_size):
+def search(query, page, page_size):
     sql = f"""SELECT {DOG_FIELDS},
              l.name AS litter_name,
              o.name AS owner_name
