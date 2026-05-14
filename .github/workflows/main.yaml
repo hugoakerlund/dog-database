@@ -13,7 +13,7 @@ jobs:
         uses: bounceapp/render-action@0.12.0
         with:
           render-token: ${{ secrets.RENDER_TOKEN }}
-          service-id: srv-d80037j7uimc73f40qv0
+          service-id: srv-d835lkl7vvec73elojd0
           retries: 20
           wait: 16000
           sleep: 30000
