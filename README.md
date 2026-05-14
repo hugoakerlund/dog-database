@@ -14,6 +14,9 @@ Dog database is a simple web application built with Flask that allows users to v
 * The user can enter their dogs in a dog show. The entry list shows which dogs have entered.
 * The user can comment on other users' dogs.
 
+## Deployed application
+Application is deployed at https://dog-database.onrender.com.
+
 ## Installation
 
 Install `flask` with pip:
