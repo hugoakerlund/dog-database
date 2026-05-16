@@ -1,15 +1,21 @@
-FROM ubuntu
+FROM python:3.12-alpine
 
 EXPOSE 5000
 
 WORKDIR /usr/src/app
 
+RUN apk add --no-cache sqlite
+
+RUN pip install --no-cache-dir MarkupSafe Flask
+
 COPY . .
 
-RUN apt-get update && apt-get install -y python3 python3-flask sqlite3
+RUN sqlite3 database.db < schema.sql && \
+    python3 seed.py && \
+    rm -rf /root/.cache /tmp/* && \
+    adduser -D appuser && \
+    chown -R appuser:appuser /usr/src/app
 
-RUN sqlite3 database.db < schema.sql
-
-RUN python3 seed.py
+USER appuser
 
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
